@@ -9,7 +9,7 @@ _realname=gcc
 pkgbase=mingw-w64-${_realname}-mcf
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}-mcf"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-mcf-libs")
-pkgver=10.2.1.d20210122.c15.g4d43c7649b1
+pkgver=11.2.1.d20220105
 pkgrel=1
 pkgdesc="GNU Compiler Collection (C,C++,OpenMP) for MinGW-w64 with MCF thread model"
 depends=("${MINGW_PACKAGE_PREFIX}-binutils"
@@ -259,15 +259,6 @@ package_mingw-w64-gcc-mcf-libs() {
 }
 
 # Wrappers for package functions
-
-# 32-bit wrappers
-package_mingw-w64-i686-gcc-mcf() {
-  package_mingw-w64-gcc-mcf
-}
-
-package_mingw-w64-i686-gcc-mcf-libs() {
-  package_mingw-w64-gcc-mcf-libs
-}
 
 # 64-bit wrappers
 package_mingw-w64-x86_64-gcc-mcf() {
