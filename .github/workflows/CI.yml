@@ -19,7 +19,7 @@ jobs:
       shell: msys2 {0}
       run: |
         cd /d/a/mcfgthread/mcfgthread/mcfgthread-git; makepkg 
-        pacman -U /d/a/mcfgthread/mcfgthread/mcfgthread-git/*.pkg.tar.xz --noconfirm
+        pacman -U /d/a/mcfgthread/mcfgthread/*.pkg.tar.xz --noconfirm
     - name: Package
       shell: pwsh
       run: |
