@@ -4,7 +4,7 @@ _realname=mcfgthread
 pkgbase=mingw-w64-${_realname}-git
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}-git"
          "${MINGW_PACKAGE_PREFIX}-${_realname}"-libs-git)
-pkgver=r521.9570e5c
+pkgver=custom
 pkgrel=1
 pkgdesc="An efficient Gthread implementation for GCC MinGW-w64 targets on Windows, providing both C11 and C++11 thread support"
 arch=('any')
@@ -77,14 +77,6 @@ package_mingw-w64-mcfgthread-libs() {
 }
 
 # Wrappers for package functions
-
-# 32-bit wrappers
-package_mingw-w64-i686-mcfgthread-git() {
-  package_mingw-w64-mcfgthread
-}
-package_mingw-w64-i686-mcfgthread-libs-git() {
-  package_mingw-w64-mcfgthread-libs
-}
 
 # 64-bit wrappers
 package_mingw-w64-x86_64-mcfgthread-git() {
