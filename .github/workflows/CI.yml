@@ -20,11 +20,11 @@ jobs:
       run: |
         cd /d/a/mcfgthread/mcfgthread/mcfgthread-git; makepkg 
         pacman -U /d/a/mcfgthread/mcfgthread/mcfgthread-git/*.pkg.tar.xz --noconfirm
-   - name: Package
-     shell: pwsh
-     run: |
-       $date = Get-Date -Format "yyyy-MM-dd"
-       7z a mcfgthread-${date}.7z C:\msys64\opt\*    
+    - name: Package
+      shell: pwsh
+      run: |
+        $date = Get-Date -Format "yyyy-MM-dd"
+        7z a mcfgthread-${date}.7z C:\msys64\opt\*    
     - name: Upload
       uses: eko5624/upload-release-action@v2
       with:
