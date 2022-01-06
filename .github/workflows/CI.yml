@@ -19,7 +19,19 @@ jobs:
       shell: msys2 {0}
       run: |
         cd /d/a/mcfgthread/mcfgthread/mingw-w64-mcfgthread-git; PATH=/mingw64/bin:/mingw32/bin:/usr/bin MINGW_ARCH=mingw64 makepkg-mingw -sLf 
-        pacman -U *.pkg.tar.xz --noconfirm
+        
+    - name: Upload
+      uses: eko5624/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: mingw-w64-mcfgthread-git/*pkg*.xz
+        tag: latest
+        overwrite: true
+        file_glob: true
+    - name: Setup Packages      
+      shell: msys2 {0}
+      run: |
+        pacman -U /d/a/mcfgthread/mcfgthread/mingw-w64-mcfgthread-git/*.pkg.tar.xz --noconfirm
     - name: Package
       shell: pwsh
       run: |
