@@ -18,7 +18,7 @@ jobs:
     - name: Build
       shell: msys2 {0}
       run: |
-        cd /d/a/mcfgthread/mcfgthread/mingw-w64-gcc-git; PATH=/mingw64/bin:/mingw32/bin:/usr/bin makepkg 
+        cd /d/a/mcfgthread/mcfgthread/mingw-w64-gcc-git; PATH=/mingw64/bin:/mingw32/bin:/usr/bin MINGW_ARCH=mingw64 makepkg-mingw -sLf 
         pacman -U *.pkg.tar.xz --noconfirm
     - name: Package
       shell: pwsh
