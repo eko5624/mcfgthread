@@ -14,11 +14,62 @@ jobs:
     - name: Prepare
       run: git config --global core.autocrlf input
       shell: bash
-    - uses: eko5624/checkout@v2
-    - name: Build
+
+    - name: Setup headers-git and crt-git
+      shell: msys2 {0}
+      run: |      
+        git clone https://github.com/lhmouse/MINGW-packages
+        cd MINGW-packages/mingw-w64-headers-git
+        MINGW_ARCH=ucrt64 makepkg-mingw
+        pacman -U *.tar.*
+
+        cd MINGW-packages/mingw-w64-crt-git
+        MINGW_ARCH=ucrt64 makepkg-mingw
+        pacman -U *.tar.*
+
+    - name: Setup mcfgthread-git, gcc-mcf and gdb-mcf
+      shell: msys2 {0}
+      run: |      
+        git clone https://github.com/lhmouse/MINGW-packages-dev
+        cd MINGW-packages-dev/mingw-w64-mcfgthread-git
+        MINGW_ARCH=ucrt64 makepkg-mingw
+        pacman -U *.tar.*
+
+        cd MINGW-packages-dev/mingw-w64-gcc-git
+        MINGW_ARCH=ucrt64 makepkg-mingw
+        pacman -U *.tar.*
+
+        cd MINGW-packages-dev/mingw-w64-gdb-git
+        MINGW_ARCH=ucrt64 makepkg-mingw
+        pacman -U *.tar.*
+
+    - name: Upload
+      uses: eko5624/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: mingw-w64-mcfgthread-git/*pkg*.xz
+        tag: latest
+        overwrite: true
+        file_glob: true
+    - name: Setup Packages      
       shell: msys2 {0}
       run: |
-        cd /d/a/mcfgthread/mcfgthread/mingw-w64-mcfgthread-git; PATH=/mingw64/bin:/mingw32/bin:/usr/bin MINGW_ARCH=mingw64 makepkg-mingw -sLf 
+        pacman -U /d/a/mcfgthread/mcfgthread/mingw-w64-mcfgthread-git/*.pkg.tar.xz --noconfirm
+    - name: Package
+      shell: pwsh
+      run: |
+        $date = Get-Date -Format "yyyy-MM-dd"
+        7z a mcfgthread-${date}.7z C:\msys64\opt\*    
+    - name: Upload
+      uses: eko5624/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: mcfgthread*.7z
+        tag: latest
+        overwrite: true
+        file_glob: true        
+
+ 
         
     - name: Upload
       uses: eko5624/upload-release-action@v2
