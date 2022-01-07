@@ -17,46 +17,85 @@ jobs:
         git config --global user.email 'datong5624@gmail.com'
       shell: bash
 
-    - name: Setup headers-git and crt-git
+    - name: Setup headers-git 
       shell: msys2 {0}
       run: |      
         git clone https://github.com/lhmouse/MINGW-packages
         cd MINGW-packages/mingw-w64-headers-git
         MINGW_ARCH=ucrt64 makepkg-mingw
-        pacman -U *.tar.*
+    - name: Upload
+      uses: eko5624/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: mingw-w64-headers/*.tar.*
+        tag: latest
+        overwrite: true
+        file_glob: true        
 
+    - name: Setup crt-git
+      shell: msys2 {0}
+      run: |      
+        git clone https://github.com/lhmouse/MINGW-packages
         cd MINGW-packages/mingw-w64-crt-git
         MINGW_ARCH=ucrt64 makepkg-mingw
-        pacman -U *.tar.*
+    - name: Upload
+      uses: eko5624/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: mingw-w64-crt-git/*.tar.*
+        tag: latest
+        overwrite: true
+        file_glob: true         
 
-    - name: Setup mcfgthread-git, gcc-mcf and gdb-mcf
+    - name: Setup mcfgthread-git
       shell: msys2 {0}
       run: |      
         git clone https://github.com/lhmouse/MINGW-packages-dev
         cd MINGW-packages-dev/mingw-w64-mcfgthread-git
         MINGW_ARCH=ucrt64 makepkg-mingw
-        pacman -U *.tar.*
-
-        cd MINGW-packages-dev/mingw-w64-gcc-git
-        MINGW_ARCH=ucrt64 makepkg-mingw
-        pacman -U *.tar.*
-
-        cd MINGW-packages-dev/mingw-w64-gdb-git
-        MINGW_ARCH=ucrt64 makepkg-mingw
-        pacman -U *.tar.*
-
     - name: Upload
       uses: eko5624/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: mingw-w64-mcfgthread-git/*pkg*.xz
+        file: mingw-w64-mcfgthread-git/*.tar.*
         tag: latest
         overwrite: true
         file_glob: true
+
+    - name: Setup gcc-git 
+      shell: msys2 {0}
+      run: |      
+        git clone https://github.com/lhmouse/MINGW-packages-dev
+        cd MINGW-packages-dev/mingw-w64-gcc-git
+        MINGW_ARCH=ucrt64 makepkg-mingw
+    - name: Upload
+      uses: eko5624/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: mingw-w64-gcc-git/*.tar.*
+        tag: latest
+        overwrite: true
+        file_glob: true        
+
+    - name: Setup gdb-git
+      shell: msys2 {0}
+      run: |      
+        git clone https://github.com/lhmouse/MINGW-packages-dev
+        cd MINGW-packages-dev/mingw-w64-gdb-git
+        MINGW_ARCH=ucrt64 makepkg-mingw
+    - name: Upload
+      uses: eko5624/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: mingw-w64-gdb-git/*.tar.*
+        tag: latest
+        overwrite: true
+        file_glob: true
+        
     - name: Setup Packages      
       shell: msys2 {0}
       run: |
-        pacman -U /d/a/mcfgthread/mcfgthread/mingw-w64-mcfgthread-git/*.pkg.tar.xz --noconfirm
+        pacman -U /d/a/mcfgthread/mcfgthread/*.tar.* --noconfirm
     - name: Package
       shell: pwsh
       run: |
