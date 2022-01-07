@@ -13,8 +13,8 @@ jobs:
         install: base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-gdb mingw-w64-i686-toolchain mingw-w64-i686-gdb mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-tools mingw-w64-ucrt-x86_64-autotools autotools git
     - name: Prepare
       run: |
-        git config --global user.name 'eko5624'
-        git config --global user.email 'datong5624@gmail.com'
+        git config --global user.email "example@example.com"
+        git config --global user.name "GitHub Actions"
       shell: bash
 
     - name: Setup headers-git 
