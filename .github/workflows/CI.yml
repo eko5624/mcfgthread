@@ -12,7 +12,7 @@ jobs:
         release: false
         install: base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-gdb mingw-w64-i686-toolchain mingw-w64-i686-gdb mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-tools mingw-w64-ucrt-x86_64-autotools autotools git
 
-    - name: Setup headers-git 
+    - name: Setup headers-git,crt-git 
       shell: msys2 {0}
       run: |      
         git config --global user.email "example@example.com"
@@ -20,6 +20,26 @@ jobs:
         git clone https://github.com/lhmouse/MINGW-packages
         cd MINGW-packages/mingw-w64-headers-git
         MINGW_ARCH=ucrt64 makepkg-mingw
+        
+        cd MINGW-packages/mingw-w64-crt-git
+        MINGW_ARCH=ucrt64 makepkg-mingw  
+        
+    - name: Delete
+      uses: eko5624/delete-release-assets@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: latest
+        assets: mingw-w64-ucrt-x86_64-headers-git*
+        fail-if-no-assets: false
+        fail-if-no-release: false     
+    - name: Delete
+      uses: eko5624/delete-release-assets@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: latest
+        assets: mingw-w64-ucrt-x86_64-crt-git*
+        fail-if-no-assets: false
+        fail-if-no-release: false        
     - name: Upload
       uses: eko5624/upload-release-action@v2
       with:
@@ -28,15 +48,6 @@ jobs:
         tag: latest
         overwrite: true
         file_glob: true        
-
-    - name: Setup crt-git
-      shell: msys2 {0}
-      run: |      
-        git config --global user.email "example@example.com"
-        git config --global user.name "GitHub Actions"        
-        git clone https://github.com/lhmouse/MINGW-packages
-        cd MINGW-packages/mingw-w64-crt-git
-        MINGW_ARCH=ucrt64 makepkg-mingw
     - name: Upload
       uses: eko5624/upload-release-action@v2
       with:
@@ -44,9 +55,9 @@ jobs:
         file: MINGW-packages/mingw-w64-crt-git/*.tar.*
         tag: latest
         overwrite: true
-        file_glob: true         
-
-    - name: Setup mcfgthread-git
+        file_glob: true   
+        
+    - name: Setup mcfgthread-git,gcc-git,gdb-git
       shell: msys2 {0}
       run: |      
         git config --global user.email "example@example.com"
@@ -54,6 +65,36 @@ jobs:
         git clone https://github.com/lhmouse/MINGW-packages-dev
         cd MINGW-packages-dev/mingw-w64-mcfgthread-git
         MINGW_ARCH=ucrt64 makepkg-mingw
+        
+        cd MINGW-packages-dev/mingw-w64-gcc-git
+        MINGW_ARCH=ucrt64 makepkg-mingw
+        
+        cd MINGW-packages-dev/mingw-w64-gdb-git
+        MINGW_ARCH=ucrt64 makepkg-mingw        
+    - name: Delete
+      uses: eko5624/delete-release-assets@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: latest
+        assets: mingw-w64-ucrt-x86_64-mcfgthread-git*
+        fail-if-no-assets: false
+        fail-if-no-release: false
+    - name: Delete
+      uses: eko5624/delete-release-assets@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: latest
+        assets: mingw-w64-ucrt-x86_64-gcc-git*
+        fail-if-no-assets: false
+        fail-if-no-release: false
+    - name: Delete
+      uses: eko5624/delete-release-assets@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: latest
+        assets: mingw-w64-ucrt-x86_64-gdb-git*
+        fail-if-no-assets: false
+        fail-if-no-release: false        
     - name: Upload
       uses: eko5624/upload-release-action@v2
       with:
@@ -62,15 +103,6 @@ jobs:
         tag: latest
         overwrite: true
         file_glob: true
-
-    - name: Setup gcc-git 
-      shell: msys2 {0}
-      run: |      
-        git config --global user.email "example@example.com"
-        git config --global user.name "GitHub Actions"        
-        git clone https://github.com/lhmouse/MINGW-packages-dev
-        cd MINGW-packages-dev/mingw-w64-gcc-git
-        MINGW_ARCH=ucrt64 makepkg-mingw
     - name: Upload
       uses: eko5624/upload-release-action@v2
       with:
@@ -79,15 +111,6 @@ jobs:
         tag: latest
         overwrite: true
         file_glob: true        
-
-    - name: Setup gdb-git
-      shell: msys2 {0}
-      run: |      
-        git config --global user.email "example@example.com"
-        git config --global user.name "GitHub Actions"        
-        git clone https://github.com/lhmouse/MINGW-packages-dev
-        cd MINGW-packages-dev/mingw-w64-gdb-git
-        MINGW_ARCH=ucrt64 makepkg-mingw
     - name: Upload
       uses: eko5624/upload-release-action@v2
       with:
