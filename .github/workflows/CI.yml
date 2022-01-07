@@ -24,7 +24,7 @@ jobs:
       uses: eko5624/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: mingw-w64-headers/*.tar.*
+        file: MINGW-packages/mingw-w64-headers-git/*.tar.*
         tag: latest
         overwrite: true
         file_glob: true        
@@ -41,7 +41,7 @@ jobs:
       uses: eko5624/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: mingw-w64-crt-git/*.tar.*
+        file: MINGW-packages/mingw-w64-crt-git/*.tar.*
         tag: latest
         overwrite: true
         file_glob: true         
@@ -58,7 +58,7 @@ jobs:
       uses: eko5624/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: mingw-w64-mcfgthread-git/*.tar.*
+        file: MINGW-packages-dev/mingw-w64-mcfgthread-git/*.tar.*
         tag: latest
         overwrite: true
         file_glob: true
@@ -75,7 +75,7 @@ jobs:
       uses: eko5624/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: mingw-w64-gcc-git/*.tar.*
+        file: MINGW-packages-dev/mingw-w64-gcc-git/*.tar.*
         tag: latest
         overwrite: true
         file_glob: true        
@@ -92,7 +92,7 @@ jobs:
       uses: eko5624/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: mingw-w64-gdb-git/*.tar.*
+        file: MINGW-packages-dev/mingw-w64-gdb-git/*.tar.*
         tag: latest
         overwrite: true
         file_glob: true
