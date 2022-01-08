@@ -20,6 +20,8 @@ jobs:
         git clone https://github.com/lhmouse/MINGW-packages
         cd MINGW-packages/mingw-w64-headers-git
         MINGW_ARCH=ucrt64 makepkg-mingw
+        pacman -U /d/a/mcfgthread/mcfgthread/MINGW-packages/mingw-w64-headers-git/*.tar.*
+        cd ..
         
         cd MINGW-packages/mingw-w64-crt-git
         MINGW_ARCH=ucrt64 makepkg-mingw  
@@ -65,6 +67,7 @@ jobs:
         git clone https://github.com/lhmouse/MINGW-packages-dev
         cd MINGW-packages-dev/mingw-w64-mcfgthread-git
         MINGW_ARCH=ucrt64 makepkg-mingw
+        
         
         cd MINGW-packages-dev/mingw-w64-gcc-git
         MINGW_ARCH=ucrt64 makepkg-mingw
