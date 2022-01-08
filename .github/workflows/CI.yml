@@ -4,15 +4,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  headers-git:
     runs-on: windows-2022
     steps:
     - uses: msys2/setup-msys2@v2
       with:
         release: false
-        install: base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-gdb mingw-w64-i686-toolchain mingw-w64-i686-gdb mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-tools mingw-w64-ucrt-x86_64-autotools autotools git
-
-    - name: Setup headers-git,crt-git 
+        install: base-devel git mingw-w64-x86_64-toolchain mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-tools mingw-w64-ucrt-x86_64-autotools
+    - name: build 
       shell: msys2 {0}
       run: |      
         git config --global user.email "example@example.com"
@@ -20,12 +19,6 @@ jobs:
         git clone https://github.com/lhmouse/MINGW-packages
         cd MINGW-packages/mingw-w64-headers-git
         MINGW_ARCH=ucrt64 makepkg-mingw
-        pacman -U /d/a/mcfgthread/mcfgthread/MINGW-packages/mingw-w64-headers-git/*.tar.* --noconfirm
-        cd ..
-        
-        cd MINGW-packages/mingw-w64-crt-git
-        MINGW_ARCH=ucrt64 makepkg-mingw  
-        
     - name: Delete
       uses: eko5624/delete-release-assets@v1
       with:
@@ -33,7 +26,36 @@ jobs:
         tag: latest
         assets: mingw-w64-ucrt-x86_64-headers-git*
         fail-if-no-assets: false
-        fail-if-no-release: false     
+        fail-if-no-release: false 
+    - name: Upload
+      uses: eko5624/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: MINGW-packages/mingw-w64-headers-git/*.tar.*
+        tag: latest
+        overwrite: true
+        file_glob: true
+
+  crt-git:
+    needs: [headers-git]
+    runs-on: windows-2022
+    steps:
+    - uses: msys2/setup-msys2@v2
+      with:
+        release: false
+        install: base-devel git mingw-w64-x86_64-toolchain mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-tools mingw-w64-ucrt-x86_64-autotools
+    - name: build 
+      shell: msys2 {0}
+      run: |      
+        git config --global user.email "example@example.com"
+        git config --global user.name "GitHub Actions"        
+        git clone https://github.com/lhmouse/MINGW-packages        
+        curl -OL https://github.com/${{ github.repository }}/releases/latest/mingw-w64-ucrt-x86_64-headers-git-10.0.0.6375.1dba34fc6-1-any.pkg.tar.zst
+        pacman -U /d/a/mcfgthread/mcfgthread/*.tar.* --noconfirm
+        cd MINGW-packages/mingw-w64-crt-git
+        MINGW_ARCH=ucrt64 makepkg-mingw  
+        
+    
     - name: Delete
       uses: eko5624/delete-release-assets@v1
       with:
@@ -42,14 +64,7 @@ jobs:
         assets: mingw-w64-ucrt-x86_64-crt-git*
         fail-if-no-assets: false
         fail-if-no-release: false        
-    - name: Upload
-      uses: eko5624/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: MINGW-packages/mingw-w64-headers-git/*.tar.*
-        tag: latest
-        overwrite: true
-        file_glob: true        
+        
     - name: Upload
       uses: eko5624/upload-release-action@v2
       with:
