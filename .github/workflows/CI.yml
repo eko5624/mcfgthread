@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  headers-git:
+  mcfgthread-git:
     runs-on: windows-2022
     steps:
     - uses: msys2/setup-msys2@v2
@@ -16,28 +16,28 @@ jobs:
       run: |      
         git config --global user.email "example@example.com"
         git config --global user.name "GitHub Actions"        
-        git clone https://github.com/lhmouse/MINGW-packages
-        cd MINGW-packages/mingw-w64-headers-git
+        git clone https://github.com/lhmouse/MINGW-packages-dev
+        cd MINGW-packages-dev/mingw-w64-mcfgthread-git
         MINGW_ARCH=ucrt64 makepkg-mingw
     - name: Delete
       uses: eko5624/delete-release-assets@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: latest
-        assets: mingw-w64-ucrt-x86_64-headers-git*
+        assets: mingw-w64-ucrt-x86_64-mcfgthread-git*
         fail-if-no-assets: false
         fail-if-no-release: false 
     - name: Upload
       uses: eko5624/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: MINGW-packages/mingw-w64-headers-git/*.tar.*
+        file: MINGW-packages-dev/mingw-w64-mcfgthread-git/*.tar.*
         tag: latest
         overwrite: true
         file_glob: true
 
-  crt-git:
-    needs: [headers-git]
+  mingw-w64-gcc-git:
+    needs: [mcfgthread-git]
     runs-on: windows-2022
     steps:
     - uses: msys2/setup-msys2@v2
@@ -52,51 +52,8 @@ jobs:
         git clone https://github.com/lhmouse/MINGW-packages        
         curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-headers-git-10.0.0.6375.1dba34fc6-1-any.pkg.tar.zst
         pacman -U /d/a/mcfgthread/mcfgthread/*.tar.* --noconfirm
-        cd MINGW-packages/mingw-w64-crt-git
-        MINGW_ARCH=ucrt64 makepkg-mingw  
-        
-    
-    - name: Delete
-      uses: eko5624/delete-release-assets@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: latest
-        assets: mingw-w64-ucrt-x86_64-crt-git*
-        fail-if-no-assets: false
-        fail-if-no-release: false        
-        
-    - name: Upload
-      uses: eko5624/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: MINGW-packages/mingw-w64-crt-git/*.tar.*
-        tag: latest
-        overwrite: true
-        file_glob: true   
-        
-    - name: Setup mcfgthread-git,gcc-git,gdb-git
-      shell: msys2 {0}
-      run: |      
-        git config --global user.email "example@example.com"
-        git config --global user.name "GitHub Actions"        
-        git clone https://github.com/lhmouse/MINGW-packages-dev
-        cd MINGW-packages-dev/mingw-w64-mcfgthread-git
-        MINGW_ARCH=ucrt64 makepkg-mingw
-        
-        
         cd MINGW-packages-dev/mingw-w64-gcc-git
-        MINGW_ARCH=ucrt64 makepkg-mingw
-        
-        cd MINGW-packages-dev/mingw-w64-gdb-git
-        MINGW_ARCH=ucrt64 makepkg-mingw        
-    - name: Delete
-      uses: eko5624/delete-release-assets@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: latest
-        assets: mingw-w64-ucrt-x86_64-mcfgthread-git*
-        fail-if-no-assets: false
-        fail-if-no-release: false
+        MINGW_ARCH=ucrt64 makepkg-mingw 
     - name: Delete
       uses: eko5624/delete-release-assets@v1
       with:
@@ -104,23 +61,7 @@ jobs:
         tag: latest
         assets: mingw-w64-ucrt-x86_64-gcc-git*
         fail-if-no-assets: false
-        fail-if-no-release: false
-    - name: Delete
-      uses: eko5624/delete-release-assets@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: latest
-        assets: mingw-w64-ucrt-x86_64-gdb-git*
-        fail-if-no-assets: false
-        fail-if-no-release: false        
-    - name: Upload
-      uses: eko5624/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: MINGW-packages-dev/mingw-w64-mcfgthread-git/*.tar.*
-        tag: latest
-        overwrite: true
-        file_glob: true
+        fail-if-no-release: false 
     - name: Upload
       uses: eko5624/upload-release-action@v2
       with:
@@ -129,25 +70,18 @@ jobs:
         tag: latest
         overwrite: true
         file_glob: true        
-    - name: Upload
-      uses: eko5624/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: MINGW-packages-dev/mingw-w64-gdb-git/*.tar.*
-        tag: latest
-        overwrite: true
-        file_glob: true
+    
         
     - name: Setup Packages      
       shell: msys2 {0}
       run: |
-        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/ffmpeg-4.4.1-1-x86_64.pkg.tar.xz
+        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-gcc-git.pkg.tar.xz
         pacman -U /d/a/mcfgthread/mcfgthread/*.tar.* --noconfirm
     - name: Package
       shell: pwsh
       run: |
         $date = Get-Date -Format "yyyy-MM-dd"
-        7z a mcfgthread-${date}.7z C:\msys64\opt\*    
+        7z a mcfgthread-${date}.7z C:\msys64\ucrt64\*    
     - name: Upload
       uses: eko5624/upload-release-action@v2
       with:
