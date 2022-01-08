@@ -50,7 +50,7 @@ jobs:
         git config --global user.email "example@example.com"
         git config --global user.name "GitHub Actions"        
         git clone https://github.com/lhmouse/MINGW-packages        
-        curl -OL https://github.com/${{ github.repository }}/releases/latest/mingw-w64-ucrt-x86_64-headers-git-10.0.0.6375.1dba34fc6-1-any.pkg.tar.zst
+        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-headers-git-10.0.0.6375.1dba34fc6-1-any.pkg.tar.zst
         pacman -U /d/a/mcfgthread/mcfgthread/*.tar.* --noconfirm
         cd MINGW-packages/mingw-w64-crt-git
         MINGW_ARCH=ucrt64 makepkg-mingw  
