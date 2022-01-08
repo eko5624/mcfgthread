@@ -7,18 +7,24 @@ jobs:
   build:
     runs-on: windows-2022
     steps:
-    - name: Setup toolchain
-      run: |
-        C:\msys64\usr\bin\bash -lc 'pacman -S base-devel git mingw-w64-x86_64-toolchain mingw-w64-x86_64-gdb mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-tools mingw-w64-ucrt-x86_64-autotools --noconfirm'
+    - uses: msys2/setup-msys2@v2
+      with:
+        release: false
+        install: base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-gdb mingw-w64-i686-toolchain mingw-w64-i686-gdb mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-tools mingw-w64-ucrt-x86_64-autotools autotools git
+
     - name: Setup headers-git,crt-git 
+      shell: msys2 {0}
       run: |      
         git config --global user.email "example@example.com"
         git config --global user.name "GitHub Actions"        
         git clone https://github.com/lhmouse/MINGW-packages
-        C:\msys64\usr\bin\bash -lc 'cd MINGW-packages/mingw-w64-headers-git; MINGW_ARCH=ucrt64 makepkg-mingw        
-        C:\msys64\usr\bin\bash -lc "pacman -U /d/a/mcfgthread/mcfgthread/MINGW-packages/mingw-w64-headers-git/*.tar.* --noconfirm"
-        cd ..        
-        C:\msys64\usr\bin\bash -lc 'MINGW-packages/mingw-w64-crt-git; MINGW_ARCH=ucrt64 makepkg-mingw 
+        cd MINGW-packages/mingw-w64-headers-git
+        MINGW_ARCH=ucrt64 makepkg-mingw
+        pacman -U /d/a/mcfgthread/mcfgthread/MINGW-packages/mingw-w64-headers-git/*.tar.* --noconfirm
+        cd ..
+        
+        cd MINGW-packages/mingw-w64-crt-git
+        MINGW_ARCH=ucrt64 makepkg-mingw  
         
     - name: Delete
       uses: eko5624/delete-release-assets@v1
