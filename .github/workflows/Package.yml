@@ -1,0 +1,30 @@
+name: Package
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Package:
+    runs-on: windows-2022
+    steps:
+    - uses: msys2/setup-msys2@v2
+      with:
+        release: false
+    - name: Setup Packages      
+      shell: msys2 {0}
+      run: |
+        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-gcc-git.pkg.tar.xz
+        pacman -U /d/a/mcfgthread/mcfgthread/*.tar.* --noconfirm        
+    - name: Package
+      shell: pwsh
+      run: |
+        $date = Get-Date -Format "yyyy-MM-dd"
+        7z a mcfgthread-${date}.7z C:\msys64\ucrt64\*    
+    - name: Upload
+      uses: eko5624/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: mcfgthread*.7z
+        tag: latest
+        overwrite: true
+        file_glob: true           
