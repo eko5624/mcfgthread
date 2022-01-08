@@ -45,7 +45,7 @@ optdepends=()
 options=('staticlibs' '!emptydirs') # '!strip' 'debug'
 
 #_branch=releases/gcc-7
-_branch=releases/gcc-11.2
+_branch=releases/gcc-11
 _realpkgver="$(git archive --remote=git://gcc.gnu.org/git/gcc.git refs/heads/${_branch}:gcc/ BASE-VER | tar -xO)"
 
 # git+https://gcc.gnu.org/git/gcc.git#branch=${_branch}
