@@ -11,6 +11,9 @@ jobs:
       with:
         release: false
         install: base-devel git mingw-w64-x86_64-toolchain mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-tools mingw-w64-ucrt-x86_64-autotools
+    - name: Prepare
+      run: git config --global core.autocrlf input
+      shell: bash    
     - uses: eko5624/checkout@v2
     - name: build 
       shell: msys2 {0}
