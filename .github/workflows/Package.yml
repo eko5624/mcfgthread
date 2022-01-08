@@ -13,7 +13,7 @@ jobs:
     - name: Setup Packages      
       shell: msys2 {0}
       run: |
-        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-gcc-git.pkg.tar.xz
+        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-x86_64-gcc-mcf-11.2-1.pkg.tar.xz
         pacman -U /d/a/mcfgthread/mcfgthread/*.tar.* --noconfirm        
     - name: Package
       shell: pwsh
