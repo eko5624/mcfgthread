@@ -10,7 +10,7 @@ jobs:
     - uses: msys2/setup-msys2@v2
       with:
         release: false
-        install: base-devel git mingw-w64-x86_64-toolchain mingw-w64-i686-toolchain
+        install: base-devel git mingw-w64-x86_64-toolchain mingw-w64-i686-toolchain mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-crt mingw-w64-ucrt-x86_64-headers
     - name: Prepare
       run: git config --global core.autocrlf input
       shell: bash    
@@ -18,6 +18,8 @@ jobs:
     - name: build 
       shell: msys2 {0}
       run: |      
+        git config --global user.email "example@example.com"
+        git config --global user.name "GitHub Actions" 
         cd /d/a/mcfgthread/mcfgthread//mingw-w64-mcfgthread-git; MINGW_ARCH=ucrt64 makepkg-mingw        
     - name: Delete
       uses: eko5624/delete-release-assets@v1
