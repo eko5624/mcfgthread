@@ -14,10 +14,13 @@ jobs:
     - name: Prepare
       run: git config --global core.autocrlf input
       shell: bash    
+    
     - uses: eko5624/checkout@v2
     - name: build 
       shell: msys2 {0}
       run: |             
+        git config --global user.email "example@example.com"
+        git config --global user.name "GitHub Actions" 
         curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-mcfgthread-git-r528.6af5465-1-any.pkg.tar.zst
         curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-mcfgthread-libs-git-r528.6af5465-1-any.pkg.tar.zst
         pacman -U /d/a/mcfgthread/mcfgthread/*.tar.* --noconfirm
