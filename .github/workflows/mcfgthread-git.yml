@@ -20,7 +20,7 @@ jobs:
       run: |      
         git config --global user.email "example@example.com"
         git config --global user.name "GitHub Actions" 
-        cd /d/a/mcfgthread/mcfgthread//mingw-w64-mcfgthread-git; MINGW_ARCH=ucrt64 makepkg - mingw64 -sLF        
+        cd /d/a/mcfgthread/mcfgthread//mingw-w64-mcfgthread-git; MINGW_ARCH=ucrt64 makepkg-mingw -sCLF        
     - name: Delete
       uses: eko5624/delete-release-assets@v1
       with:
