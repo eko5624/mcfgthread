@@ -1,4 +1,4 @@
-From 8cafaee70dab0d3799cace08c44aa60a8902660e Mon Sep 17 00:00:00 2001
+From 8cafaee70dab0d3799cace08c44aa60a89026601 Mon Sep 17 00:00:00 2001
 From: Martin Richter <xricht17@stud.fit.vutbr.cz>
 Date: Wed, 5 Aug 2015 23:36:25 +0100
 Subject: [PATCH] Fix using large PCH
