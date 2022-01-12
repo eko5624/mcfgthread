@@ -68,7 +68,7 @@ diff --git a/gcc/ggc-common.c b/gcc/ggc-common.c
 index 0d528cf455c..bb13f1566e7 100644
 --- a/gcc/ggc-common.c
 +++ b/gcc/ggc-common.c
-@@ -591,7 +591,9 @@ gt_pch_restore (FILE *f)
+@@ -729,7 +729,9 @@ gt_pch_restore (FILE *f)
    size_t i;
    struct mmap_info mmi;
    int result;
@@ -77,7 +77,7 @@ index 0d528cf455c..bb13f1566e7 100644
  
    /* We are about to reload the line maps along with the rest of the PCH
       data, which means that the (loaded) ones cannot be guaranteed to be
-@@ -737,19 +739,22 @@ gt_pch_restore (FILE *f)
+@@ -737,19 +739,23 @@ gt_pch_restore (FILE *f)
      for (rti = *rt; rti->base != NULL; rti++)
        memset (rti->base, 0, rti->stride);
  
