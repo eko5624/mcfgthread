@@ -1,3 +1,27 @@
+From 8cafaee70dab0d3799cace08c44aa60a8902660e Mon Sep 17 00:00:00 2001
+From: Martin Richter <xricht17@stud.fit.vutbr.cz>
+Date: Wed, 5 Aug 2015 23:36:25 +0100
+Subject: [PATCH] Fix using large PCH
+
+The following patch fixes segfault when gt_pch_use_address
+fails (returns -1). fatal_error now correctly shows an error
+message and terminates the program.
+I have basicly only reordered reads, and placed them after
+the file mapping itself. Global pointers are changed only
+after gt_pch_use_address succeeds, so in case of failure
+they still contain valid addresses.
+
+This patch is meant for the master branch. However, it
+should not be hard to modify it for others.
+
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=14940
+https://sourceforge.net/p/mingw-w64/bugs/382/
+---
+ gcc/config/i386/host-mingw32.c | 10 ++-------
+ gcc/ggc-common.c               | 41 +++++++++++++++++++++++++++++-----
+ 2 files changed, 37 insertions(+), 14 deletions(-)
+
+
 diff --git a/gcc/config/i386/host-mingw32.c b/gcc/config/i386/host-mingw32.c
 index 250fef59b55..36b2239aa5d 100644
 --- a/gcc/config/i386/host-mingw32.c
