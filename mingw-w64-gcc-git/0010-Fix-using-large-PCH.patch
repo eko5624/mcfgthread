@@ -71,10 +71,9 @@ index 0d528cf455c..bb13f1566e7 100644
    size_t i;
    struct mmap_info mmi;
    int result;
--
 +  long pch_tabs_off;
 +  long pch_data_off;
-+  
+ 
    /* Delete any deletable objects.  This makes ggc_pch_read much
       faster, as it can be sure that no GCable objects remain other
       than the ones just read in.  */
@@ -99,10 +98,10 @@ index 0d528cf455c..bb13f1566e7 100644
    for (rt = gt_ggc_rtab; *rt; rt++)
      for (rti = *rt; rti->base != NULL; rti++)
        for (i = 0; i < rti->nelt; i++)
--	if (fread ((char *)rti->base + rti->stride * i,
--		   sizeof (void *), 1, f) != 1)
+-	       if (fread ((char *)rti->base + rti->stride * i,
+-		                 sizeof (void *), 1, f) != 1)
 +	if (fseek (f, sizeof (void *), SEEK_CUR) != 0)
- 	  fatal_error (input_location, "cannot read PCH file: %m");
+ 	         fatal_error (input_location, "cannot read PCH file: %m");
  
 +  /* mmi still has to be read now. */          
    if (fread (&mmi, sizeof (mmi), 1, f) != 1)
