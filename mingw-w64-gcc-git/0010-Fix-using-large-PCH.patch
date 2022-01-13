@@ -73,7 +73,7 @@ index de4308d..066541c 100644
  
    /* We are about to reload the line maps along with the rest of the PCH
       data, which means that the (loaded) ones cannot be guaranteed to be
-@@ -737,20 +739,23 @@ gt_pch_restore (FILE *f)
+@@ -737,20 +739,24 @@ gt_pch_restore (FILE *f)
      for (rti = *rt; rti->base != NULL; rti++)
        memset (rti->base, 0, rti->stride);
  
@@ -100,12 +100,6 @@ index de4308d..066541c 100644
 -          error_reading_pointers = true;
 +        if (fseek (f, sizeof (void *), SEEK_CUR) != 0)
 +          fatal_error (input_location, "cannot read PCH file: %m");
- 
-   /* Stash the newly read-in line table pointer - it does not point to
-@@ -758,7 +763,8 @@ gt_pch_restore (FILE *f)
-   line_table = save_line_table;
-   if (error_reading_pointers)
-     fatal_error (input_location, "cannot read PCH file: %m");
 
 +  /* mmi still has to be read now. */ 
    if (fread (&mmi, sizeof (mmi), 1, f) != 1)
