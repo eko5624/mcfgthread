@@ -61,7 +61,7 @@ index 250fef59b55..36b2239aa5d 100644
  
  
 diff --git a/gcc/ggc-common.c b/gcc/ggc-common.c
-index 0d528cf455c..bb13f1566e7 100644
+index de4308d..066541c 100644
 --- a/gcc/ggc-common.c
 +++ b/gcc/ggc-common.c
 @@ -722,6 +722,8 @@ gt_pch_restore (FILE *f)
