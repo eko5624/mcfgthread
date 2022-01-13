@@ -105,8 +105,7 @@ index de4308d..066541c 100644
    line_table = save_line_table;
    if (error_reading_pointers)
      fatal_error (input_location, "cannot read PCH file: %m");
--
-+
+
 +  /* mmi still has to be read now. */ 
    if (fread (&mmi, sizeof (mmi), 1, f) != 1)
      fatal_error (input_location, "cannot read PCH file: %m");
@@ -142,3 +141,5 @@ index de4308d..066541c 100644
    size_t reloc_addrs_size;
    if (fread (&reloc_addrs_size, sizeof (reloc_addrs_size), 1, f) != 1)
      fatal_error (input_location, "cannot read PCH file: %m");
+-- 
+2.26.2     
