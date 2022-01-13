@@ -98,7 +98,7 @@ index 0d528cf455c..bb13f1566e7 100644
 -        if (fread ((char *)rti->base + rti->stride * i,
 -                   sizeof (void *), 1, f) != 1)
 +        if (fseek (f, sizeof (void *), SEEK_CUR) != 0)
-     error_reading_pointers = true;
+           error_reading_pointers = true;
  
    /* Stash the newly read-in line table pointer - it does not point to
 @@ -758,7 +763,8 @@ gt_pch_restore (FILE *f)
