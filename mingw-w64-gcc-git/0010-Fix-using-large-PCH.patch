@@ -68,7 +68,7 @@ diff --git a/gcc/ggc-common.c b/gcc/ggc-common.c
 index 0d528cf455c..bb13f1566e7 100644
 --- a/gcc/ggc-common.c
 +++ b/gcc/ggc-common.c
-@@ -729,7 +729,9 @@ gt_pch_restore (FILE *f)
+@@ -722,6 +722,8 @@ gt_pch_restore (FILE *f)
    size_t i;
    struct mmap_info mmi;
    int result;
@@ -77,7 +77,7 @@ index 0d528cf455c..bb13f1566e7 100644
  
    /* We are about to reload the line maps along with the rest of the PCH
       data, which means that the (loaded) ones cannot be guaranteed to be
-@@ -737,19 +739,23 @@ gt_pch_restore (FILE *f)
+@@ -737,19 +739,22 @@ gt_pch_restore (FILE *f)
      for (rti = *rt; rti->base != NULL; rti++)
        memset (rti->base, 0, rti->stride);
  
@@ -105,19 +105,21 @@ index 0d528cf455c..bb13f1566e7 100644
      error_reading_pointers = true;
  
    /* Stash the newly read-in line table pointer - it does not point to
-@@ -759,6 +764,7 @@ gt_pch_restore (FILE *f)
+@@ -758,7 +763,8 @@ gt_pch_restore (FILE *f)
+   line_table = save_line_table;
    if (error_reading_pointers)
      fatal_error (input_location, "cannot read PCH file: %m");
- 
+-
++
 +  /* mmi still has to be read now. */ 
    if (fread (&mmi, sizeof (mmi), 1, f) != 1)
      fatal_error (input_location, "cannot read PCH file: %m");
  
-@@ -787,6 +793,29 @@ gt_pch_restore (FILE *f)
+@@ -788,6 +794,29 @@ gt_pch_restore (FILE *f)
      }
    else if (fseek (f, mmi.offset + mmi.size, SEEK_SET) != 0)
      fatal_error (input_location, "cannot read PCH file: %m");
-+     
+     
 +  /* File mapping done, read tables now. */
 +  pch_data_off = ftell(f);
 +  
@@ -140,6 +142,7 @@ index 0d528cf455c..bb13f1566e7 100644
 + 
 +  if (fseek (f, pch_data_off, SEEK_SET) != 0)
 +    fatal_error (input_location, "can%'t read PCH file: %m");             
- 
++ 
    size_t reloc_addrs_size;
    if (fread (&reloc_addrs_size, sizeof (reloc_addrs_size), 1, f) != 1)
+     fatal_error (input_location, "cannot read PCH file: %m");
