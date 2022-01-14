@@ -62,19 +62,7 @@ source=(${_realname}::"git://gcc.gnu.org/git/gcc.git#branch=${_branch}"
         "0014-gcc-9-branch-clone_function_name_1-Retain-any-stdcall-suffix.patch"
         "0150-gcc-10.2.0-libgcc-ldflags.patch"
         "9000-gcc-11-branch-Added-mcf-thread-model-support-from-mcfgthread.patch")
-sha256sums=('SKIP'
-            'dcc6ec24d7946643b35fce57c50d9900bcdbeb8723981ee5e7ff2ae935137598'
-            '6033acda690786397059536787a6577e1a9f2b39f8a66276821917066094f43c'
-            '388f423a67e4be6f547ca7e340ff8ee4c78b1ed83f3fd698daa409e309911807'
-            '6e407a782d3fb636d800a4278fbe1da876732ea17cba6aa82c261b6ec6ec2073'
-            '8305fca48ef0101c9f5d6c39b439658a4c8c1fb2f67d4ba0dc516b21e416c52e'
-            '3629446c0039d9061cfedcb6d7a7589279588bb4601c7ce233546d357bd4be34'
-            'ec6800816632234afc35ce40542a6aab3ee76e8514a7d0cb4171fd874353ecd7'
-            '7a201413020cc9d7357e51921f49b22092fec2b644c36f4420c65966a67ec68c'
-            '8faff8e503a617f283270f411399a8bcacda3ab62b4072dedf117e108af4844a'
-            '2321c7dce29a600477e481d16d847f05dc8c6d6461ee1eba7814c5bf62c2ef95'
-            '7f0b4e45d933e18c9d8bd2afcd83e4f52e97e2e25dd41bfa0cba755c70e591c7'
-            '8ebba6eb0ea53d84bb075bc958181350f1aa2e8bb2348dfa39c29a70963f106a')
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 
 _threads="mcf"
 _git_base_commit=
