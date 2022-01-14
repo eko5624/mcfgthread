@@ -87,10 +87,3 @@ package_mingw-w64-x86_64-mcfgthread-libs-git() {
   package_mingw-w64-mcfgthread-libs
 }
 
-# UCRT 64-bit wrappers
-package_mingw-w64-ucrt-x86_64-mcfgthread-git() {
-  package_mingw-w64-mcfgthread
-}
-package_mingw-w64-ucrt-x86_64-mcfgthread-libs-git() {
-  package_mingw-w64-mcfgthread-libs
-}
