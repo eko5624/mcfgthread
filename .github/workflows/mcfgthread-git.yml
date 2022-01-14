@@ -10,7 +10,7 @@ jobs:
     - uses: msys2/setup-msys2@v2
       with:
         release: false
-        install: base-devel git mingw-w64-x86_64-toolchain 
+        install: base-devel git mingw-w64-x86_64-toolchain mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-crt mingw-w64-ucrt-x86_64-headers 
     - name: Prepare
       run: git config --global core.autocrlf input
       shell: bash    
@@ -28,15 +28,7 @@ jobs:
         tag: latest
         assets: mingw-w64-ucrt-x86_64-mcfgthread-git*
         fail-if-no-assets: false
-        fail-if-no-release: false 
-    - name: Delete
-      uses: eko5624/delete-release-assets@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: latest
-        assets: mingw-w64-x86_64-mcfgthread-git*
-        fail-if-no-assets: false
-        fail-if-no-release: false         
+        fail-if-no-release: false      
     - name: Upload
       uses: eko5624/upload-release-action@v2
       with:
