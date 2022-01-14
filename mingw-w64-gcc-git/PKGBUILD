@@ -240,24 +240,6 @@ package_mingw-w64-gcc-mcf-libs() {
 
 # Wrappers for package functions
 
-# 32-bit wrappers
-package_mingw-w64-i686-gcc-mcf() {
-  package_mingw-w64-gcc-mcf
-}
-
-package_mingw-w64-i686-gcc-mcf-libs() {
-  package_mingw-w64-gcc-mcf-libs
-}
-
-# 64-bit wrappers
-package_mingw-w64-x86_64-gcc-mcf() {
-  package_mingw-w64-gcc-mcf
-}
-
-package_mingw-w64-x86_64-gcc-mcf-libs() {
-  package_mingw-w64-gcc-mcf-libs
-}
-
 # UCRT 64-bit wrappers
 package_mingw-w64-ucrt-x86_64-gcc-mcf() {
   package_mingw-w64-gcc-mcf
