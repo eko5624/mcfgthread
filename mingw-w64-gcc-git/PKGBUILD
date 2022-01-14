@@ -1,0 +1,280 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Maintainer: Ray Donnelly <mingw.android@gmail.com>
+# Contributor: Alexey Borzenkov <snaury@gmail.com>
+# Contributor: Renato Silva <br.renatosilva@gmail.com>
+# Contributor: Liu Hao <lh_mouse@126.com>
+# Contributor: Tim Stahlhut <stahta01@gmail.com>
+
+_realname=gcc
+pkgbase=mingw-w64-${_realname}-mcf
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}-mcf"
+         "${MINGW_PACKAGE_PREFIX}-${_realname}-mcf-libs")
+pkgver=11.1.1.d20210505.c11.g2a9847e9fe2
+pkgrel=1
+pkgdesc="GNU Compiler Collection (C,C++,OpenMP) for MinGW-w64 with MCF thread model"
+depends=("${MINGW_PACKAGE_PREFIX}-binutils"
+         "${MINGW_PACKAGE_PREFIX}-crt"
+         "${MINGW_PACKAGE_PREFIX}-headers"
+         "${MINGW_PACKAGE_PREFIX}-isl"
+         "${MINGW_PACKAGE_PREFIX}-libiconv"
+         "${MINGW_PACKAGE_PREFIX}-mpc"
+         "${MINGW_PACKAGE_PREFIX}-windows-default-manifest"
+         "${MINGW_PACKAGE_PREFIX}-winpthreads"
+         "${MINGW_PACKAGE_PREFIX}-zlib"
+         "${MINGW_PACKAGE_PREFIX}-mcfgthread-libs")
+arch=('any')
+mingw_arch=('mingw32' 'mingw64' 'ucrt64')
+url="https://gcc.gnu.org"
+license=('GPL' 'LGPL' 'FDL' 'custom')
+groups=("${MINGW_PACKAGE_PREFIX}-toolchain")
+makedepends=("${MINGW_PACKAGE_PREFIX}-${_realname}"
+             "${MINGW_PACKAGE_PREFIX}-binutils"
+             "${MINGW_PACKAGE_PREFIX}-crt"
+             "${MINGW_PACKAGE_PREFIX}-headers"
+             "${MINGW_PACKAGE_PREFIX}-gmp"
+             "${MINGW_PACKAGE_PREFIX}-isl"
+             "${MINGW_PACKAGE_PREFIX}-libiconv"
+             "${MINGW_PACKAGE_PREFIX}-mpc"
+             "${MINGW_PACKAGE_PREFIX}-mpfr"
+             "${MINGW_PACKAGE_PREFIX}-windows-default-manifest"
+             "${MINGW_PACKAGE_PREFIX}-winpthreads"
+             "${MINGW_PACKAGE_PREFIX}-zlib"
+             "${MINGW_PACKAGE_PREFIX}-mcfgthread")
+#checkdepends=('dejagnu')
+optdepends=()
+options=('staticlibs' '!emptydirs') # '!strip' 'debug'
+
+#_branch=releases/gcc-7
+_branch=releases/gcc-11
+_realpkgver="$(git archive --remote=git://gcc.gnu.org/git/gcc.git refs/heads/${_branch}:gcc/ BASE-VER | tar -xO)"
+
+# git+https://gcc.gnu.org/git/gcc.git#branch=${_branch}
+source=(${_realname}::"git://gcc.gnu.org/git/gcc.git#branch=${_branch}"
+        "0002-Relocate-libintl.patch"
+        "0003-Windows-Follow-Posix-dir-exists-semantics-more-close.patch"
+        "0004-Windows-Use-not-in-progpath-and-leave-case-as-is.patch"
+        "0005-Windows-Don-t-ignore-native-system-header-dir.patch"
+        "0006-Windows-New-feature-to-allow-overriding.patch"
+        "0007-Build-EXTRA_GNATTOOLS-for-Ada.patch"
+        "0008-Prettify-linking-no-undefined.patch"
+        "0010-Fix-using-large-PCH.patch"
+        "0011-Enable-shared-gnat-implib.patch"
+        "0014-gcc-9-branch-clone_function_name_1-Retain-any-stdcall-suffix.patch"
+        "0150-gcc-10.2.0-libgcc-ldflags.patch"
+        "9000-gcc-11-branch-Added-mcf-thread-model-support-from-mcfgthread.patch")
+sha256sums=('SKIP'
+            'dcc6ec24d7946643b35fce57c50d9900bcdbeb8723981ee5e7ff2ae935137598'
+            '6033acda690786397059536787a6577e1a9f2b39f8a66276821917066094f43c'
+            '388f423a67e4be6f547ca7e340ff8ee4c78b1ed83f3fd698daa409e309911807'
+            '6e407a782d3fb636d800a4278fbe1da876732ea17cba6aa82c261b6ec6ec2073'
+            '8305fca48ef0101c9f5d6c39b439658a4c8c1fb2f67d4ba0dc516b21e416c52e'
+            '3629446c0039d9061cfedcb6d7a7589279588bb4601c7ce233546d357bd4be34'
+            'ec6800816632234afc35ce40542a6aab3ee76e8514a7d0cb4171fd874353ecd7'
+            '7a201413020cc9d7357e51921f49b22092fec2b644c36f4420c65966a67ec68c'
+            '8faff8e503a617f283270f411399a8bcacda3ab62b4072dedf117e108af4844a'
+            '2321c7dce29a600477e481d16d847f05dc8c6d6461ee1eba7814c5bf62c2ef95'
+            '7f0b4e45d933e18c9d8bd2afcd83e4f52e97e2e25dd41bfa0cba755c70e591c7'
+            '8ebba6eb0ea53d84bb075bc958181350f1aa2e8bb2348dfa39c29a70963f106a')
+
+_threads="mcf"
+_git_base_commit=
+_gcc_version=
+_gcc_date=
+
+pkgver() {
+  cd ${srcdir}/${_realname}
+  _gcc_version=$(head -n 34 gcc/BASE-VER | sed -e 's/.* //' | tr -d '"\n')
+  _gcc_date=$(head -n 34 gcc/DATESTAMP | sed -e 's/.* //' | tr -d '"\n')
+  printf "%s.d%s.c%s.g%s" "$_gcc_version" "$_gcc_date" $(git rev-list --count ${_git_base_commit}..HEAD) $(git rev-parse --short ${_git_base_commit})
+}
+
+prepare() {
+  cd ${srcdir}/${_realname}
+  _git_base_commit=$(git rev-parse HEAD)
+  GIT_AM="git am --committer-date-is-author-date"
+  ${GIT_AM} ${srcdir}/0002-Relocate-libintl.patch
+  ${GIT_AM} ${srcdir}/0003-Windows-Follow-Posix-dir-exists-semantics-more-close.patch
+  ${GIT_AM} ${srcdir}/0004-Windows-Use-not-in-progpath-and-leave-case-as-is.patch
+  ${GIT_AM} ${srcdir}/0005-Windows-Don-t-ignore-native-system-header-dir.patch
+  ${GIT_AM} ${srcdir}/0006-Windows-New-feature-to-allow-overriding.patch
+  ${GIT_AM} ${srcdir}/0007-Build-EXTRA_GNATTOOLS-for-Ada.patch
+  ${GIT_AM} ${srcdir}/0008-Prettify-linking-no-undefined.patch
+  ${GIT_AM} ${srcdir}/0010-Fix-using-large-PCH.patch
+  ${GIT_AM} ${srcdir}/0011-Enable-shared-gnat-implib.patch
+  ${GIT_AM} ${srcdir}/0014-gcc-9-branch-clone_function_name_1-Retain-any-stdcall-suffix.patch
+  ${GIT_AM} ${srcdir}/9000-gcc-11-branch-Added-mcf-thread-model-support-from-mcfgthread.patch
+
+  patch -Nbp1 -i "${srcdir}/0150-gcc-10.2.0-libgcc-ldflags.patch"
+
+  # do not expect $prefix/mingw symlink - this should be superceded by
+  # 0004-Windows-Don-t-ignore-native-system-header-dir.patch .. but isn't!
+  sed -i 's/${prefix}\/mingw\//${prefix}\//g' configure
+
+  # change hardcoded /mingw prefix to the real prefix .. isn't this rubbish?
+  # it might work at build time and could be important there but beyond that?!
+  local MINGW_NATIVE_PREFIX=$(cygpath -am ${MINGW_PREFIX}/${MINGW_CHOST})
+  sed -i "s#\\/mingw\\/#${MINGW_NATIVE_PREFIX//\//\\/}\\/#g" gcc/config/i386/mingw32.h
+}
+
+build() {
+  [[ -d ${srcdir}/build-${MINGW_CHOST} ]] && rm -rf ${srcdir}/build-${MINGW_CHOST}
+  mkdir -p ${srcdir}/build-${MINGW_CHOST} && cd ${srcdir}/build-${MINGW_CHOST}
+
+  case "${CARCH}" in
+    i686)
+      LDFLAGS+=" -Wl,--large-address-aware"
+      local _arch=i686
+      local _conf="--enable-sjlj-exceptions"    # "--disable-sjlj-exceptions --with-dwarf2"
+    ;;
+
+    x86_64)
+      local _arch=x86-64
+      local _conf=""
+    ;;
+  esac
+
+  local _languages="c,lto,c++"
+  if [ "$_enable_fortran" == "yes" ]; then
+    _languages+=",fortran"
+  fi
+  if [ "$_enable_ada" == "yes" ]; then
+    _languages+=",ada"
+  fi
+  if [ "$_enable_objc" == "yes" ]; then
+    _languages+=",objc,obj-c++"
+  fi
+
+  local _LDFLAGS_FOR_TARGET="$LDFLAGS"
+  LDFLAGS+=" -Wl,--disable-dynamicbase"
+  if [ "${CARCH}" = 'x86_64' ]; then
+    LDFLAGS+=",--default-image-base-low"
+  fi
+
+  ../${_realname}/configure \
+    --prefix=${MINGW_PREFIX} \
+    --with-local-prefix=${MINGW_PREFIX}/local \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --with-native-system-header-dir=${MINGW_PREFIX}/${MINGW_CHOST}/include \
+    --libexecdir=${MINGW_PREFIX}/lib \
+    --enable-bootstrap \
+    --with-arch=${_arch} \
+    --with-tune=ivybridge \
+    --enable-languages=c,lto,c++ \
+    --enable-shared --enable-static \
+    --enable-threads=${_threads} \
+    --enable-graphite \
+    --enable-fully-dynamic-string \
+    --enable-libstdcxx-time=yes \
+    --disable-libstdcxx-pch \
+    --disable-libstdcxx-debug \
+    --enable-libstdcxx-filesystem-ts=yes \
+    --disable-isl-version-check \
+    --enable-lto \
+    --enable-libgomp \
+    --disable-multilib \
+    --enable-checking=release \
+    --disable-rpath \
+    --disable-win32-registry \
+    --enable-nls \
+    --disable-werror \
+    --disable-symvers \
+    --with-libiconv \
+    --with-system-zlib \
+    --with-{gmp,mpfr,mpc,isl}=${MINGW_PREFIX} \
+    --with-pkgversion="GCC with MCF thread model, built by LH_Mouse." \
+    --with-bugurl="https://github.com/lhmouse/MINGW-packages-dev/issues" \
+    --with-gnu-as --with-gnu-ld \
+    --with-boot-ldflags="${LDFLAGS} -static-libstdc++ -static-libgcc" \
+    LDFLAGS_FOR_TARGET="${_LDFLAGS_FOR_TARGET}" \
+    --enable-linker-plugin-flags='LDFLAGS=-static-libstdc++\ -static-libgcc\ '"${_LDFLAGS_FOR_TARGET// /\\ }"'\ -Wl,--stack,12582912' \
+    --disable-tls \
+    --enable-plugin  \
+    ${_conf}
+    #--enable-libitm
+    #--enable-objc-gc
+    #--with-gxx-include-dir=${MINGW_PREFIX}/include/c++/${_realpkgver} \
+    #--enable-version-specific-runtime-libs \
+    #--enable-libatomic \
+
+  # While we're debugging -fopenmp problems at least.
+  # .. we may as well not strip anything.
+  if check_option "strip" "n"; then
+    sed -i 's,^STRIP = .*$,STRIP = true,g'                   Makefile
+    sed -i 's,^STRIP_FOR_TARGET=.*$,STRIP_FOR_TARGET=true,g' Makefile
+  fi
+
+  make all
+
+  rm -rf "${srcdir}${MINGW_PREFIX}"
+  make -j1 DESTDIR=${srcdir} install
+}
+
+package_mingw-w64-gcc-mcf() {
+  pkgdesc="GNU Compiler Collection (C,C++,OpenMP) for MinGW-w64 with MCF thread model (devel)"
+  depends=("${MINGW_PACKAGE_PREFIX}-binutils"
+           "${MINGW_PACKAGE_PREFIX}-crt"
+           "${MINGW_PACKAGE_PREFIX}-headers"
+           "${MINGW_PACKAGE_PREFIX}-isl"
+           "${MINGW_PACKAGE_PREFIX}-libiconv"
+           "${MINGW_PACKAGE_PREFIX}-mpc"
+           "${MINGW_PACKAGE_PREFIX}-windows-default-manifest"
+           "${MINGW_PACKAGE_PREFIX}-winpthreads"
+           "${MINGW_PACKAGE_PREFIX}-zlib"
+           "${MINGW_PACKAGE_PREFIX}-${_realname}"-libs)
+  provides=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+  conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}"
+             "${MINGW_PACKAGE_PREFIX}-${_realname}-git")
+
+  mkdir -p "${pkgdir}${MINGW_PREFIX}"
+  cd "${srcdir}${MINGW_PREFIX}"
+  _files_cp="$(find bin -type f -and -not -name "*.dll")"
+  [[ -z "${_files_cp}" ]] || cp --parents -r ${_files_cp} --target-directory="${pkgdir}${MINGW_PREFIX}"
+  cp --parents -r include   --target-directory="${pkgdir}${MINGW_PREFIX}"
+  cp --parents -r lib       --target-directory="${pkgdir}${MINGW_PREFIX}"
+}
+
+package_mingw-w64-gcc-mcf-libs() {
+  pkgdesc="GNU Compiler Collection (C,C++,OpenMP) for MinGW-w64 with MCF thread model (libs)"
+  depends=("${MINGW_PACKAGE_PREFIX}-gmp"
+           "${MINGW_PACKAGE_PREFIX}-libwinpthread")
+  provides=("${MINGW_PACKAGE_PREFIX}-${_realname}-libs")
+  conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}-libs-git"
+             "${MINGW_PACKAGE_PREFIX}-${_realname}-libs")
+
+  mkdir -p "${pkgdir}${MINGW_PREFIX}"
+  cd "${srcdir}${MINGW_PREFIX}"
+  _files_cp="$(find bin -type f -and -name "*.dll")"
+  [[ -z "${_files_cp}" ]] || cp --parents -r ${_files_cp} --target-directory="${pkgdir}${MINGW_PREFIX}"
+  cp --parents -r share     --target-directory="${pkgdir}${MINGW_PREFIX}"
+}
+
+# Wrappers for package functions
+
+# 32-bit wrappers
+package_mingw-w64-i686-gcc-mcf() {
+  package_mingw-w64-gcc-mcf
+}
+
+package_mingw-w64-i686-gcc-mcf-libs() {
+  package_mingw-w64-gcc-mcf-libs
+}
+
+# 64-bit wrappers
+package_mingw-w64-x86_64-gcc-mcf() {
+  package_mingw-w64-gcc-mcf
+}
+
+package_mingw-w64-x86_64-gcc-mcf-libs() {
+  package_mingw-w64-gcc-mcf-libs
+}
+
+# UCRT 64-bit wrappers
+package_mingw-w64-ucrt-x86_64-gcc-mcf() {
+  package_mingw-w64-gcc-mcf
+}
+
+package_mingw-w64-ucrt-x86_64-gcc-mcf-libs() {
+  package_mingw-w64-gcc-mcf-libs
+}
