@@ -20,7 +20,7 @@ jobs:
       run: |      
         git config --global user.email "example@example.com"
         git config --global user.name "GitHub Actions" 
-        cd /d/a/mcfgthread/mcfgthread/mingw-w64-mcfgthread-git; MINGW_ARCH=ucrt64 makepkg-mingw -sLf       
+        cd /d/a/mcfgthread/mcfgthread/mingw-w64-mcfgthread-git; MINGW_ARCH=mingw64 makepkg-mingw -sLf       
     - name: Delete
       uses: eko5624/delete-release-assets@v1
       with:
@@ -29,6 +29,14 @@ jobs:
         assets: mingw-w64-ucrt-x86_64-mcfgthread-git*
         fail-if-no-assets: false
         fail-if-no-release: false 
+    - name: Delete
+      uses: eko5624/delete-release-assets@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: latest
+        assets: mingw-w64-x86_64-mcfgthread-git*
+        fail-if-no-assets: false
+        fail-if-no-release: false         
     - name: Upload
       uses: eko5624/upload-release-action@v2
       with:
