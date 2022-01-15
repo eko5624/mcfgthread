@@ -16,9 +16,6 @@ jobs:
       shell: bash    
     
     - uses: eko5624/checkout@v2
-    - name: activate native windows symlinks
-      run: | 
-        sed -i 's/rem set MSYS=winsymlinks:nativestrict/set MSYS=winsymlinks:nativestrict/g' /c/msys64/msys2_shell.cmd
     - name: build 
       shell: msys2 {0}
       run: |             
