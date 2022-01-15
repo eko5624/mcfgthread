@@ -10,11 +10,6 @@ jobs:
     - name: Prepare
       run: git config --global core.autocrlf false
       shell: bash        
-    - name: User information
-      run: |             
-        git config --global user.email "example@example.com"
-        git config --global user.name "GitHub Actions"
-      shell: bash
     - name: Checkout repo
       uses: eko5624/checkout@v2      
     - name: Activate native windows symlinks
@@ -22,6 +17,8 @@ jobs:
         sed -i 's/rem set MSYS=winsymlinks:nativestrict/set MSYS=winsymlinks:nativestrict/g' /c/msys64/msys2_shell.cmd
     - name: build 
       run: |             
+        git config --global user.email "example@example.com"
+        git config --global user.name "GitHub Actions"        
         C:\msys64\usr\bin\bash -lc 'pacman -S base-devel git mingw-w64-x86_64-toolchain mingw-w64-ucrt-x86_64-crt mingw-w64-ucrt-x86_64-headers mingw-w64-ucrt-x86_64-gcc --noconfirm' 
         curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-mcfgthread-git-r528.6af5465-1-any.pkg.tar.zst
         curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-mcfgthread-libs-git-r528.6af5465-1-any.pkg.tar.zst
