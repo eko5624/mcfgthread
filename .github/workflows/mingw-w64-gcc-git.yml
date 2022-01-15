@@ -18,8 +18,8 @@ jobs:
     - name: build 
       run: |                     
         C:\msys64\usr\bin\bash -lc 'pacman -S base-devel git mingw-w64-x86_64-toolchain mingw-w64-ucrt-x86_64-crt mingw-w64-ucrt-x86_64-headers mingw-w64-ucrt-x86_64-gcc --noconfirm' 
-        git config --global user.email "example@example.com"
-        git config --global user.name "GitHub Actions"
+        C:\msys64\usr\bin\bash -lc 'git config --global user.email "example@example.com"'
+        C:\msys64\usr\bin\bash -lc 'git config --global user.name "GitHub Actions"'
         curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-mcfgthread-git-r528.6af5465-1-any.pkg.tar.zst
         curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-mcfgthread-libs-git-r528.6af5465-1-any.pkg.tar.zst
         C:\msys64\usr\bin\bash -lc "pacman -U /d/a/mcfgthread/mcfgthread/*.tar.* --noconfirm"      
