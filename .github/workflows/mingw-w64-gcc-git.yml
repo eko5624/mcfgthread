@@ -33,7 +33,7 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: latest
-        assets: mingw-w64-ucrt-x86_64-gcc-git*
+        assets: mingw-w64-ucrt-x86_64-gcc-mcf*
         fail-if-no-assets: false
         fail-if-no-release: false 
     - name: Upload
