@@ -133,7 +133,7 @@ build() {
   fi
 
   local _LDFLAGS_FOR_TARGET="$LDFLAGS"
-  LDFLAGS+=" -Wl,--export-all-symbols,--disable-dynamicbase"
+  LDFLAGS+="-Wl,--export-all-symbols,--disable-dynamicbase"
   if [ "${CARCH}" = 'x86_64' ]; then
     LDFLAGS+=",--default-image-base-low"
   fi
@@ -248,3 +248,4 @@ package_mingw-w64-ucrt-x86_64-gcc-mcf() {
 package_mingw-w64-ucrt-x86_64-gcc-mcf-libs() {
   package_mingw-w64-gcc-mcf-libs
 }
+
