@@ -134,7 +134,6 @@ build() {
   fi
 
   local _LDFLAGS_FOR_TARGET="$LDFLAGS"
-  LDFLAGS=" -Wl,--export-all-symbols"
   LDFLAGS+=" -Wl,--disable-dynamicbase"
   if [ "${CARCH}" = 'x86_64' ]; then
     LDFLAGS+=",--default-image-base-low"
