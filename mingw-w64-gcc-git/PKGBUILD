@@ -110,7 +110,7 @@ build() {
 
   case "${CARCH}" in
     i686)
-      LDFLAGS+=" -Wl,--large-address-aware"
+      LDFLAGS+=" -Wl,--export-all-symbols,--large-address-aware"
       local _arch=i686
       local _conf="--enable-sjlj-exceptions"    # "--disable-sjlj-exceptions --with-dwarf2"
     ;;
@@ -122,6 +122,9 @@ build() {
   esac
 
   local _languages="c,lto,c++"
+  if [ "$_enable_fortran" == "yes" ]; then
+    _languages+=",fortran"
+  fi
   if [ "$_enable_ada" == "yes" ]; then
     _languages+=",ada"
   fi
