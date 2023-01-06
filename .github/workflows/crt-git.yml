@@ -1,10 +1,10 @@
-name: headers-git
+name: crt-git
 
 on:
   workflow_dispatch:
 
 jobs:
-  headers-git:
+  crt-git:
     runs-on: windows-2022
     steps:
     - uses: msys2/setup-msys2@v2
