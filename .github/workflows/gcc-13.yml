@@ -40,6 +40,8 @@ jobs:
       run: |              
         curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-headers-git-10.0.0.r201.g931ca20b2-1-any.pkg.tar.zst
         curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-crt-git-10.0.0.r201.g931ca20b2-1-any.pkg.tar.zst
+        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-mcfgthread-1.5.alpha.1.5.g5b5ddc9-1-any.pkg.tar.zst
+        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-mcfgthread-libs-1.5.alpha.1.5.g5b5ddc9-1-any.pkg.tar.zst
         pacman -U *.tar.zst --noconfirm      
         cd mingw-w64-gcc; MINGW_ARCH=ucrt64 makepkg-mingw -sLf
     - name: Delete
