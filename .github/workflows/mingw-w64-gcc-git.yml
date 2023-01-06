@@ -1,10 +1,10 @@
-name: mingw-w64-gcc-git
+name: mingw-w64-gcc
 
 on:
   workflow_dispatch:
 
 jobs:
-  mingw-w64-gcc-git:
+  mingw-w64-gcc:
     runs-on: windows-2022
     steps:
     - uses: msys2/setup-msys2@v2
@@ -14,19 +14,21 @@ jobs:
     - name: Prepare
       run: git config --global core.autocrlf input
       shell: bash    
+    - uses: actions/checkout@main
     
-    - uses: eko5624/checkout@v2
+    - name: Setup git config
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
     - name: build 
       shell: msys2 {0}
-      run: |             
-        git config --global user.email "example@example.com"
-        git config --global user.name "GitHub Actions" 
-        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-mcfgthread-git-r528.6af5465-1-any.pkg.tar.zst
-        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-mcfgthread-libs-git-r528.6af5465-1-any.pkg.tar.zst
+      run: |              
+        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-mcfgthread-1.4.1-1-any.pkg.tar.gz
+        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-mcfgthread-libs-1.4.1-1-any.pkg.tar.gz
         pacman -U /d/a/mcfgthread/mcfgthread/*.tar.* --noconfirm      
-        cd /d/a/mcfgthread/mcfgthread/mingw-w64-gcc-git; MINGW_ARCH=ucrt64 makepkg-mingw -sLf
+        cd gcc-12-with-mcfgthread/mingw-w64-gcc; MINGW_ARCH=ucrt64 makepkg-mingw -sLf
     - name: Delete
-      uses: eko5624/delete-release-assets@v1
+      uses: mknejp/delete-release-assets@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: latest
@@ -34,10 +36,10 @@ jobs:
         fail-if-no-assets: false
         fail-if-no-release: false 
     - name: Upload
-      uses: eko5624/upload-release-action@v2
+      uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: mingw-w64-gcc-git/*.tar.*
+        file: mingw-w64-gcc/*.tar.*
         tag: latest
         overwrite: true
         file_glob: true        
