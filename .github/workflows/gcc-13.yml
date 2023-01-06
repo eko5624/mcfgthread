@@ -14,6 +14,7 @@ jobs:
           base-devel
           git
           mingw-w64-ucrt-x86_64-binutils
+          mingw-w64-ucrt-x86_64-gcc
           mingw-w64-ucrt-x86_64-gmp
           mingw-w64-ucrt-x86_64-isl
           mingw-w64-ucrt-x86_64-libiconv
