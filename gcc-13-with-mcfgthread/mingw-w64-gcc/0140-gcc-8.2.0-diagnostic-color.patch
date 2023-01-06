@@ -1,14 +1,14 @@
-From af52a4883ae383b95ff9e027c7d1a883d02b738f Mon Sep 17 00:00:00 2001
+From a2f3bb52faa2cf6f1b80e142ed5ce2b7d4c711f3 Mon Sep 17 00:00:00 2001
 From: Alexey Pavlov <alexpux@gmail.com>
 Date: Sat, 4 Aug 2018 08:38:11 +0300
-Subject: [PATCH] gcc: Enable diagnostic colors under mintty
+Subject: [PATCH 14/16] gcc: Enable diagnostic colors under mintty
 
 ---
  gcc/diagnostic-color.cc | 36 +++++++++++++++++++++++++++++++++++-
  1 file changed, 35 insertions(+), 1 deletion(-)
 
 diff --git a/gcc/diagnostic-color.cc b/gcc/diagnostic-color.cc
-index 640adfad558..5ea6979878a 100644
+index 95047d78c2e..5d9fc6e2d13 100644
 --- a/gcc/diagnostic-color.cc
 +++ b/gcc/diagnostic-color.cc
 @@ -23,6 +23,7 @@
@@ -19,7 +19,7 @@ index 640adfad558..5ea6979878a 100644
  #endif
  
  #include "color-macros.h"
-@@ -211,9 +212,42 @@ should_colorize (void)
+@@ -213,9 +214,42 @@ should_colorize (void)
    HANDLE h;
    DWORD m;
  
@@ -64,5 +64,5 @@ index 640adfad558..5ea6979878a 100644
    char const *t = getenv ("TERM");
    /* emacs M-x shell sets TERM="dumb".  */
 -- 
-2.35.3
+2.38.1
 

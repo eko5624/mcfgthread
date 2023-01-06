@@ -1,7 +1,8 @@
-From 581ee9c6eb65cc26cf29fd2fa492d853f4c7f3c1 Mon Sep 17 00:00:00 2001
+From 45fab34cb60bc221e6debdf9457d382b62cf4017 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 5 Aug 2015 23:36:13 +0100
-Subject: [PATCH] master Windows: New feature to allow overriding -lmsvcrt
+Subject: [PATCH 05/16] master Windows: New feature to allow overriding
+ -lmsvcrt
 
 Added in support of the MinGW-w64 WIP feature "agile mscvrt dll" where
 a process' loaded msvc runtime is used by a newly loaded DLL rather than
@@ -39,5 +40,5 @@ index b5f31c3da0a..baf80400862 100644
  #undef STARTFILE_SPEC
  #define STARTFILE_SPEC "%{shared|mdll:dllcrt2%O%s} \
 -- 
-2.38.0
+2.38.1
 
