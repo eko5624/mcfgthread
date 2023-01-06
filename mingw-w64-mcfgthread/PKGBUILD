@@ -33,11 +33,6 @@ prepare() {
 
   mkdir -p m4
   autoreconf -ifv
-
-  pushd test_c++
-  mkdir -p m4
-  autoreconf -ifv
-  popd
 }
 
 build() {
