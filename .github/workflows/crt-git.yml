@@ -1,0 +1,42 @@
+name: headers-git
+
+on:
+  workflow_dispatch:
+
+jobs:
+  headers-git:
+    runs-on: windows-2022
+    steps:
+    - uses: msys2/setup-msys2@v2
+      with:
+        release: false
+        install: base-devel git mingw-w64-x86_64-toolchain
+    - name: Prepare
+      run: git config --global core.autocrlf input
+      shell: bash    
+    - uses: actions/checkout@main
+    
+    - name: Setup git config
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    - name: build headers-git
+      shell: msys2 {0}
+      run: |                    
+        cd mingw-w64-crt-git; MINGW_ARCH=ucrt64 makepkg-mingw -sLf
+    - name: Delete
+      uses: mknejp/delete-release-assets@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: latest
+        assets: mingw-w64-ucrt-x86_64-crt-git*
+        fail-if-no-assets: false
+        fail-if-no-release: false 
+    - name: Upload
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: mingw-w64-crt-git/*.tar.*
+        tag: latest
+        overwrite: true
+        file_glob: true
