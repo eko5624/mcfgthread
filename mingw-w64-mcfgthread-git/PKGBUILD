@@ -4,24 +4,24 @@ _realname=mcfgthread
 pkgbase=mingw-w64-${_realname}-git
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}-git"
          "${MINGW_PACKAGE_PREFIX}-${_realname}"-libs-git)
-pkgver=r521.9570e5c
+pkgver=v1.0.rc.2.1.gf937400
 pkgrel=1
-pkgdesc="An efficient Gthread implementation for GCC MinGW-w64 targets on Windows, providing both C11 and C++11 thread support"
 arch=('any')
-mingw_arch=('mingw32' 'mingw64' 'ucrt64')
+mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64')
 url="https://github.com/lhmouse/mcfgthread"
 license=('LGPL' 'custom')
 options=('staticlibs' 'strip')
 _branch=master
-makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
+makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
+             "${MINGW_PACKAGE_PREFIX}-autotools"
              "${MINGW_PACKAGE_PREFIX}-crt"
              "${MINGW_PACKAGE_PREFIX}-headers")
-source=("git+https://github.com/lhmouse/mcfgthread.git")
+source=("git+https://github.com/lhmouse/mcfgthread.git#branch=${_branch}")
 sha256sums=('SKIP')
 
 pkgver() {
   cd "${_realname}"
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  git describe --tags | sed -E 's,[-:/],.,g'
 }
 
 prepare() {
@@ -39,7 +39,8 @@ build() {
     --prefix=${MINGW_PREFIX} \
     --build=${MINGW_CHOST} \
     --host=${MINGW_CHOST} \
-    --target=${MINGW_CHOST}
+    --target=${MINGW_CHOST} \
+    --disable-pch
 
   make
 
@@ -53,10 +54,9 @@ check() {
 }
 
 package_mingw-w64-mcfgthread() {
-  pkgdesc="An efficient Gthread implementation for GCC MinGW-w64 targets on Windows, providing both C11 and C++11 thread support (devel)"
+  pkgdesc="An efficient gthread implementation, providing C++11 threading support (devel)"
   depends=("${MINGW_PACKAGE_PREFIX}-${_realname}"-libs)
   provides=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-  conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 
   mkdir -p "${pkgdir}${MINGW_PREFIX}"
   cd "${srcdir}${MINGW_PREFIX}"
@@ -65,11 +65,10 @@ package_mingw-w64-mcfgthread() {
   cp --parents -r include   --target-directory="${pkgdir}${MINGW_PREFIX}"
   cp --parents -r lib       --target-directory="${pkgdir}${MINGW_PREFIX}"
 }
+
 package_mingw-w64-mcfgthread-libs() {
-  pkgdesc="An efficient Gthread implementation for GCC MinGW-w64 targets on Windows, providing both C11 and C++11 thread support (libs)"
-  depends=()
+  pkgdesc="An efficient gthread implementation, providing C++11 threading support (libs)"
   provides=("${MINGW_PACKAGE_PREFIX}-${_realname}"-libs)
-  conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}"-libs)
 
   mkdir -p "${pkgdir}${MINGW_PREFIX}"
   cd "${srcdir}${MINGW_PREFIX}"
@@ -83,8 +82,7 @@ package_mingw-w64-mcfgthread-libs() {
 package_mingw-w64-ucrt-x86_64-mcfgthread-git() {
   package_mingw-w64-mcfgthread
 }
+
 package_mingw-w64-ucrt-x86_64-mcfgthread-libs-git() {
   package_mingw-w64-mcfgthread-libs
 }
-
-
