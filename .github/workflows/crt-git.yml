@@ -22,7 +22,9 @@ jobs:
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
     - name: build headers-git
       shell: msys2 {0}
-      run: |                    
+      run: |
+        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-headers-git-10.0.0.r201.g931ca20b2-1-any.pkg.tar.zst                   
+        pacman -U *.tar.zst --noconfirm
         cd mingw-w64-crt-git; MINGW_ARCH=ucrt64 makepkg-mingw -sLf
     - name: Delete
       uses: mknejp/delete-release-assets@v1
