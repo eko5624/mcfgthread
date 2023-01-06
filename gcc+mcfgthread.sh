@@ -11,7 +11,7 @@ cd $DIR/MINGW-packages
 git branch -a
 git checkout -b mcfgthread-pkg
 cp -rf mingw-w64-mcfgthread ../gcc-12-with-mcfgthread
-git checkout -b master
+git checkout master
 cp -rf mingw-w64-gcc ../gcc-12-with-mcfgthread
 
 git checkout -b gcc-13
