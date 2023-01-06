@@ -1,0 +1,160 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Contributor: Ray Donnelly <mingw.android@gmail.com>
+
+_realname=gdb
+pkgbase=mingw-w64-${_realname}
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
+         "${MINGW_PACKAGE_PREFIX}-${_realname}-multiarch")
+pkgver=12.0.90+20220320
+_branch=gdb-12-branch
+_sourcedir=${_realname}
+pkgrel=1
+pkgdesc="GNU Debugger (mingw-w64)"
+arch=('any')
+mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32')
+url="https://www.gnu.org/software/gdb/"
+license=('spdx:GPL-3.0-or-later')
+groups=($( [[ ${MINGW_PACKAGE_PREFIX} == *-clang-* ]] || echo "${MINGW_PACKAGE_PREFIX}-toolchain" ))
+depends=("${MINGW_PACKAGE_PREFIX}-expat"
+         "${MINGW_PACKAGE_PREFIX}-gmp"
+         "${MINGW_PACKAGE_PREFIX}-libiconv"
+         "${MINGW_PACKAGE_PREFIX}-mpfr"
+         "${MINGW_PACKAGE_PREFIX}-ncurses"
+         "${MINGW_PACKAGE_PREFIX}-python"
+         "${MINGW_PACKAGE_PREFIX}-readline"
+         "${MINGW_PACKAGE_PREFIX}-xxhash"
+         "${MINGW_PACKAGE_PREFIX}-zlib")
+optdepends=("${MINGW_PACKAGE_PREFIX}-python-pygments: for syntax highlighting")
+checkdepends=('dejagnu' 'bc')
+# gmp, mpfr and xz (lzma) are linked statically
+makedepends=("${MINGW_PACKAGE_PREFIX}-iconv"
+             "${MINGW_PACKAGE_PREFIX}-xz"
+             "${MINGW_PACKAGE_PREFIX}-autotools"
+             "${MINGW_PACKAGE_PREFIX}-cc")
+options=('staticlibs' '!distcc' '!ccache')
+source=(${_sourcedir}::"git://sourceware.org/git/binutils-gdb.git#branch=${_branch}"
+        '0001-Workaround-performance-regression-in-info-func-var-t.patch'
+        '0002-Fix-using-gnu-print.patch'
+        '0003-configure-Disable-static-linking-with-standard-libs.patch'
+        '0004-Python-Configure-path-fixes.patch'
+        '0005-W32-Always-check-USERPROFILE-if-HOME-is-not-set.patch'
+        '0006-Fix-internal-error-when-printing-C-pointer-to-member.patch'
+        '0007-readline-8.2.patch'::https://sourceware.org/git/?p=binutils-gdb.git\;a=patch\;h=1add37b567a7dee39d99f37b37802034c3fce9c4)
+validpgpkeys=('F40ADB902B24264AA42E50BF92EDB04BFF325CF3')
+sha256sums=('SKIP'
+            '428cda7dcc107c236225ae89704390b0f1e70c276b5ca6b1741988f384b21d62'
+            'c60e867fb74f7985b5ac5337a07cc697b4a4ffe19fb6e52f7c377e29c8413a4a'
+            '0eb291cd81f7392610d16a83f436a30d3384a99661c6b6ffd1bfb243d5aee6dd'
+            '7ef9c6e238a4e232bc689e15e48ee2d8045542c47f0b156d9fc92a7c14e6757e'
+            '39d1cb2a1be8d60c16404ad96882f10cd3ebd942d8b7af62a7416a230a50de93'
+            '839dd8b02c24e03154cb94faeb3b46bce794461463c5a280c7fc616f34360ff4'
+            '10239536c197e98f6057fd72ea40b4c73ced2402d54fe02ecb5772b7e793cb16')
+
+pkgver() {
+  cd ${srcdir}/${_sourcedir}
+  _gdb_date=$(sed -n -e 's/^.* BFD_VERSION_DATE \(.*\)$/\1/p'  bfd/version.h)
+  head -n 1 gdb/version.in | sed -e "s/\.DATE.*$/+$_gdb_date/"
+}
+
+prepare() {
+  cd ${srcdir}/${_sourcedir}
+  git clean -fdx
+
+  # https://sourceware.org/bugzilla/show_bug.cgi?id=15412
+  patch -p1 -i ${srcdir}/0001-Workaround-performance-regression-in-info-func-var-t.patch
+
+  patch -p1 -i ${srcdir}/0002-Fix-using-gnu-print.patch
+
+  # https://sourceware.org/bugzilla/show_bug.cgi?id=21078
+  patch -p1 -i ${srcdir}/0003-configure-Disable-static-linking-with-standard-libs.patch
+
+  patch -p1 -i ${srcdir}/0004-Python-Configure-path-fixes.patch
+  patch -p1 -i ${srcdir}/0005-W32-Always-check-USERPROFILE-if-HOME-is-not-set.patch
+  patch -p1 -i ${srcdir}/0006-Fix-internal-error-when-printing-C-pointer-to-member.patch
+  patch -p1 -i ${srcdir}/0007-readline-8.2.patch
+
+  # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
+}
+
+do_build() {
+  builddir=${srcdir}/build-${MSYSTEM}$1
+  [[ -d ${builddir} ]] && rm -rf ${builddir}
+  mkdir ${builddir} && cd ${builddir}
+
+  if [ "${CARCH}" != "x86_64" ]; then
+    LDFLAGS+=" -Wl,--large-address-aware"
+  fi
+
+  if check_option "debug" "y"; then
+    CFLAGS+=" -O0"
+    CXXFLAGS+=" -O0"
+  fi
+
+
+  CPPFLAGS+=" -I${MINGW_PREFIX}/include/ncurses"
+  CFLAGS+=" -I${MINGW_PREFIX}/include/ncurses"
+  CXXFLAGS+=" -I${MINGW_PREFIX}/include/ncurses"
+
+  ../${_sourcedir}/configure \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --prefix=${MINGW_PREFIX} \
+    $2 \
+    --enable-64-bit-bfd \
+    --disable-werror \
+    --disable-win32-registry \
+    --disable-rpath \
+    --disable-sim \
+    --with-curses \
+    --with-system-gdbinit=${MINGW_PREFIX}/etc/gdbinit \
+    --with-system-readline \
+    --with-python=${MINGW_PREFIX}/bin/python \
+    --with-expat \
+    --with-libiconv-prefix=${MINGW_PREFIX} \
+    --with-mpfr \
+    --with-zlib \
+    --with-lzma \
+    --enable-tui \
+    --enable-source-highlight=no
+
+  make all-gdb all-gdbserver
+}
+
+build() {
+  do_build
+  do_build -multiarch --enable-targets=all
+}
+
+package_gdb() {
+  cd ${srcdir}/build-${MSYSTEM}
+  make DESTDIR=${pkgdir} install-gdb install-gdbserver
+
+  # Remove unwanted files
+  rm -rf ${pkgdir}${MINGW_PREFIX}/share/{man,info}
+
+  rm -f ${pkgdir}${MINGW_PREFIX}/include/*.h
+  rm -f ${pkgdir}${MINGW_PREFIX}/lib/*.a
+}
+
+package_gdb-multiarch() {
+  pkgdesc="GNU Debugger (supports all targets)"
+  depends=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+
+  destdir=${pkgdir}${MINGW_PREFIX}/bin
+  mkdir -p $destdir
+  strip -o ${destdir}/gdb-multiarch.exe ${srcdir}/build-${MSYSTEM}-multiarch/gdb/gdb.exe
+  strip -o ${destdir}/gdbserver-multiarch.exe ${srcdir}/build-${MSYSTEM}-multiarch/gdbserver/gdbserver.exe
+}
+
+# template start; name=mingw-w64-splitpkg-wrappers; version=1.0;
+# vim: set ft=bash :
+
+# generate wrappers
+for _name in "${pkgname[@]}"; do
+  _short="package_${_name#${MINGW_PACKAGE_PREFIX}-}"
+  _func="$(declare -f "${_short}")"
+  eval "${_func/#${_short}/package_${_name}}"
+done
+# template end;
