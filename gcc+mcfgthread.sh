@@ -23,7 +23,7 @@ cp -rf mingw-w64-gdb ../
 git fetch origin
 git fetch origin gcc-13:gcc-13
 git branch -a
-git checkout -b gcc-13 origin/gcc-13
+git checkout gcc-13
 cp -rf mingw-w64-gcc ../gcc-13-with-mcfgthread
 cd ..
 rm -rf MINGW-packages
