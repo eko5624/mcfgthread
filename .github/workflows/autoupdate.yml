@@ -24,8 +24,7 @@ jobs:
     - name: Update
       shell: bash
       run: |
-        ./gcc-12+mcfgthread.sh
-        ./gcc-13+mcfgthread.sh
+        ./gcc+mcfgthread.sh
         git add -A
         git commit -am "Automate" || echo "nothing updated"
         git push
