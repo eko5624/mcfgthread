@@ -10,7 +10,7 @@ jobs:
     - uses: msys2/setup-msys2@v2
       with:
         release: false
-        install: base-devel git mingw-w64-x86_64-toolchain mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-crt mingw-w64-ucrt-x86_64-headers 
+        install: base-devel git mingw-w64-ucrt-x86_64-autotools mingw-w64-ucrt-x86_64-cc
     - name: Prepare
       run: git config --global core.autocrlf input
       shell: bash    
@@ -24,7 +24,10 @@ jobs:
     - name: build 
       shell: msys2 {0}
       run: | 
-        cd gcc-12-with-mcfgthread/mingw-w64-mcfgthread; MINGW_ARCH=ucrt64 makepkg-mingw -sLf       
+        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-headers-git-10.0.0.r201.g931ca20b2-1-any.pkg.tar.zst
+        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-crt-git-10.0.0.r201.g931ca20b2-1-any.pkg.tar.zst
+        pacman -U *.tar.zst --noconfirm       
+        cd mingw-w64-mcfgthread; MINGW_ARCH=ucrt64 makepkg-mingw -sLf       
     - name: Delete
       uses: mknejp/delete-release-assets@v1
       with:
@@ -37,7 +40,7 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: gcc-12-with-mcfgthread/mingw-w64-mcfgthread/*.tar.*
+        file: mingw-w64-mcfgthread/*.tar.*
         tag: latest
         overwrite: true
         file_glob: true
