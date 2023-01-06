@@ -64,8 +64,7 @@ source=(${_sourcedir}::"git://gcc.gnu.org/git/gcc.git#branch=${_branch}"
         0021-PR14940-Allow-a-PCH-to-be-mapped-to-a-different-addr.patch
         0140-gcc-8.2.0-diagnostic-color.patch
         0200-add-m-no-align-vector-insn-option-for-i386.patch
-        0300-override-builtin-printf-format.patch
-        9000-Deprecate-the-nonsense-AT-T-synax.patch)
+        0300-override-builtin-printf-format.patch)
 sha256sums=('SKIP'
             '0acd5b088ae2c3e632f6c624cb8d240953181444c6ccdedd360711714dd999b9'
             'abacf37d5823d4734bc876bc2aa953069903ec8c9833ab10690cf1ac5af35afb'
@@ -83,8 +82,7 @@ sha256sums=('SKIP'
             '6c272078340a27b3f147e497115b0a6e9fc0da720a2602f12b086524522caa59'
             '2d6b783fc09bda0073b6f6c1797e8a4ccbcdd35e90307c0982aedcd8667b8d39'
             'c34f9e71b5a092be1987ad4c65891742c74c9eb8ef6560100e751cd31375f579'
-            'f73c8d1701762fed7d8102d17d8e4416a4cc5e600e297a89c2e1fe09cd743a1c'
-            'a72e20190e8878e62a020b95605c2b8f4c9c39df6ef337ee62e432b943dc4044')
+            'f73c8d1701762fed7d8102d17d8e4416a4cc5e600e297a89c2e1fe09cd743a1c')
 validpgpkeys=(F3691687D867B81B51CE07D9BBE43771487328A9  # bpiotrowski@archlinux.org
               86CFFCA918CF3AF47147588051E8B148A9999C34  # evangelos@foutrelis.com
               13975A70E63C361C73AE69EF6EEB81F8981C74C7  # richard.guenther@gmail.com
