@@ -10,7 +10,7 @@ jobs:
     - uses: msys2/setup-msys2@v2
       with:
         release: false
-        install: base-devel git base-devel mingw-w64-ucrt-x86_64-autotools mingw-w64-ucrt-x86_64-cc base-devel mingw-w64-ucrt-x86_64-binutils
+        install: base-devel git mingw-w64-ucrt-x86_64-autotools mingw-w64-ucrt-x86_64-cc mingw-w64-ucrt-x86_64-binutils
     - name: Prepare
       run: git config --global core.autocrlf input
       shell: bash    
@@ -38,7 +38,7 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: mingw-w64-crt-git/*.tar.*
+        file: mingw-w64-crt-git/*.tar.zst
         tag: latest
         overwrite: true
         file_glob: true
