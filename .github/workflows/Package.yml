@@ -21,7 +21,7 @@ jobs:
         $date = Get-Date -Format "yyyy-MM-dd"
         7z a mcfgthread-${date}.7z C:\msys64\ucrt64\*    
     - name: Upload
-      uses: eko5624/upload-release-action@v2
+      uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: mcfgthread*.7z
