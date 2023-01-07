@@ -1,10 +1,10 @@
-name: gcc-13
+name: gcc-with-mcfgthread
 
 on:
   workflow_dispatch:
 
 jobs:
-  gcc-13:
+  gcc:
     runs-on: windows-2022
     steps:
     - uses: msys2/setup-msys2@v2
