@@ -1,16 +1,31 @@
-name: mingw-w64-gcc
+name: gdb
 
 on:
   workflow_dispatch:
 
 jobs:
-  mingw-w64-gcc:
+  gdb:
     runs-on: windows-2022
     steps:
     - uses: msys2/setup-msys2@v2
       with:
         release: false
-        install: base-devel git mingw-w64-x86_64-toolchain mingw-w64-ucrt-x86_64-crt mingw-w64-ucrt-x86_64-headers mingw-w64-ucrt-x86_64-gcc
+        install: >-
+          base-devel
+          git
+          mingw-w64-ucrt-x86_64-expat
+          mingw-w64-ucrt-x86_64-gmp
+          mingw-w64-ucrt-x86_64-libiconv
+          mingw-w64-ucrt-x86_64-mpfr
+          mingw-w64-ucrt-x86_64-ncurses
+          mingw-w64-ucrt-x86_64-python
+          mingw-w64-ucrt-x86_64-readline
+          mingw-w64-ucrt-x86_64-xxhash
+          mingw-w64-ucrt-x86_64-zlib
+          mingw-w64-ucrt-x86_64-iconv
+          mingw-w64-ucrt-x86_64-xz
+          mingw-w64-ucrt-x86_64-autotools
+          mingw-w64-ucrt-x86_64-cc
     - name: Prepare
       run: git config --global core.autocrlf input
       shell: bash    
@@ -22,25 +37,21 @@ jobs:
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
     - name: build 
       shell: msys2 {0}
-      run: |              
-        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-mcfgthread-1.4.1-1-any.pkg.tar.gz
-        curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-mcfgthread-libs-1.4.1-1-any.pkg.tar.gz
-        pacman -U /d/a/mcfgthread/mcfgthread/*.tar.* --noconfirm      
-        cd gcc-12-with-mcfgthread/mingw-w64-gcc; MINGW_ARCH=ucrt64 makepkg-mingw -sLf
+      run: |                    
+        cd mingw-w64-gdb; MINGW_ARCH=ucrt64 makepkg-mingw -sLf
     - name: Delete
       uses: mknejp/delete-release-assets@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: latest
-        assets: mingw-w64-ucrt-x86_64-gcc-mcf*
+        assets: mingw-w64-ucrt-x86_64-gdb*
         fail-if-no-assets: false
         fail-if-no-release: false 
     - name: Upload
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: mingw-w64-gcc/*.tar.*
+        file: mingw-w64-gdb/*.tar.*
         tag: latest
         overwrite: true
-        file_glob: true        
-            
+        file_glob: true
