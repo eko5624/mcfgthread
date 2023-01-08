@@ -6,6 +6,14 @@ on:
 jobs:
   gcc:
     runs-on: windows-2022
+    env:
+      GH_TOKEN: ${{ github.token }}
+      CURL_RETRIES: "--connect-timeout 60 --retry 5 --retry-delay 5"
+      MSYSTEM: UCRT64
+      MSYS2_PATH_TYPE: inherit
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
     - uses: msys2/setup-msys2@v2
       with:
@@ -35,9 +43,12 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    - name: build 
-      shell: msys2 {0}
-      run: |              
+    - name: build
+      run: |
+        ./install-latest.sh \
+          "mingw-w64-ucrt-x86_64-headers-git" \
+          "mingw-w64-ucrt-x86_64-crt-git" \
+          "mingw-w64-ucrt-x86_64-mcfgthread"           
         curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-headers-git-10.0.0.r201.g931ca20b2-1-any.pkg.tar.zst
         curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-crt-git-10.0.0.r201.g931ca20b2-1-any.pkg.tar.zst
         curl -OL https://github.com/${{ github.repository }}/releases/download/latest/mingw-w64-ucrt-x86_64-mcfgthread-1.5.alpha.1.5.g5b5ddc9-1-any.pkg.tar.zst
