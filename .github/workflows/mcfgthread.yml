@@ -68,7 +68,7 @@ jobs:
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
     - name: build crt-git
       run: |
-        chmod +x ./install - latest.sh
+        chmod +x ./install-latest.sh
         ./install-latest.sh "mingw-w64-ucrt-x86_64-headers-git"
         cd mingw-w64-crt-git; MINGW_ARCH=ucrt64 makepkg-mingw -sLf
     - name: Delete
@@ -116,6 +116,7 @@ jobs:
         
     - name: build 
       run: |
+        chmod +x ./install-latest.sh
         ./install-latest.sh \
           "mingw-w64-ucrt-x86_64-headers-git" \
           "mingw-w64-ucrt-x86_64-crt-git"       
