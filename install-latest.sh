@@ -9,4 +9,4 @@ for param in "$@"; do
     curl -OL $url;
   done
 done
-pacman -U *.xz --noconfirm
+pacman -U *.tar.zst --noconfirm
