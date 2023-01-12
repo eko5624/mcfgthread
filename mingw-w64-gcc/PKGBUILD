@@ -47,7 +47,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-${_realname}"
              "${MINGW_PACKAGE_PREFIX}-gperf"
              "${MINGW_PACKAGE_PREFIX}-autotools")
 options=('staticlibs' '!emptydirs') # '!strip' 'debug')
-source=(${_sourcedir}::"git://gcc.gnu.org/git/gcc.git#branch=${_branch}"
+source=("git+https://gitee.com/mirrors/gcc.git#commit=4e0b504f26f78ff02e80ad98ebbf8ded3aa6ffa1"
         "gdbinit"
         0002-Relocate-libintl.patch
         0003-Windows-Follow-Posix-dir-exists-semantics-more-close.patch
