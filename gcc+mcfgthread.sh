@@ -12,13 +12,13 @@ rm -rf $DIR/mingw-w64-gdb
 git clone https://github.com/lhmouse/MINGW-packages.git
 cd $DIR/MINGW-packages
 
-git fetch origin
-#git fetch origin gcc-13:gcc-13
-echo "show remote branch"
+#git fetch origin
+git fetch origin gcc-13:gcc-13
+echo "show remote branch >>"
 git branch -r
 git merge origin/gcc-13
 git checkout gcc-13
-echo "show local branch"
+echo "show local branch >>"
 git branch
 #patch -p1 -i ../fix-mcfgthread-and-gcc.patch
 cp -rf mingw-w64-headers-git ../
