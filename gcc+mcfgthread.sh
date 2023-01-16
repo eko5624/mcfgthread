@@ -12,8 +12,13 @@ rm -rf $DIR/mingw-w64-gdb
 git clone https://github.com/lhmouse/MINGW-packages.git
 cd $DIR/MINGW-packages
 
-#git fetch origin
+#下载远程origin仓库默认分支
+git fetch origin
+
+#本地新建gcc-13分支，并将远程origin仓库的
+#gcc-13分支代码下载到本地gcc-13分支
 git fetch origin gcc-13:gcc-13
+
 echo "show remote branch >>"
 git branch -r
 git checkout gcc-13
