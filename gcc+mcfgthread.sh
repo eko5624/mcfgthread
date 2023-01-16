@@ -16,7 +16,6 @@ cd $DIR/MINGW-packages
 git fetch origin gcc-13:gcc-13
 echo "show remote branch >>"
 git branch -r
-git merge origin/gcc-13
 git checkout gcc-13
 echo "show local branch >>"
 git branch
