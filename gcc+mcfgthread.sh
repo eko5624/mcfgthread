@@ -19,7 +19,7 @@ git branch
 echo "show remote branch"
 git branch -r
 git checkout -b gcc-13
-patch -p1 -i ../fix-mcfgthread-and-gcc.patch
+#patch -p1 -i ../fix-mcfgthread-and-gcc.patch
 cp -rf mingw-w64-headers-git ../
 cp -rf mingw-w64-crt-git ../
 cp -rf mingw-w64-mcfgthread ../
