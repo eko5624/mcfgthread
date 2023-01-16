@@ -7,7 +7,7 @@ jobs:
   headers-git:
     runs-on: windows-2022
     env:
-      MSYSTEM: UCRT64
+      MSYSTEM: MSYS
     steps:
     - uses: msys2/setup-msys2@v2
       with:
