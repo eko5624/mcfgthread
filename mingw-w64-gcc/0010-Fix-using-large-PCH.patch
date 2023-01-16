@@ -1,7 +1,7 @@
-From 9d50e597ffb5b331f67b2255311574b4036059fa Mon Sep 17 00:00:00 2001
+From c084ab275f47cc27621e664d1c63e177525cf321 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Tue, 10 May 2022 13:19:07 +0800
-Subject: [PATCH 08/16] Remove size limit of PCH
+Subject: [PATCH] Remove size limit of PCH
 
 Reference: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=14940
 Signed-off-by: LIU Hao <lh_mouse@126.com>
@@ -52,5 +52,5 @@ index 3b0d83ffc60..f915b85abd0 100644
  
  
 -- 
-2.38.1
+2.36.0
 

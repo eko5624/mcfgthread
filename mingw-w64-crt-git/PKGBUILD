@@ -18,34 +18,35 @@ makedepends=("git"
              "${MINGW_PACKAGE_PREFIX}-autotools")
 provides=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-options=('!strip' '!buildflags' '!emptydirs')
+options=('!strip' 'staticlibs' '!buildflags' '!emptydirs')
 source=("mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64"
         0001-Allow-to-use-bessel-and-complex-functions-without-un.patch
         0002-DirectX-9-fixes-for-VLC.patch
         9001-crt-Mark-atexit-as-DATA-because-it-s-always-overridd.patch
         9002-crt-Provide-wrappers-for-exit-in-libmingwex.patch
-        9003-crt-Implement-standard-conforming-termination-suppor.patch)
+        9003-crt-Implement-standard-conforming-termination-suppor.patch
+        9004-crt-Regenerate-Makefile.in.patch)
 sha256sums=('SKIP'
             'd641257f7e1469aff89adc33e57702b75fe9667ca035978f890eae1020b6814c'
             '09b1c7b62f666a07609af57e10c2b0ad815b78356f4b0f1fb6d827a1109a0ec7'
-            'd4370b1e19f8e272f16e5af40faf74821e81d0b20783ee7ab2b32fe0a21466ee'
-            '0fd2c9eb6048d2c08901fafdcae59da7fc60b15036d8e9807219c5dcb9f1027a'
-            '08b3602239fb873988af1783d3bdde7579b725198e92ef5f03569de9ac925910')
+            '7507ab6a1ff138d3487fb5964a2b5c7dcfbfecf84a2f84f22ef8abd2f743ee12'
+            'fcd54052761a3040b37035499babc7477480f453675c7704fb9a6e40571a7b3d'
+            '975528b1157ff221ea7b9878a6a05ae660dd0f6ffbc16a6efd3224ecd87dfa90'
+            '5cd8f926e003fac08760310fb7dc9410748e55e2b7f001b4bb015c255fd57d45')
 
 pkgver() {
   cd "${srcdir}/mingw-w64"
-  git describe --long HEAD | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//g'
+  git describe --long ${_commit} | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//g'
 }
 
 prepare() {
   cd ${srcdir}/mingw-w64
-  git reset --hard
   git clean -fdx
 
   git apply "${srcdir}/9001-crt-Mark-atexit-as-DATA-because-it-s-always-overridd.patch"
-  git apply "${srcdir}/9002-crt-Provide-wrappers-for-exit-in-libmingwex.patch"
+  git apply "${srcdir}/9002-crt-Provide-wrappers-for-exit-in-C-files.patch"
   git apply "${srcdir}/9003-crt-Implement-standard-conforming-termination-suppor.patch"
-  (cd mingw-w64-crt && automake)
+  git apply "${srcdir}/9004-crt-Regenerate-Makefile.in.patch"
 
   git apply "${srcdir}/0001-Allow-to-use-bessel-and-complex-functions-without-un.patch"
   git apply "${srcdir}/0002-DirectX-9-fixes-for-VLC.patch"

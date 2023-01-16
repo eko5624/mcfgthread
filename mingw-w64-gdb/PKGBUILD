@@ -58,7 +58,6 @@ pkgver() {
 
 prepare() {
   cd ${srcdir}/${_sourcedir}
-  git reset --hard
   git clean -fdx
 
   # https://sourceware.org/bugzilla/show_bug.cgi?id=15412

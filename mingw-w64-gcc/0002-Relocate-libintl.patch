@@ -1,7 +1,7 @@
-From b1ce1b0d007a8af09c259c07e1262e080311c09e Mon Sep 17 00:00:00 2001
+From 056d1dbaa0c542fde6e0d90a28be9a280967d6d1 Mon Sep 17 00:00:00 2001
 From: Erwin Waterlander <waterlan@xs4all.nl>
 Date: Wed, 5 Aug 2015 23:36:03 +0100
-Subject: [PATCH 01/16] Relocate libintl
+Subject: [PATCH 01/15] Relocate libintl
 
 The relocatex-libintl patch adds builtin relocation for executables to the
 libintl dll. With this patch the programs are automatically relocatable. There
@@ -851,5 +851,5 @@ index 00000000000..5cc7c5174a9
 +
 +#endif /* __RELOCATE_H__ */
 -- 
-2.38.1
+2.35.3
 
