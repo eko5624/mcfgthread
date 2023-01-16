@@ -12,7 +12,7 @@ rm -rf $DIR/mingw-w64-gdb
 git clone https://github.com/lhmouse/MINGW-packages.git
 cd $DIR/MINGW-packages
 
-git fetch origin
+git fetch all
 #git fetch origin gcc-13:gcc-13
 echo "show remote branch"
 git branch -r
