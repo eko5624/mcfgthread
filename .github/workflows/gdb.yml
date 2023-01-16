@@ -6,8 +6,8 @@ on:
 jobs:
   gdb:
     runs-on: windows-2022
-    env:
-      MSYSTEM: UCRT64      
+    #env:
+    #  MSYSTEM: MSYS    
     steps:
     - uses: msys2/setup-msys2@v2
       with:
