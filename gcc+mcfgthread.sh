@@ -24,7 +24,6 @@ git branch -r
 git checkout gcc-13
 echo "show local branch >>"
 git branch
-#patch -p1 -i ../fix-mcfgthread-and-gcc.patch
 cp -rf mingw-w64-headers-git ../
 cp -rf mingw-w64-crt-git ../
 cp -rf mingw-w64-mcfgthread ../
