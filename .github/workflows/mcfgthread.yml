@@ -6,6 +6,8 @@ on:
 jobs:
   headers-git:
     runs-on: windows-2022
+    env:
+      MSYSTEM: MSYS
     steps:
     - uses: msys2/setup-msys2@v2
       with:
@@ -47,7 +49,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       CURL_RETRIES: "--connect-timeout 60 --retry 5 --retry-delay 5"
-      MSYSTEM: UCRT64
+      MSYSTEM: MSYS
       MSYS2_PATH_TYPE: inherit
     defaults:
       run:
@@ -94,7 +96,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       CURL_RETRIES: "--connect-timeout 60 --retry 5 --retry-delay 5"
-      MSYSTEM: UCRT64
+      MSYSTEM: MSYS
       MSYS2_PATH_TYPE: inherit
     defaults:
       run:
