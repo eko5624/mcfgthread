@@ -13,12 +13,12 @@ git clone https://github.com/lhmouse/MINGW-packages.git
 cd $DIR/MINGW-packages
 
 git fetch origin
-git fetch origin gcc-13:gcc-13
+#git fetch origin gcc-13:gcc-13
 echo "show local branch"
 git branch
 echo "show remote branch"
 git branch -r
-git checkout gcc-13
+git checkout -b gcc-13
 patch -p1 -i ../fix-mcfgthread-and-gcc.patch
 cp -rf mingw-w64-headers-git ../
 cp -rf mingw-w64-crt-git ../
