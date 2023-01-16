@@ -5,8 +5,8 @@ _realname=gdb
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-multiarch")
-pkgver=12.0.90+20220320
-_branch=gdb-12-branch
+pkgver=13.0.90+20230106
+_branch=gdb-13-branch
 _sourcedir=${_realname}
 pkgrel=1
 pkgdesc="GNU Debugger (mingw-w64)"
@@ -34,21 +34,15 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-iconv"
 options=('staticlibs' '!distcc' '!ccache')
 source=(${_sourcedir}::"git://sourceware.org/git/binutils-gdb.git#branch=${_branch}"
         '0001-Workaround-performance-regression-in-info-func-var-t.patch'
-        '0002-Fix-using-gnu-print.patch'
         '0003-configure-Disable-static-linking-with-standard-libs.patch'
         '0004-Python-Configure-path-fixes.patch'
-        '0005-W32-Always-check-USERPROFILE-if-HOME-is-not-set.patch'
-        '0006-Fix-internal-error-when-printing-C-pointer-to-member.patch'
-        '0007-readline-8.2.patch'::https://sourceware.org/git/?p=binutils-gdb.git\;a=patch\;h=1add37b567a7dee39d99f37b37802034c3fce9c4)
+        '0005-W32-Always-check-USERPROFILE-if-HOME-is-not-set.patch')
 validpgpkeys=('F40ADB902B24264AA42E50BF92EDB04BFF325CF3')
 sha256sums=('SKIP'
-            '428cda7dcc107c236225ae89704390b0f1e70c276b5ca6b1741988f384b21d62'
-            'c60e867fb74f7985b5ac5337a07cc697b4a4ffe19fb6e52f7c377e29c8413a4a'
-            '0eb291cd81f7392610d16a83f436a30d3384a99661c6b6ffd1bfb243d5aee6dd'
-            '7ef9c6e238a4e232bc689e15e48ee2d8045542c47f0b156d9fc92a7c14e6757e'
-            '39d1cb2a1be8d60c16404ad96882f10cd3ebd942d8b7af62a7416a230a50de93'
-            '839dd8b02c24e03154cb94faeb3b46bce794461463c5a280c7fc616f34360ff4'
-            '10239536c197e98f6057fd72ea40b4c73ced2402d54fe02ecb5772b7e793cb16')
+            'b57ec1367a9f980678d4829e7d92531976e9ea1cd0ee3272b841e8292be8c4a9'
+            'aaee15628ea99bbda44e18cac4dbaf95c1cf16a067d3a683da6debec4512eae6'
+            '6d5c58532872314c0645d3bcf9148ffab80bec27f990a53f37fdb63ac7967f3a'
+            '000d34d16220310ea27ec07cbed431c7b479204728715c3e2fbe8239156d9045')
 
 pkgver() {
   cd ${srcdir}/${_sourcedir}
@@ -58,20 +52,17 @@ pkgver() {
 
 prepare() {
   cd ${srcdir}/${_sourcedir}
+  git reset --hard
   git clean -fdx
 
   # https://sourceware.org/bugzilla/show_bug.cgi?id=15412
   patch -p1 -i ${srcdir}/0001-Workaround-performance-regression-in-info-func-var-t.patch
-
-  patch -p1 -i ${srcdir}/0002-Fix-using-gnu-print.patch
 
   # https://sourceware.org/bugzilla/show_bug.cgi?id=21078
   patch -p1 -i ${srcdir}/0003-configure-Disable-static-linking-with-standard-libs.patch
 
   patch -p1 -i ${srcdir}/0004-Python-Configure-path-fixes.patch
   patch -p1 -i ${srcdir}/0005-W32-Always-check-USERPROFILE-if-HOME-is-not-set.patch
-  patch -p1 -i ${srcdir}/0006-Fix-internal-error-when-printing-C-pointer-to-member.patch
-  patch -p1 -i ${srcdir}/0007-readline-8.2.patch
 
   # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
