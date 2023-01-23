@@ -6,7 +6,7 @@ pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-multiarch")
 pkgver=13.0.90+20230106
-_branch=gdb-12-branch
+_branch=gdb-13-branch
 _sourcedir=${_realname}
 pkgrel=1
 pkgdesc="GNU Debugger (mingw-w64)"
