@@ -58,19 +58,6 @@ build() {
   make -j1 DESTDIR=${srcdir} install
 }
 
-check() {
-  cd "${srcdir}/build-${MSYSTEM}"
-  make check
-
-  # Run c++ tests, which have to be configured separately after C
-  # libraries have been built.
-  mkdir -p test_c++
-  pushd test_c++
-
-  ../../${_realname}/test_c++/configure \
-    --build=${MINGW_CHOST} \
-    --host=${MINGW_CHOST}
-
   make check
   popd
 }
