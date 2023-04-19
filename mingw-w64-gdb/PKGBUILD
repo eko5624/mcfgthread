@@ -5,9 +5,8 @@ _realname=gdb
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-multiarch")
-pkgver=13.0.90+20230106
+pkgver=13.1.90+20230307
 _branch=gdb-13-branch
-_sourcedir=${_realname}
 pkgrel=1
 pkgdesc="GNU Debugger (mingw-w64)"
 arch=('any')
@@ -15,54 +14,73 @@ mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32')
 url="https://www.gnu.org/software/gdb/"
 license=('spdx:GPL-3.0-or-later')
 groups=($( [[ ${MINGW_PACKAGE_PREFIX} == *-clang-* ]] || echo "${MINGW_PACKAGE_PREFIX}-toolchain" ))
-depends=("${MINGW_PACKAGE_PREFIX}-expat"
-         "${MINGW_PACKAGE_PREFIX}-gmp"
-         "${MINGW_PACKAGE_PREFIX}-libiconv"
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
+         "${MINGW_PACKAGE_PREFIX}-mpc"
          "${MINGW_PACKAGE_PREFIX}-mpfr"
          "${MINGW_PACKAGE_PREFIX}-ncurses"
          "${MINGW_PACKAGE_PREFIX}-python"
          "${MINGW_PACKAGE_PREFIX}-readline"
          "${MINGW_PACKAGE_PREFIX}-xxhash"
-         "${MINGW_PACKAGE_PREFIX}-zlib")
+         "${MINGW_PACKAGE_PREFIX}-zlib"
+         "${MINGW_PACKAGE_PREFIX}-zstd")
 optdepends=("${MINGW_PACKAGE_PREFIX}-python-pygments: for syntax highlighting")
 checkdepends=('dejagnu' 'bc')
 # gmp, mpfr and xz (lzma) are linked statically
-makedepends=("${MINGW_PACKAGE_PREFIX}-iconv"
-             "${MINGW_PACKAGE_PREFIX}-xz"
+makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-autotools"
-             "${MINGW_PACKAGE_PREFIX}-cc")
-options=('staticlibs' '!distcc' '!ccache')
-source=(${_sourcedir}::"git://sourceware.org/git/binutils-gdb.git#branch=${_branch}"
+             "${MINGW_PACKAGE_PREFIX}-iconv"
+             "${MINGW_PACKAGE_PREFIX}-xz")
+source=(${_realname}::"git://sourceware.org/git/binutils-gdb.git#branch=${_branch}"
         '0001-Workaround-performance-regression-in-info-func-var-t.patch'
+        '0002-Fix-using-gnu-print.patch'
         '0003-configure-Disable-static-linking-with-standard-libs.patch'
         '0004-Python-Configure-path-fixes.patch'
-        '0005-W32-Always-check-USERPROFILE-if-HOME-is-not-set.patch')
+        '0005-W32-Always-check-USERPROFILE-if-HOME-is-not-set.patch'
+        '0006-Handle-unwinding-from-SEGV-on-Windows.patch')
 validpgpkeys=('F40ADB902B24264AA42E50BF92EDB04BFF325CF3')
 sha256sums=('SKIP'
-            'b57ec1367a9f980678d4829e7d92531976e9ea1cd0ee3272b841e8292be8c4a9'
-            'aaee15628ea99bbda44e18cac4dbaf95c1cf16a067d3a683da6debec4512eae6'
-            '6d5c58532872314c0645d3bcf9148ffab80bec27f990a53f37fdb63ac7967f3a'
-            '000d34d16220310ea27ec07cbed431c7b479204728715c3e2fbe8239156d9045')
+            '428cda7dcc107c236225ae89704390b0f1e70c276b5ca6b1741988f384b21d62'
+            'cf12bce0b988765ecac26a6895238c48ef9676d6fc01f986f75dcbc8bd8d3f07'
+            '0eb291cd81f7392610d16a83f436a30d3384a99661c6b6ffd1bfb243d5aee6dd'
+            '7ef9c6e238a4e232bc689e15e48ee2d8045542c47f0b156d9fc92a7c14e6757e'
+            '39d1cb2a1be8d60c16404ad96882f10cd3ebd942d8b7af62a7416a230a50de93'
+            '5d0086ed36649c8faeb46efe5aeaf9ca6b6602a8d90ea72e1feb2436b1396acc')
+
+apply_patch_with_msg() {
+  for _patch in "$@"
+  do
+    msg2 "Applying ${_patch}"
+    patch -Nbp1 -i "${srcdir}/${_patch}"
+  done
+}
 
 pkgver() {
-  cd ${srcdir}/${_sourcedir}
+  cd ${srcdir}/${_realname}
   _gdb_date=$(sed -n -e 's/^.* BFD_VERSION_DATE \(.*\)$/\1/p'  bfd/version.h)
   head -n 1 gdb/version.in | sed -e "s/\.DATE.*$/+$_gdb_date/"
 }
 
 prepare() {
-  cd ${srcdir}/${_sourcedir}
-  git reset --hard
-  git clean -fdx
+  cd ${srcdir}/${_realname}
 
   # https://sourceware.org/bugzilla/show_bug.cgi?id=15412
-  patch -p1 -i ${srcdir}/0001-Workaround-performance-regression-in-info-func-var-t.patch
+  apply_patch_with_msg \
+    0001-Workaround-performance-regression-in-info-func-var-t.patch
+
+  apply_patch_with_msg \
+    0002-Fix-using-gnu-print.patch
 
   # https://sourceware.org/bugzilla/show_bug.cgi?id=21078
-  patch -p1 -i ${srcdir}/0003-configure-Disable-static-linking-with-standard-libs.patch
+  apply_patch_with_msg \
+    0003-configure-Disable-static-linking-with-standard-libs.patch
 
-  patch -p1 -i ${srcdir}/0004-Python-Configure-path-fixes.patch
-  patch -p1 -i ${srcdir}/0005-W32-Always-check-USERPROFILE-if-HOME-is-not-set.patch
+  apply_patch_with_msg \
+    0004-Python-Configure-path-fixes.patch \
+    0005-W32-Always-check-USERPROFILE-if-HOME-is-not-set.patch
+
+  # https://sourceware.org/bugzilla/show_bug.cgi?id=30255
+  apply_patch_with_msg \
+    0006-Handle-unwinding-from-SEGV-on-Windows.patch
 
   # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
@@ -82,17 +100,27 @@ do_build() {
     CXXFLAGS+=" -O0"
   fi
 
-
   CPPFLAGS+=" -I${MINGW_PREFIX}/include/ncurses"
   CFLAGS+=" -I${MINGW_PREFIX}/include/ncurses"
   CXXFLAGS+=" -I${MINGW_PREFIX}/include/ncurses"
 
-  ../${_sourcedir}/configure \
+  declare -a _extra_config
+  if [[ ${MINGW_PACKAGE_PREFIX} == *-clang-* ]]; then
+    # Fix compilation with clang 16. Consider removing once fixed upstream.
+    CFLAGS+=" -Wno-enum-constexpr-conversion"
+    CXXFLAGS+=" -Wno-enum-constexpr-conversion"
+
+    # Checking for a working Ada compiler takes very long and ultimately fails.
+    _extra_config+=("acx_cv_cc_gcc_supports_ada=no")
+  fi
+
+  ../${_realname}/configure \
     --build=${MINGW_CHOST} \
     --host=${MINGW_CHOST} \
     --target=${MINGW_CHOST} \
     --prefix=${MINGW_PREFIX} \
     $2 \
+    ${_extra_config[@]} \
     --enable-64-bit-bfd \
     --disable-werror \
     --disable-win32-registry \
@@ -101,12 +129,13 @@ do_build() {
     --with-curses \
     --with-system-gdbinit=${MINGW_PREFIX}/etc/gdbinit \
     --with-system-readline \
+    --with-system-zlib \
     --with-python=${MINGW_PREFIX}/bin/python \
     --with-expat \
     --with-libiconv-prefix=${MINGW_PREFIX} \
     --with-mpfr \
-    --with-zlib \
     --with-lzma \
+    --with-zstd \
     --enable-tui \
     --enable-source-highlight=no
 
@@ -131,12 +160,17 @@ package_gdb() {
 
 package_gdb-multiarch() {
   pkgdesc="GNU Debugger (supports all targets)"
-  depends=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+  depends=("${MINGW_PACKAGE_PREFIX}-${_realname}=${pkgver}")
+
+  builddir=${srcdir}/build-${MSYSTEM}-multiarch
+  cd ${builddir}
+  make DESTDIR=${builddir}/inst install-gdb install-gdbserver
 
   destdir=${pkgdir}${MINGW_PREFIX}/bin
+  bindir=${builddir}/inst${MINGW_PREFIX}/bin
   mkdir -p $destdir
-  strip -o ${destdir}/gdb-multiarch.exe ${srcdir}/build-${MSYSTEM}-multiarch/gdb/gdb.exe
-  strip -o ${destdir}/gdbserver-multiarch.exe ${srcdir}/build-${MSYSTEM}-multiarch/gdbserver/gdbserver.exe
+  cp -p ${bindir}/gdb.exe ${destdir}/gdb-multiarch.exe
+  cp -p ${bindir}/gdbserver.exe ${destdir}/gdbserver-multiarch.exe
 }
 
 # template start; name=mingw-w64-splitpkg-wrappers; version=1.0;

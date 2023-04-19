@@ -177,6 +177,7 @@ index 00000000000..5217f304540
 +#ifdef __WIN32__
 +# define WIN32_LEAN_AND_MEAN
 +# include <stdio.h>
++# define WIN32_LEAN_AND_MEAN
 +# include <windows.h>
 +//# include <gw32.h>
 +#endif /* __WIN32__ */
