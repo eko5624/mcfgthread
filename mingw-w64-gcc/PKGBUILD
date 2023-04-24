@@ -66,7 +66,7 @@ source=(${_sourcedir}::"git://gcc.gnu.org/git/gcc.git#branch=${_branch}"
         0400-gcc-Make-stupid-AT-T-syntax-not-default.patch)
 sha256sums=('SKIP'
             '0acd5b088ae2c3e632f6c624cb8d240953181444c6ccdedd360711714dd999b9'
-            'e3cb622c952b185c045048fddb3235c1337e79619e8877cafeed11860f866005'
+            '3fab890be4b0d4e9e309749c4de5ce00f069eee4fe6080baa100f768264e6218'
             '3fc35067823f87e48dd3bfd265e7593000dc110fa9ad5f16c81b896765fc897a'
             '57f0081655ba9a94ed7cc3d8b67a79aee8442a56613bd17f9809a7b0e68e43cd'
             'a3637466910fae6145c947095051e3b91b16e4715d4abddc474eeb00539e9dc2'

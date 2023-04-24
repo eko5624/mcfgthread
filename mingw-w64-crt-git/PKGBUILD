@@ -3,7 +3,7 @@
 _realname=crt
 pkgbase=mingw-w64-${_realname}-git
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
-pkgver=10.0.0.r120.gc0d9ec0f8
+pkgver=10.0.0.r269.g70ec1e0de
 pkgrel=1
 pkgdesc='MinGW-w64 CRT for Windows'
 arch=('any')
@@ -23,12 +23,14 @@ source=("mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64"
         0001-Allow-to-use-bessel-and-complex-functions-without-un.patch
         9001-crt-Mark-atexit-as-DATA-because-it-s-always-overridd.patch
         9002-crt-Provide-wrappers-for-exit-in-libmingwex.patch
-        9003-crt-Implement-standard-conforming-termination-suppor.patch)
+        9003-crt-Implement-standard-conforming-termination-suppor.patch
+        9004-crt-Copy-clock-and-nanosleep-from-winpthreads.patch)
 sha256sums=('SKIP'
             'd641257f7e1469aff89adc33e57702b75fe9667ca035978f890eae1020b6814c'
             'd4370b1e19f8e272f16e5af40faf74821e81d0b20783ee7ab2b32fe0a21466ee'
             '0fd2c9eb6048d2c08901fafdcae59da7fc60b15036d8e9807219c5dcb9f1027a'
-            '08b3602239fb873988af1783d3bdde7579b725198e92ef5f03569de9ac925910')
+            '08b3602239fb873988af1783d3bdde7579b725198e92ef5f03569de9ac925910'
+            'e56ef63443fb147489a0ea7d866daf49482773bc1aa779e98496f1ebe0ce6f70')
 
 pkgver() {
   cd "${srcdir}/mingw-w64"
@@ -43,6 +45,7 @@ prepare() {
   git apply "${srcdir}/9001-crt-Mark-atexit-as-DATA-because-it-s-always-overridd.patch"
   git apply "${srcdir}/9002-crt-Provide-wrappers-for-exit-in-libmingwex.patch"
   git apply "${srcdir}/9003-crt-Implement-standard-conforming-termination-suppor.patch"
+  git apply "${srcdir}/9004-crt-Copy-clock-and-nanosleep-from-winpthreads.patch"
   (cd mingw-w64-crt && automake)
 
   git apply "${srcdir}/0001-Allow-to-use-bessel-and-complex-functions-without-un.patch"
@@ -50,21 +53,27 @@ prepare() {
 
 build() {
   msg "Building ${MSYSTEM} CRT"
-  local _crt_configure_args
+
+  declare -a _crt_configure_args
   case "$CARCH" in
     i686)
-      _crt_configure_args="--disable-lib64 --enable-lib32"
+      _crt_configure_args=("--disable-lib64" "--enable-lib32")
     ;;
     x86_64)
-      _crt_configure_args="--disable-lib32 --enable-lib64"
+      _crt_configure_args=("--disable-lib32" "--enable-lib64")
     ;;
     armv7)
-      _crt_configure_args="--disable-lib32 --disable-lib64 --enable-libarm32"
+      _crt_configure_args=("--disable-lib32" "--disable-lib64" "--enable-libarm32")
     ;;
     aarch64)
-      _crt_configure_args="--disable-lib32 --disable-lib64 --disable-libarm32 --enable-libarm64"
+      _crt_configure_args=("--disable-lib32" "--disable-lib64" "--disable-libarm32" "--enable-libarm64")
     ;;
   esac
+
+  # only clang+lld support this at the moment
+  if [[ $MINGW_PACKAGE_PREFIX == *-clang-* ]]; then
+    _crt_configure_args+=("--enable-cfguard")
+  fi
 
   local _default_msvcrt=msvcrt
   if [[ $MINGW_PACKAGE_PREFIX == *-clang-* ]] || [[ $MINGW_PACKAGE_PREFIX == *-ucrt-* ]]; then
@@ -82,7 +91,7 @@ build() {
     --with-default-msvcrt=${_default_msvcrt} \
     --enable-wildcard \
     --disable-dependency-tracking \
-    ${_crt_configure_args}
+    "${_crt_configure_args[@]}"
 
   make
 }
