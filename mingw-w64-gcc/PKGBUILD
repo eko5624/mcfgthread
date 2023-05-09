@@ -21,7 +21,7 @@ pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
         )
 #_snapshot=20181214
 pkgver=13.0.1+20230307
-_branch=master
+_branch=releases/gcc-13
 _sourcedir=${_realname}
 pkgrel=1
 pkgdesc="GCC for the MinGW-w64"
@@ -46,7 +46,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-${_realname}"
              "${MINGW_PACKAGE_PREFIX}-zstd"
              "${MINGW_PACKAGE_PREFIX}-gperf"
              "${MINGW_PACKAGE_PREFIX}-autotools")
-options=('staticlibs' '!emptydirs') # '!strip' 'debug')
+options=('!emptydirs') # '!strip' 'debug')
 source=(${_sourcedir}::"git://gcc.gnu.org/git/gcc.git#branch=${_branch}"
         "gdbinit"
         0002-Relocate-libintl.patch
@@ -63,7 +63,8 @@ source=(${_sourcedir}::"git://gcc.gnu.org/git/gcc.git#branch=${_branch}"
         0140-gcc-diagnostic-color.patch
         0200-add-m-no-align-vector-insn-option-for-i386.patch
         0300-override-builtin-printf-format.patch
-        0400-gcc-Make-stupid-AT-T-syntax-not-default.patch)
+        0400-gcc-Make-stupid-AT-T-syntax-not-default.patch
+        https://github.com/gcc-mirror/gcc/commit/1c118c9970600117700cc12284587e0238de6bbe.patch)
 sha256sums=('SKIP'
             '0acd5b088ae2c3e632f6c624cb8d240953181444c6ccdedd360711714dd999b9'
             '3fab890be4b0d4e9e309749c4de5ce00f069eee4fe6080baa100f768264e6218'
@@ -80,7 +81,8 @@ sha256sums=('SKIP'
             'e0a5b470f49a29f20215cc9f9d04c1cb9969dff6f0e546542799d3a693ef1c84'
             'c34f9e71b5a092be1987ad4c65891742c74c9eb8ef6560100e751cd31375f579'
             'f73c8d1701762fed7d8102d17d8e4416a4cc5e600e297a89c2e1fe09cd743a1c'
-            'ebbd37e62e5420fc90c9365ebab9bb1a3baef37bf86cf9f059398023552c9ee8')
+            'ebbd37e62e5420fc90c9365ebab9bb1a3baef37bf86cf9f059398023552c9ee8'
+            'aecce97a914cead59a1bbb90fba2f7645dfa5d8bb7dbf9eedb94cade2270a1c2')
 validpgpkeys=(F3691687D867B81B51CE07D9BBE43771487328A9  # bpiotrowski@archlinux.org
               86CFFCA918CF3AF47147588051E8B148A9999C34  # evangelos@foutrelis.com
               13975A70E63C361C73AE69EF6EEB81F8981C74C7  # richard.guenther@gmail.com
@@ -104,7 +106,6 @@ del_file_exists() {
   done
 }
 # =========================================== #
-
 
 pkgver() {
   cd ${srcdir}/${_sourcedir}
@@ -152,6 +153,10 @@ prepare() {
 
   apply_patch_with_msg \
     0400-gcc-Make-stupid-AT-T-syntax-not-default.patch
+
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=109670#c7
+  # https://github.com/gcc-mirror/gcc/commit/1c118c9970600117700cc12284587e0238de6bbe
+  patch -R -Nbp1 -i "${srcdir}/1c118c9970600117700cc12284587e0238de6bbe.patch"
 
   # do not expect ${prefix}/mingw symlink - this should be superceded by
   # 0005-Windows-Don-t-ignore-native-system-header-dir.patch .. but isn't!
@@ -214,14 +219,6 @@ build() {
     '--with-stage1-ldflags="-static-libstdc++"'
   )
 
-  # -fstack-protector-strong breaks libssp
-  # https://github.com/msys2/MINGW-packages/issues/13830
-  # TODO: This can be removed once we drop libssp all together
-  CFLAGS+=" -fno-stack-protector"
-
-  # TODO: remove this with gcc 13.x, which includes a proper fix:
-  # https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=902c755930326cb4405672aa3ea13c35c653cbff
-  CPPFLAGS+=" -DWIN32_LEAN_AND_MEAN"
   # In addition adaint.c does `#include <accctrl.h>` which pulls in msxml.h, hacky hack:
   CPPFLAGS+=" -DCOM_NO_WINDOWS_H"
 
@@ -249,6 +246,7 @@ build() {
     --disable-libstdcxx-pch \
     --enable-lto \
     --enable-libgomp \
+    --disable-libssp \
     --disable-multilib \
     --disable-rpath \
     --disable-win32-registry \
@@ -271,11 +269,17 @@ build() {
     sed -i 's,^STRIP_FOR_TARGET=.*$,STRIP_FOR_TARGET=true,g' Makefile
   fi
 
-  make V=1 all
+  # https://gcc.gnu.org/onlinedocs/gccint/Makefile.html
+  # https://bugs.archlinux.org/task/71777
+  make -O STAGE1_CFLAGS="-O2" \
+          BOOT_CFLAGS="$CFLAGS" \
+          BOOT_LDFLAGS="$LDFLAGS" \
+          LDFLAGS_FOR_TARGET="$LDFLAGS" \
+          all
 
   rm -rf ${srcdir}${MINGW_PREFIX}
 
-  make -j1 DESTDIR=${srcdir} install
+  make DESTDIR=${srcdir} install
   if [ "$_enable_ada" == "yes" ]; then
     mv ${srcdir}${MINGW_PREFIX}/lib/gcc/${MINGW_CHOST}/${pkgver%%+*}/adalib/*.dll ${srcdir}${MINGW_PREFIX}/bin/
   fi
@@ -285,8 +289,7 @@ package_gcc-libs() {
   pkgdesc="GNU Compiler Collection (libraries) for MinGW-w64"
   depends=("${MINGW_PACKAGE_PREFIX}-libwinpthread"
            "${MINGW_PACKAGE_PREFIX}-mcfgthread-libs")
-  provides=("${MINGW_PACKAGE_PREFIX}-libssp"
-            "${MINGW_PACKAGE_PREFIX}-omp")
+  provides=("${MINGW_PACKAGE_PREFIX}-omp")
 
   # Licensing information
 
@@ -298,7 +301,7 @@ package_gcc-libs() {
   # We explain the licensing in this generated README file
   mkdir -p "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}-libs"
   cat << ENDFILE > "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}-libs/README"
-The libgcc, libssp, libstdc++, libgomp and libatomic libraries are covered by
+The libgcc, libstdc++, libgomp and libatomic libraries are covered by
 GPL3+ with the GCC Runtime Library Exception. The libquadmath library is covered
 by LGPL2+. The package as a whole can be redistributed under GPL3+.
 ENDFILE
@@ -312,7 +315,7 @@ ENDFILE
 
   cd ${srcdir}${MINGW_PREFIX}
   # libitm* and libvtv* are disbled until fixed
-  cp bin/{libatomic*,libgcc*,libgomp*,libquadmath*,libssp*,libstdc*}.dll ${pkgdir}${MINGW_PREFIX}/bin/
+  cp bin/{libatomic*,libgcc*,libgomp*,libquadmath*,libstdc*}.dll ${pkgdir}${MINGW_PREFIX}/bin/
   if [ "$_enable_jit" == "yes" ]; then
     rm ${pkgdir}${MINGW_PREFIX}/bin/libgccjit-0.dll
   fi
