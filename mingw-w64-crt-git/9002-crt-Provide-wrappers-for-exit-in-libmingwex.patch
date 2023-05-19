@@ -1,7 +1,7 @@
-From 7657195aaf89aaaaf5178230f1db8ca4b41f1cf0 Mon Sep 17 00:00:00 2001
+From 08f939e2e44db1c728c65594e8054dc8f5271955 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 7 Oct 2022 22:46:50 +0800
-Subject: [PATCH] crt: Provide wrappers for `*exit()` in libmingwex
+Subject: [PATCH 2/4] crt: Provide wrappers for `*exit()` in libmingwex
 
 This should have no effect on functionality, but allows further
 customization of them.
@@ -11,7 +11,7 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
  mingw-w64-crt/Makefile.am                     |  2 +-
  mingw-w64-crt/crt/exit_wrappers.c             | 25 +++++++++++++++++
  mingw-w64-crt/crt/ucrt_exit_wrappers.c        | 27 +++++++++++++++++++
- mingw-w64-crt/crt/ucrtbase_compat.c           |  2 +-
+ mingw-w64-crt/crt/ucrtbase_compat.c           |  4 ++-
  .../api-ms-win-crt-runtime-l1-1-0.def.in      |  8 +++---
  mingw-w64-crt/lib-common/msvcr120_app.def.in  |  4 +--
  mingw-w64-crt/lib-common/msvcrt.def.in        |  4 +--
@@ -39,12 +39,12 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
  mingw-w64-crt/libarm32/kernelbase.def         |  4 +--
  mingw-w64-crt/libarm32/msvcr110.def           |  4 +--
  mingw-w64-crt/libarm32/msvcr120_clr0400.def   |  4 +--
- 31 files changed, 112 insertions(+), 60 deletions(-)
+ 31 files changed, 114 insertions(+), 60 deletions(-)
  create mode 100644 mingw-w64-crt/crt/exit_wrappers.c
  create mode 100644 mingw-w64-crt/crt/ucrt_exit_wrappers.c
 
 diff --git a/mingw-w64-crt/Makefile.am b/mingw-w64-crt/Makefile.am
-index 0297e49b0..a9b096f0f 100644
+index a4a1ed922..79d358600 100644
 --- a/mingw-w64-crt/Makefile.am
 +++ b/mingw-w64-crt/Makefile.am
 @@ -129,7 +129,7 @@ src_libmingw32=include/oscalls.h include/internal.h include/sect_attribs.h \
@@ -121,11 +121,15 @@ index 000000000..112d8e3c7
 +  (*__MINGW_IMP_SYMBOL(_Exit))(status);
 +}
 diff --git a/mingw-w64-crt/crt/ucrtbase_compat.c b/mingw-w64-crt/crt/ucrtbase_compat.c
-index 33eeaff3e..359d94485 100644
+index 33eeaff3e..3f88d24c4 100644
 --- a/mingw-w64-crt/crt/ucrtbase_compat.c
 +++ b/mingw-w64-crt/crt/ucrtbase_compat.c
-@@ -104,7 +104,7 @@ int __cdecl (*__MINGW_IMP_SYMBOL(at_quick_exit))(void (__cdecl *)(void)) = at_qu
+@@ -102,9 +102,11 @@ int __cdecl at_quick_exit(void (__cdecl *func)(void))
  
+ int __cdecl (*__MINGW_IMP_SYMBOL(at_quick_exit))(void (__cdecl *)(void)) = at_quick_exit;
+ 
++extern void (*__MINGW_IMP_SYMBOL(_exit))(int) __attribute__((__noreturn__));
++
  void __cdecl _amsg_exit(int ret) {
    fprintf(stderr, "runtime error %d\n", ret);
 -  _exit(255);

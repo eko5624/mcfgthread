@@ -1,7 +1,7 @@
-From 61d165aa9c36a41b2cffed90c74d98b7c7826c65 Mon Sep 17 00:00:00 2001
+From 5eeb3ae48e0f16a80f8849c4caf3034d9928d392 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Sat, 22 Oct 2022 23:31:33 +0800
-Subject: [PATCH 3/3] crt: Implement standard-conforming termination support
+Subject: [PATCH 3/4] crt: Implement standard-conforming termination support
  with mcfgthread
 
 This commit implements these functions in accordance with the ISO C
@@ -110,7 +110,7 @@ index e264d4e96..768c0f44e 100644
  
  char __mingw_module_is_dll = 1;
 diff --git a/mingw-w64-crt/crt/crtexe.c b/mingw-w64-crt/crt/crtexe.c
-index e4a180a3a..19d1136c5 100644
+index 03bda5912..7f501400a 100644
 --- a/mingw-w64-crt/crt/crtexe.c
 +++ b/mingw-w64-crt/crt/crtexe.c
 @@ -20,6 +20,10 @@
@@ -124,7 +124,7 @@ index e4a180a3a..19d1136c5 100644
  
  #if defined(__SEH__) && (!defined(__clang__) || __clang_major__ >= 7)
  #define SEH_INLINE_ASM
-@@ -50,6 +54,7 @@ int *__cdecl __p__commode(void);
+@@ -45,6 +49,7 @@ int *__cdecl __p__commode(void);
  extern int _fmode;
  extern int _commode;
  extern int _dowildcard;
@@ -132,7 +132,7 @@ index e4a180a3a..19d1136c5 100644
  
  extern _CRTIMP void __cdecl _initterm(_PVFV *, _PVFV *);
  
-@@ -263,6 +268,11 @@ __tmainCRTStartup (void)
+@@ -258,6 +263,11 @@ __tmainCRTStartup (void)
      _fpreset ();
  
      duplicate_ppstrings (argc, &argv);
@@ -144,7 +144,7 @@ index e4a180a3a..19d1136c5 100644
      __main (); /* C++ initialization. */
  #ifdef _UNICODE
      __winitenv = envp;
-@@ -339,7 +349,11 @@ static void duplicate_ppstrings (int ac, _TCHAR ***av)
+@@ -334,7 +344,11 @@ static void duplicate_ppstrings (int ac, _TCHAR ***av)
  
  int __cdecl atexit (_PVFV func)
  {
@@ -208,7 +208,7 @@ index 256c26d07..ab6896f96 100644
 +}
 +#endif  /* __USING_MCFGTHREAD__  */
 diff --git a/mingw-w64-crt/crt/tls_atexit.c b/mingw-w64-crt/crt/tls_atexit.c
-index f39731ad7..0b8f83a4c 100644
+index 0412fa4ba..ed36b935c 100644
 --- a/mingw-w64-crt/crt/tls_atexit.c
 +++ b/mingw-w64-crt/crt/tls_atexit.c
 @@ -4,6 +4,29 @@
@@ -260,7 +260,7 @@ index f39731ad7..0b8f83a4c 100644
  extern char __mingw_module_is_dll;
  
  static CRITICAL_SECTION lock;
-@@ -159,3 +177,5 @@ static void WINAPI tls_callback(HANDLE hDllHandle, DWORD dwReason, LPVOID __UNUS
+@@ -170,3 +188,5 @@ static void WINAPI tls_callback(HANDLE hDllHandle, DWORD dwReason, LPVOID __UNUS
  }
  
  _CRTALLOC(".CRT$XLB") PIMAGE_TLS_CALLBACK __xl_b = (PIMAGE_TLS_CALLBACK) tls_callback;
@@ -293,7 +293,7 @@ index 112d8e3c7..4ef52a687 100644
 +#endif
  }
 diff --git a/mingw-w64-crt/crt/ucrtbase_compat.c b/mingw-w64-crt/crt/ucrtbase_compat.c
-index 02910ff2f..52c22d62e 100644
+index 3f88d24c4..d15cffaa3 100644
 --- a/mingw-w64-crt/crt/ucrtbase_compat.c
 +++ b/mingw-w64-crt/crt/ucrtbase_compat.c
 @@ -55,8 +55,6 @@ _CRTIMP int __cdecl _configure_wide_argv(int mode);
@@ -322,8 +322,8 @@ index 02910ff2f..52c22d62e 100644
  int __cdecl (*__MINGW_IMP_SYMBOL(at_quick_exit))(void (__cdecl *)(void)) = at_quick_exit;
 +#endif  // __USING_MCFGTHREAD__
  
- void __cdecl _amsg_exit(int ret) {
-   fprintf(stderr, "runtime error %d\n", ret);
+ extern void (*__MINGW_IMP_SYMBOL(_exit))(int) __attribute__((__noreturn__));
+ 
 -- 
-2.39.0
+2.40.1
 

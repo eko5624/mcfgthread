@@ -1,0 +1,171 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Contributor: Ray Donnelly <mingw.android@gmail.com>
+# Contributor: Mateusz Mikula <mati865@gmail.com>
+
+_realname=binutils
+pkgbase=mingw-w64-${_realname}
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+pkgver=14.0.50+20230519
+_branch=binutils-2_40-branch
+_sourcedir=${_realname}
+pkgrel=1
+pkgdesc="A set of programs to assemble and manipulate binary and object files (mingw-w64)"
+arch=('any')
+mingw_arch=('mingw32' 'mingw64' 'ucrt64')
+url="https://www.gnu.org/software/binutils/"
+license=('GPL')
+groups=("${MINGW_PACKAGE_PREFIX}-toolchain")
+depends=("${MINGW_PACKAGE_PREFIX}-zstd")
+makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
+             "${MINGW_PACKAGE_PREFIX}-autotools")
+source=(${_sourcedir}::"git://sourceware.org/git/binutils-gdb.git#branch=${_branch}"
+        0002-check-for-unusual-file-harder.patch
+        0003-opcodes-i386-dis-Use-Intel-syntax-by-default.patch
+        0010-bfd-Increase-_bfd_coff_max_nscns-to-65279.patch
+        0110-binutils-mingw-gnu-print.patch
+        2001-ld-option-to-move-default-bases-under-4GB.patch
+        2003-Restore-old-behaviour-of-windres-so-that-options-con.patch
+        reproducible-import-libraries.patch
+        specify-timestamp.patch
+        libiberty-unlink-handle-windows-nul.patch
+        bfd-real-fopen-handle-windows-nul.patch
+        3001-try-fix-compare_section-abort.patch
+        decorated-symbols-in-import-libs.patch
+)
+sha256sums=('SKIP'
+            '2c99345fc575c3a060d6677537f636c6c4154fac0fde508070f3b6296c1060d4'
+            '18fa935462f50d2588d121da20310c4479cc1d22328add1c768027b1e79e3aab'
+            '4e8ac055df61b1b5d6ae29dc87e1154737c2e87c7b244b44866702cabf1a5d18'
+            '5f3fc3949172d2d6e7cd595f9359077e012391a8c3c2aebc02e30fa656ded833'
+            '328ed91bdc9c729ab19f2a566d2d1cbb5ac1beb4775bd71d85e9777b4ed4c17a'
+            'd584f1cd9e94cba0e9b27625c4acc8ad5242cd625c9b44839d42fc116072568c'
+            'a094660ec95996c00b598429843b7869037732146442af567ada9f539bd40480'
+            '27696da8ecfff307537a461b205fad44d6abc1fa648fbf839e72a1d3ea71c40a'
+            '7ccbd418695733c50966068fa9755a6abb156f53af23701d2bc097c63e9e0030'
+            'dda1cf0c1825283a8b3708d1a4087dd650f4fbc3f8aa571e211cfe3e1458c8f8'
+            'ddfa01ed6ce1c0608bbcd462ced8383b5f9f686c2b49fb510a41637fff2ca019'
+            '6313b7b32840db54bc20cfee7d2537e3e414b657e42e7bae1db1f61d3b63d599')
+validpgpkeys=('EAF1C276A747E9ED86210CBAC3126D3B4AE55E93'
+              '3A24BC1E8FB409FA9F14371813FCEF89DD9E3C4F')
+
+apply_patch_with_msg() {
+  for _patch in "$@"
+  do
+    msg2 "Applying ${_patch}"
+    patch -p1 -i "${srcdir}/${_patch}"
+  done
+}
+
+pkgver() {
+  cd ${srcdir}/${_sourcedir}
+  _gdb_date=$(sed -n -e 's/^.* BFD_VERSION_DATE \(.*\)$/\1/p'  bfd/version.h)
+  head -n 1 gdb/version.in | sed -e "s/\.DATE.*$/+$_gdb_date/"
+}
+
+prepare() {
+  cd ${srcdir}/${_sourcedir}
+  git reset --hard
+  git clean -fdx
+
+  apply_patch_with_msg \
+    0002-check-for-unusual-file-harder.patch \
+    0010-bfd-Increase-_bfd_coff_max_nscns-to-65279.patch \
+    0110-binutils-mingw-gnu-print.patch
+
+  apply_patch_with_msg \
+    0003-opcodes-i386-dis-Use-Intel-syntax-by-default.patch
+
+  # Add an option to change default bases back below 4GB to ease transition
+  # https://github.com/msys2/MINGW-packages/issues/7027
+  # https://github.com/msys2/MINGW-packages/issues/7023
+  apply_patch_with_msg 2001-ld-option-to-move-default-bases-under-4GB.patch
+
+  # https://github.com/msys2/MINGW-packages/pull/9233#issuecomment-889439433
+  patch -R -p1 -i "${srcdir}/2003-Restore-old-behaviour-of-windres-so-that-options-con.patch"
+
+  # patches for reproducibility from Debian:
+  # https://salsa.debian.org/mingw-w64-team/binutils-mingw-w64/-/tree/master/debian/patches
+  patch -p2 -i "${srcdir}/reproducible-import-libraries.patch"
+  patch -p2 -i "${srcdir}/specify-timestamp.patch"
+
+  # Handle Windows nul device
+  # https://github.com/msys2/MINGW-packages/issues/1840
+  # https://github.com/msys2/MINGW-packages/issues/10520
+  # https://github.com/msys2/MINGW-packages/issues/14725
+
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108276
+  # https://gcc.gnu.org/pipermail/gcc-patches/2023-January/609487.html
+  patch -p1 -i "${srcdir}/libiberty-unlink-handle-windows-nul.patch"
+
+  # https://sourceware.org/bugzilla/show_bug.cgi?id=29947
+  patch -p1 -i "${srcdir}/bfd-real-fopen-handle-windows-nul.patch"
+
+  # https://sourceware.org/bugzilla/show_bug.cgi?id=30079#c2
+  # XXX: Update to upstream fix once there is one
+  patch -p1 -i "${srcdir}/3001-try-fix-compare_section-abort.patch"
+
+  if [ "${CARCH}" = "i686" ]; then
+    # https://sourceware.org/bugzilla/show_bug.cgi?id=30421
+    apply_patch_with_msg decorated-symbols-in-import-libs.patch
+  fi
+}
+
+build() {
+  [[ -d ${srcdir}/build-${MSYSTEM} ]] && rm -rf ${srcdir}/build-${MSYSTEM}
+  mkdir -p build-${MSYSTEM} && cd build-${MSYSTEM}
+
+  if check_option "debug" "y"; then
+    CFLAGS+=" -O0"
+  fi
+
+  declare -a extra_config=""
+  if [ "${CARCH}" = "x86_64" ]; then
+    extra_config+=('--enable-64-bit-bfd')
+  else
+    LDFLAGS+=" -Wl,--large-address-aware"
+  fi
+
+  ../${_sourcedir}/configure \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --prefix=${MINGW_PREFIX} \
+    --disable-werror \
+    --enable-lto \
+    --with-sysroot=${MINGW_PREFIX} \
+    --with-libiconv-prefix=${MINGW_PREFIX} \
+    ${extra_config[@]} \
+    --enable-nls \
+    --disable-rpath \
+    --disable-multilib \
+    --enable-install-libiberty \
+    --enable-plugins \
+    --disable-shared \
+    --enable-deterministic-archives \
+    --disable-{gdb,gdbserver}
+
+  make
+}
+
+check() {
+  cd ${srcdir}/build-${MSYSTEM}
+
+  # unset LDFLAGS as testsuite makes assumptions about which ones are active
+  # do not abort on errors - manually check log files
+  make LDFLAGS="" -k check || true
+}
+
+package() {
+  cd ${srcdir}/build-${MSYSTEM}
+  make DESTDIR=${pkgdir} install
+
+  # https://github.com/msys2/MINGW-packages/issues/7890
+  rm "${pkgdir}${MINGW_PREFIX}/lib/bfd-plugins/libdep.a"
+
+  find ${pkgdir}${MINGW_PREFIX}/share -type f -iname "opcodes.mo" -o -iname "bfd.mo" | xargs -rtl1 rm
+
+  install -Dm644 ${srcdir}/${_sourcedir}/COPYING      ${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING
+  install -Dm644 ${srcdir}/${_sourcedir}/COPYING.LIB  ${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING.LIB
+  install -Dm644 ${srcdir}/${_sourcedir}/COPYING3     ${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING3
+  install -Dm644 ${srcdir}/${_sourcedir}/COPYING3.LIB ${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING3.LIB
+}

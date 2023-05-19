@@ -5,8 +5,9 @@ _realname=gdb
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-multiarch")
-pkgver=13.1.90+20230307
+pkgver=13.1.90+20230519
 _branch=gdb-13-branch
+_sourcedir=${_realname}
 pkgrel=1
 pkgdesc="GNU Debugger (mingw-w64)"
 arch=('any')
@@ -30,13 +31,14 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-autotools"
              "${MINGW_PACKAGE_PREFIX}-iconv"
              "${MINGW_PACKAGE_PREFIX}-xz")
-source=(${_realname}::"git://sourceware.org/git/binutils-gdb.git#branch=${_branch}"
+source=(${_sourcedir}::"git://sourceware.org/git/binutils-gdb.git#branch=${_branch}"
         '0001-Workaround-performance-regression-in-info-func-var-t.patch'
         '0002-Fix-using-gnu-print.patch'
         '0003-configure-Disable-static-linking-with-standard-libs.patch'
         '0004-Python-Configure-path-fixes.patch'
         '0005-W32-Always-check-USERPROFILE-if-HOME-is-not-set.patch'
-        '0006-Handle-unwinding-from-SEGV-on-Windows.patch')
+        '0006-Handle-unwinding-from-SEGV-on-Windows.patch'
+        '0007-gdb-i386-tdep-Use-Intel-syntax-by-default.patch')
 validpgpkeys=('F40ADB902B24264AA42E50BF92EDB04BFF325CF3')
 sha256sums=('SKIP'
             '428cda7dcc107c236225ae89704390b0f1e70c276b5ca6b1741988f384b21d62'
@@ -44,7 +46,8 @@ sha256sums=('SKIP'
             '0eb291cd81f7392610d16a83f436a30d3384a99661c6b6ffd1bfb243d5aee6dd'
             '7ef9c6e238a4e232bc689e15e48ee2d8045542c47f0b156d9fc92a7c14e6757e'
             '39d1cb2a1be8d60c16404ad96882f10cd3ebd942d8b7af62a7416a230a50de93'
-            '5d0086ed36649c8faeb46efe5aeaf9ca6b6602a8d90ea72e1feb2436b1396acc')
+            '5d0086ed36649c8faeb46efe5aeaf9ca6b6602a8d90ea72e1feb2436b1396acc'
+            '790b6d80ef8c24a3cd6397283a4ab3cc5e212f3142a0df15954f248c6cf967d9')
 
 apply_patch_with_msg() {
   for _patch in "$@"
@@ -55,13 +58,15 @@ apply_patch_with_msg() {
 }
 
 pkgver() {
-  cd ${srcdir}/${_realname}
+  cd ${srcdir}/${_sourcedir}
   _gdb_date=$(sed -n -e 's/^.* BFD_VERSION_DATE \(.*\)$/\1/p'  bfd/version.h)
   head -n 1 gdb/version.in | sed -e "s/\.DATE.*$/+$_gdb_date/"
 }
 
 prepare() {
-  cd ${srcdir}/${_realname}
+  cd ${srcdir}/${_sourcedir}
+  git reset --hard
+  git clean -fdx
 
   # https://sourceware.org/bugzilla/show_bug.cgi?id=15412
   apply_patch_with_msg \
@@ -81,6 +86,9 @@ prepare() {
   # https://sourceware.org/bugzilla/show_bug.cgi?id=30255
   apply_patch_with_msg \
     0006-Handle-unwinding-from-SEGV-on-Windows.patch
+
+  apply_patch_with_msg \
+    0007-gdb-i386-tdep-Use-Intel-syntax-by-default.patch
 
   # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
