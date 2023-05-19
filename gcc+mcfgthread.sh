@@ -12,7 +12,7 @@ rm -rf $DIR/mingw-w64-gdb
 
 git clone https://github.com/lhmouse/MINGW-packages.git
 cd $DIR/MINGW-packages
-cp -rf mingw-w64-binutils
+cp -rf mingw-w64-binutils ../
 cp -rf mingw-w64-headers-git ../
 cp -rf mingw-w64-crt-git ../
 cp -rf mingw-w64-mcfgthread ../
