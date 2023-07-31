@@ -1,7 +1,7 @@
-From 08f939e2e44db1c728c65594e8054dc8f5271955 Mon Sep 17 00:00:00 2001
+From 5ef09e6baf078e9db654027dc8b25ae7e502f6b8 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 7 Oct 2022 22:46:50 +0800
-Subject: [PATCH 2/4] crt: Provide wrappers for `*exit()` in libmingwex
+Subject: [PATCH 3/5] crt: Provide wrappers for `*exit()` in libmingwex
 
 This should have no effect on functionality, but allows further
 customization of them.
@@ -44,7 +44,7 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
  create mode 100644 mingw-w64-crt/crt/ucrt_exit_wrappers.c
 
 diff --git a/mingw-w64-crt/Makefile.am b/mingw-w64-crt/Makefile.am
-index a4a1ed922..79d358600 100644
+index 24f86c6c6..54799d6be 100644
 --- a/mingw-w64-crt/Makefile.am
 +++ b/mingw-w64-crt/Makefile.am
 @@ -129,7 +129,7 @@ src_libmingw32=include/oscalls.h include/internal.h include/sect_attribs.h \
@@ -121,7 +121,7 @@ index 000000000..112d8e3c7
 +  (*__MINGW_IMP_SYMBOL(_Exit))(status);
 +}
 diff --git a/mingw-w64-crt/crt/ucrtbase_compat.c b/mingw-w64-crt/crt/ucrtbase_compat.c
-index 33eeaff3e..3f88d24c4 100644
+index 31a3ee3f1..9eb33e534 100644
 --- a/mingw-w64-crt/crt/ucrtbase_compat.c
 +++ b/mingw-w64-crt/crt/ucrtbase_compat.c
 @@ -102,9 +102,11 @@ int __cdecl at_quick_exit(void (__cdecl *func)(void))
@@ -130,7 +130,7 @@ index 33eeaff3e..3f88d24c4 100644
  
 +extern void (*__MINGW_IMP_SYMBOL(_exit))(int) __attribute__((__noreturn__));
 +
- void __cdecl _amsg_exit(int ret) {
+ void __cdecl __MINGW_ATTRIB_NORETURN _amsg_exit(int ret) {
    fprintf(stderr, "runtime error %d\n", ret);
 -  _exit(255);
 +  (*__MINGW_IMP_SYMBOL(_exit))(255);
@@ -768,5 +768,5 @@ index 3a153da53..18ab94522 100644
  expf
  fabs
 -- 
-2.40.1
+2.41.0
 

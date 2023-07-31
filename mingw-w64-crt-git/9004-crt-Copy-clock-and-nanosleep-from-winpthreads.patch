@@ -1,7 +1,7 @@
-From 31aba1cf38b1ffa10e13b1ee24ce858815d3ee80 Mon Sep 17 00:00:00 2001
+From 85a3538b123ef0c9f2fd065e62c0c6859a59c9ef Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 21 Apr 2023 22:17:21 +0800
-Subject: [PATCH 4/4] crt: Copy clock and nanosleep from winpthreads
+Subject: [PATCH 5/5] crt: Copy clock and nanosleep from winpthreads
 
 Signed-off-by: LIU Hao <lh_mouse@126.com>
 ---
@@ -13,7 +13,7 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
  create mode 100644 mingw-w64-crt/time/nanosleep.c
 
 diff --git a/mingw-w64-crt/Makefile.am b/mingw-w64-crt/Makefile.am
-index 79d358600..f3da58e35 100644
+index 54799d6be..5446e1cfe 100644
 --- a/mingw-w64-crt/Makefile.am
 +++ b/mingw-w64-crt/Makefile.am
 @@ -623,7 +623,9 @@ src_libmingwex=\
@@ -390,5 +390,5 @@ index 000000000..3c178c4bb
 +    return 0;
 +}
 -- 
-2.40.1
+2.41.0
 
