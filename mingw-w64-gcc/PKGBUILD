@@ -22,7 +22,7 @@ pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          $([[ "$_enable_jit" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-libgccjit")
         )
 #_snapshot=20181214
-pkgver=13.1.1+20230605
+pkgver=13.2.1+20230807
 _branch=releases/gcc-13
 _sourcedir=${_realname}
 pkgrel=1
