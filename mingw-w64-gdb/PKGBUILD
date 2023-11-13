@@ -5,8 +5,8 @@ _realname=gdb
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-multiarch")
-pkgver=13.2.90+20230807
-_branch=gdb-13-branch
+pkgver=14.0.91+20231108
+_branch=gdb-14-branch
 _sourcedir=${_realname}
 pkgrel=1
 pkgdesc="GNU Debugger (mingw-w64)"
@@ -37,17 +37,15 @@ source=(${_sourcedir}::"git://sourceware.org/git/binutils-gdb.git#branch=${_bran
         '0003-configure-Disable-static-linking-with-standard-libs.patch'
         '0004-Python-Configure-path-fixes.patch'
         '0005-W32-Always-check-USERPROFILE-if-HOME-is-not-set.patch'
-        '0006-Handle-unwinding-from-SEGV-on-Windows.patch'
-        '0007-gdb-i386-tdep-Use-Intel-syntax-by-default.patch')
+        '0006-gdb-i386-tdep-Use-Intel-syntax-by-default.patch')
 validpgpkeys=('F40ADB902B24264AA42E50BF92EDB04BFF325CF3')
 sha256sums=('SKIP'
-            '428cda7dcc107c236225ae89704390b0f1e70c276b5ca6b1741988f384b21d62'
-            'cf12bce0b988765ecac26a6895238c48ef9676d6fc01f986f75dcbc8bd8d3f07'
-            '0eb291cd81f7392610d16a83f436a30d3384a99661c6b6ffd1bfb243d5aee6dd'
-            '7ef9c6e238a4e232bc689e15e48ee2d8045542c47f0b156d9fc92a7c14e6757e'
-            '39d1cb2a1be8d60c16404ad96882f10cd3ebd942d8b7af62a7416a230a50de93'
-            '5d0086ed36649c8faeb46efe5aeaf9ca6b6602a8d90ea72e1feb2436b1396acc'
-            '790b6d80ef8c24a3cd6397283a4ab3cc5e212f3142a0df15954f248c6cf967d9')
+            '7c0c03198b06208f47352346f7fce57333be07058211bbeeba0c507406f2a0a5'
+            '3704274e47836c5bada02517418c736c29cc5172dda30cc4e851314ab866c89e'
+            'b5af1ce65583975230df04298d3472116c2556825661e56e75b4e562b61e42a1'
+            '4bd9e4ddd02150fe585a3992b3b8cc3647d68dc53b6fbfd209072a22fa47b053'
+            '80e52865940331657377e2dcde21e7797c0442be004e39007d073b13ae1ff860'
+            '0ae7583ae0be9f553af6aa55842878b26bccb052c45c04e9a41ad212198c118d')
 
 apply_patch_with_msg() {
   for _patch in "$@"
@@ -83,12 +81,8 @@ prepare() {
     0004-Python-Configure-path-fixes.patch \
     0005-W32-Always-check-USERPROFILE-if-HOME-is-not-set.patch
 
-  # https://sourceware.org/bugzilla/show_bug.cgi?id=30255
   apply_patch_with_msg \
-    0006-Handle-unwinding-from-SEGV-on-Windows.patch
-
-  apply_patch_with_msg \
-    0007-gdb-i386-tdep-Use-Intel-syntax-by-default.patch
+    0006-gdb-i386-tdep-Use-Intel-syntax-by-default.patch
 
   # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
@@ -128,11 +122,8 @@ do_build() {
     --with-system-readline \
     --with-system-zlib \
     --with-python=${MINGW_PREFIX}/bin/python \
-    --with-expat \
     --with-libiconv-prefix=${MINGW_PREFIX} \
-    --with-mpfr \
-    --with-lzma \
-    --with-zstd \
+    --with-{expat,gmp,mpfr,lzma,zstd}=${MINGW_PREFIX} \
     --enable-tui \
     --enable-source-highlight=no
 
