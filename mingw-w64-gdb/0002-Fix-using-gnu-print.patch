@@ -1,7 +1,7 @@
-From f99e82ea439fcc3f2fa03653de8265a680304d0e Mon Sep 17 00:00:00 2001
+From 9c62d820184b60748d002b4874b87e4b38d6a461 Mon Sep 17 00:00:00 2001
 From: Orgad Shaneh <orgads@gmail.com>
 Date: Thu, 13 Feb 2020 09:25:02 +0200
-Subject: [PATCH 2/6] Fix using gnu print
+Subject: [PATCH 2/5] Fix using gnu print
 
 ---
  gdbsupport/format.h         | 6 +++++-
@@ -9,7 +9,7 @@ Subject: [PATCH 2/6] Fix using gnu print
  2 files changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/gdbsupport/format.h b/gdbsupport/format.h
-index 2af34ab9450..4f636ca4e61 100644
+index 921fca5e04d..75d12ae531a 100644
 --- a/gdbsupport/format.h
 +++ b/gdbsupport/format.h
 @@ -23,7 +23,11 @@
@@ -26,7 +26,7 @@ index 2af34ab9450..4f636ca4e61 100644
  #else
  # define USE_PRINTF_I64 0
 diff --git a/gnulib/import/inttypes.in.h b/gnulib/import/inttypes.in.h
-index 853eca087c5..7ed8e212b6b 100644
+index e9ee500e3e6..b1f1f7edd00 100644
 --- a/gnulib/import/inttypes.in.h
 +++ b/gnulib/import/inttypes.in.h
 @@ -171,7 +171,7 @@
@@ -66,5 +66,5 @@ index 853eca087c5..7ed8e212b6b 100644
  # elif ULONG_MAX >> 31 == 1
  #  define _SCNu64_PREFIX _LONG_LONG_FORMAT_PREFIX
 -- 
-2.42.1
+2.33.1.windows.1
 
