@@ -1,7 +1,7 @@
-From fb2ac382e29f407014f8ff8ad5de6698d342e0da Mon Sep 17 00:00:00 2001
+From 9256694608b821c9c75b6b77fa96f20b47d2c88f Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Sat, 22 Oct 2022 23:31:33 +0800
-Subject: [PATCH 4/5] crt: Implement standard-conforming termination support
+Subject: [PATCH 3/4] crt: Implement standard-conforming termination support
  with mcfgthread
 
 This commit implements these functions in accordance with the ISO C
@@ -43,9 +43,9 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
  mingw-w64-crt/crt/crtexe.c             | 14 ++++++++++++
  mingw-w64-crt/crt/exit_wrappers.c      | 26 ++++++++++++++++++++++
  mingw-w64-crt/crt/tls_atexit.c         | 30 +++++++++++++++++++++-----
- mingw-w64-crt/crt/ucrt_exit_wrappers.c |  8 +++++++
+ mingw-w64-crt/crt/ucrt_exit_wrappers.c | 11 ++++++++++
  mingw-w64-crt/crt/ucrtbase_compat.c    |  7 ++++--
- 6 files changed, 106 insertions(+), 8 deletions(-)
+ 6 files changed, 109 insertions(+), 8 deletions(-)
 
 diff --git a/mingw-w64-crt/crt/crtdll.c b/mingw-w64-crt/crt/crtdll.c
 index e264d4e96..768c0f44e 100644
@@ -267,10 +267,20 @@ index 0412fa4ba..ed36b935c 100644
 +
 +#endif  /* __USING_MCFGTHREAD__  */
 diff --git a/mingw-w64-crt/crt/ucrt_exit_wrappers.c b/mingw-w64-crt/crt/ucrt_exit_wrappers.c
-index 112d8e3c7..4ef52a687 100644
+index 112d8e3c7..10611ac88 100644
 --- a/mingw-w64-crt/crt/ucrt_exit_wrappers.c
 +++ b/mingw-w64-crt/crt/ucrt_exit_wrappers.c
-@@ -14,7 +14,11 @@ extern void (*__MINGW_IMP_SYMBOL(quick_exit))(int) __attribute__((__noreturn__))
+@@ -7,6 +7,9 @@
+ #undef __MSVCRT_VERSION__
+ #define _UCRT
+ #include <_mingw.h>
++#ifdef __USING_MCFGTHREAD__
++#include <mcfgthread/exit.h>
++#endif
+ 
+ /* `quick_exit()`, C99  */
+ void quick_exit(int status) __attribute__((__noreturn__));
+@@ -14,7 +17,11 @@ extern void (*__MINGW_IMP_SYMBOL(quick_exit))(int) __attribute__((__noreturn__))
  
  void quick_exit(int status)
  {
@@ -282,7 +292,7 @@ index 112d8e3c7..4ef52a687 100644
  }
  
  /* `_Exit()`, C99  */
-@@ -23,5 +27,9 @@ extern void (*__MINGW_IMP_SYMBOL(_Exit))(int) __attribute__((__noreturn__));
+@@ -23,5 +30,9 @@ extern void (*__MINGW_IMP_SYMBOL(_Exit))(int) __attribute__((__noreturn__));
  
  void _Exit(int status)
  {
@@ -325,5 +335,5 @@ index 9eb33e534..893388b90 100644
  extern void (*__MINGW_IMP_SYMBOL(_exit))(int) __attribute__((__noreturn__));
  
 -- 
-2.41.0
+2.43.0
 
