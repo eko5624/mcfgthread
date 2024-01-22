@@ -3,8 +3,8 @@
 _realname=headers
 pkgbase=mingw-w64-${_realname}-git
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
-pkgdesc="MinGW-w64 headers for Windows"
-pkgver=10.0.0.r201.g931ca20b2
+pkgdesc="MinGW-w64 headers for Windows (mingw-w64)"
+pkgver=11.0.0.r112.g53d58c15f
 pkgrel=1
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32' 'clangarm64')

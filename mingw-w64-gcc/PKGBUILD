@@ -47,7 +47,8 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-${_realname}"
              "${MINGW_PACKAGE_PREFIX}-zlib"
              "${MINGW_PACKAGE_PREFIX}-zstd"
              "${MINGW_PACKAGE_PREFIX}-gperf"
-             "${MINGW_PACKAGE_PREFIX}-autotools")
+             "${MINGW_PACKAGE_PREFIX}-autotools"
+             "${MINGW_PACKAGE_PREFIX}-mcfgthread")
 options=('!emptydirs') # '!strip' 'debug')
 source=(${_sourcedir}::"git://gcc.gnu.org/git/gcc.git#branch=${_branch}"
         "gdbinit"
@@ -66,6 +67,7 @@ source=(${_sourcedir}::"git://gcc.gnu.org/git/gcc.git#branch=${_branch}"
         0200-add-m-no-align-vector-insn-option-for-i386.patch
         0300-override-builtin-printf-format.patch
         0400-gcc-Make-stupid-AT-T-syntax-not-default.patch
+        0401-Always-quote-labels-in-Intel-syntax.patch
         2000-enable-rust.patch
         2001-fix-building-rust-on-mingw-w64.patch
         "2f7e7bfa3c6327793cdcdcb5c770b93cecd49bd0.patch::https://gcc.gnu.org/git/?p=gcc.git;a=patch;h=2f7e7bfa3c6327793cdcdcb5c770b93cecd49bd0"
@@ -87,6 +89,7 @@ sha256sums=('SKIP'
             'c34f9e71b5a092be1987ad4c65891742c74c9eb8ef6560100e751cd31375f579'
             'f73c8d1701762fed7d8102d17d8e4416a4cc5e600e297a89c2e1fe09cd743a1c'
             'ebbd37e62e5420fc90c9365ebab9bb1a3baef37bf86cf9f059398023552c9ee8'
+            '46d7c7889755f3a5cc9cd7ebbd3432e6fd8efffce872a8a65d9af8fca906676f'
             '693a91a863a706b3526af01c9de5ce8295c59ef0f56f009bcfbf79a93cba2728'
             'e78d51c908cd4e5c905c62e8350db1c609479bb95333c67f706b56974226fd94'
             '585968957f4519aa7219de4804e96debe7592df047e497b99ea0ae073e6f57d3'
@@ -160,7 +163,8 @@ prepare() {
     0300-override-builtin-printf-format.patch
 
   apply_patch_with_msg \
-    0400-gcc-Make-stupid-AT-T-syntax-not-default.patch
+    0400-gcc-Make-stupid-AT-T-syntax-not-default.patch \
+    0401-Always-quote-labels-in-Intel-syntax.patch
 
   # https://salsa.debian.org/toolchain-team/gcc/-/blob/b953a3f9/debian/patches/rust-enabled.diff
   apply_patch_with_msg \

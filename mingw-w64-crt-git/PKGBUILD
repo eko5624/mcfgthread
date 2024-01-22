@@ -3,9 +3,9 @@
 _realname=crt
 pkgbase=mingw-w64-${_realname}-git
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
-pkgver=11.0.0.r9.g569ad0d04
+pkgver=11.0.0.r110.g95433fd59
 pkgrel=1
-pkgdesc='MinGW-w64 CRT for Windows'
+pkgdesc='MinGW-w64 CRT for Windows (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32' 'clangarm64')
 url='https://www.mingw-w64.org/'
