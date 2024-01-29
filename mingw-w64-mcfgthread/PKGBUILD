@@ -4,7 +4,7 @@ _realname=mcfgthread
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}"-libs)
-pkgver=1.6.1
+pkgver=1.7.alpha.1.68.ge422ccc
 pkgrel=1
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64' 'clang32')
@@ -13,9 +13,9 @@ license=('spdx:LGPL-3.0-or-later' 'custom')
 options=('staticlibs' 'strip' '!buildflags')
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-cc"
-  "${MINGW_PACKAGE_PREFIX}-autotools"
   "${MINGW_PACKAGE_PREFIX}-crt"
   "${MINGW_PACKAGE_PREFIX}-headers"
+  "${MINGW_PACKAGE_PREFIX}-meson"
   "git"
 )
 source=("git+https://github.com/lhmouse/mcfgthread.git")
@@ -30,49 +30,24 @@ prepare() {
   cd "${srcdir}/${_realname}"
   git reset --hard
   git clean -fdx
-
-  mkdir -p m4
-  autoreconf -ifv
-
-  pushd test_c++
-  mkdir -p m4
-  autoreconf -ifv
-  popd
 }
 
 build() {
   [[ -d "${srcdir}/build-${MSYSTEM}" ]] && rm -rf "${srcdir}/build-${MSYSTEM}"
   mkdir -p "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
 
-  export CFLAGS+=' -Os -g'
-
-  ../${_realname}/configure \
-    --prefix=${MINGW_PREFIX} \
-    --build=${MINGW_CHOST} \
-    --host=${MINGW_CHOST} \
-    --disable-pch
-
-  make
+  export CFLAGS='-Os -g'
+  MSYS2_ARG_CONV_EXCL="--prefix=" meson setup -Dbuildtype=plain --prefix="${MINGW_PREFIX}" . ../${_realname}
+  meson compile
 
   rm -rf "${srcdir}${MINGW_PREFIX}"
-  make -j1 DESTDIR=${srcdir} install
+  DESTDIR="${srcdir}" meson install --strip
+  sed -Ei "/^prefix=/s:=.*:=${MINGW_PREFIX}:" "${srcdir}${MINGW_PREFIX}"/lib/pkgconfig/*.pc
 }
 
 check() {
   cd "${srcdir}/build-${MSYSTEM}"
-  make check
-
-  # Run c++ tests, which have to be configured separately after C
-  # libraries have been built.
-  mkdir -p test_c++
-  pushd test_c++
-
-  ../../${_realname}/test_c++/configure \
-    --build=${MINGW_CHOST} \
-    --host=${MINGW_CHOST}
-
-  make check
-  popd
+  meson test
 }
 
 package_mcfgthread() {
