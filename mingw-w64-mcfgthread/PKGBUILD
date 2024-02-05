@@ -13,9 +13,9 @@ license=('spdx:LGPL-3.0-or-later' 'custom')
 options=('staticlibs' 'strip' '!buildflags')
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-meson"
   "${MINGW_PACKAGE_PREFIX}-crt"
   "${MINGW_PACKAGE_PREFIX}-headers"
-  "${MINGW_PACKAGE_PREFIX}-meson"
   "git"
 )
 source=("git+https://github.com/lhmouse/mcfgthread.git")
@@ -36,13 +36,17 @@ build() {
   [[ -d "${srcdir}/build-${MSYSTEM}" ]] && rm -rf "${srcdir}/build-${MSYSTEM}"
   mkdir -p "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
 
-  export CFLAGS='-Os -g'
-  MSYS2_ARG_CONV_EXCL="--prefix=" meson setup -Dbuildtype=plain --prefix="${MINGW_PREFIX}" . ../${_realname}
+  export CFLAGS+=' -Os -g'
+  MSYS2_ARG_CONV_EXCL="--prefix=" meson setup -Dbuildtype=plain  \
+    --prefix="${MINGW_PREFIX}" . ../${_realname}
+
+  # Build the DLL first, as Meson creates the DLL in the working directory,
+  # which might get picked up by cc1.exe when it is only half-baked.
+  ninja libmcfgthread-1.dll
   meson compile
 
   rm -rf "${srcdir}${MINGW_PREFIX}"
   DESTDIR="${srcdir}" meson install --strip
-  sed -Ei "/^prefix=/s:=.*:=${MINGW_PREFIX}:" "${srcdir}${MINGW_PREFIX}"/lib/pkgconfig/*.pc
 }
 
 check() {
@@ -56,10 +60,8 @@ package_mcfgthread() {
 
   mkdir -p "${pkgdir}${MINGW_PREFIX}"
   cd "${srcdir}${MINGW_PREFIX}"
-  _files_cp="$(find bin -type f -and -not -name "*.dll")"
-  [[ -z "${_files_cp}" ]] || cp --parents -r ${_files_cp} --target-directory="${pkgdir}${MINGW_PREFIX}"
-  cp --parents -r include   --target-directory="${pkgdir}${MINGW_PREFIX}"
-  cp --parents -r lib       --target-directory="${pkgdir}${MINGW_PREFIX}"
+  cp --parents -r include -t "${pkgdir}${MINGW_PREFIX}"
+  cp --parents -r lib -t "${pkgdir}${MINGW_PREFIX}"
 }
 
 package_mcfgthread-libs() {
@@ -67,8 +69,7 @@ package_mcfgthread-libs() {
 
   mkdir -p "${pkgdir}${MINGW_PREFIX}"
   cd "${srcdir}${MINGW_PREFIX}"
-  _files_cp="$(find bin -type f -and -name "*.dll")"
-  [[ -z "${_files_cp}" ]] || cp --parents -r ${_files_cp} --target-directory="${pkgdir}${MINGW_PREFIX}"
+  cp --parents -r bin/libmcfgthread-1.dll -t "${pkgdir}${MINGW_PREFIX}"
 }
 
 # template start; name=mingw-w64-splitpkg-wrappers; version=1.0;
