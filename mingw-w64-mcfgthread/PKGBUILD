@@ -36,8 +36,7 @@ build() {
   [[ -d "${srcdir}/build-${MSYSTEM}" ]] && rm -rf "${srcdir}/build-${MSYSTEM}"
   mkdir -p "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
 
-  export CFLAGS+=' -Os -g'
-  MSYS2_ARG_CONV_EXCL="--prefix=" meson setup -Dbuildtype=plain  \
+  MSYS2_ARG_CONV_EXCL="--prefix=" meson setup -Dbuildtype=minsize  \
     --prefix="${MINGW_PREFIX}" . ../${_realname}
 
   # Build the DLL first, as Meson creates the DLL in the working directory,
