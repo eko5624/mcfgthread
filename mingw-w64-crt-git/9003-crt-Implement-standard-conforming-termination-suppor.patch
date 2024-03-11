@@ -1,4 +1,4 @@
-From 9256694608b821c9c75b6b77fa96f20b47d2c88f Mon Sep 17 00:00:00 2001
+From bff0332abef2f93889e77f2f3c0f4a3407bb3e00 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Sat, 22 Oct 2022 23:31:33 +0800
 Subject: [PATCH 3/4] crt: Implement standard-conforming termination support
@@ -48,7 +48,7 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
  6 files changed, 109 insertions(+), 8 deletions(-)
 
 diff --git a/mingw-w64-crt/crt/crtdll.c b/mingw-w64-crt/crt/crtdll.c
-index e264d4e96..768c0f44e 100644
+index 88450ce9f..2f00ddacf 100644
 --- a/mingw-w64-crt/crt/crtdll.c
 +++ b/mingw-w64-crt/crt/crtdll.c
 @@ -31,6 +31,12 @@
@@ -110,7 +110,7 @@ index e264d4e96..768c0f44e 100644
  
  char __mingw_module_is_dll = 1;
 diff --git a/mingw-w64-crt/crt/crtexe.c b/mingw-w64-crt/crt/crtexe.c
-index 03bda5912..7f501400a 100644
+index 9d5126878..7353cca0b 100644
 --- a/mingw-w64-crt/crt/crtexe.c
 +++ b/mingw-w64-crt/crt/crtexe.c
 @@ -20,6 +20,10 @@
@@ -335,5 +335,5 @@ index 9eb33e534..893388b90 100644
  extern void (*__MINGW_IMP_SYMBOL(_exit))(int) __attribute__((__noreturn__));
  
 -- 
-2.43.0
+2.44.0
 

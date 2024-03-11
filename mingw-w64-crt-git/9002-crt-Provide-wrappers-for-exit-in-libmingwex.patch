@@ -1,7 +1,7 @@
-From f816c5ce5dd138c1c4d5bf0eaf12bbdf1692c099 Mon Sep 17 00:00:00 2001
+From 14ed3ce9d148124bb9f2a904f97ad83dd30df5fb Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 7 Oct 2022 22:46:50 +0800
-Subject: [PATCH 3/5] crt: Provide wrappers for `*exit()` in libmingwex
+Subject: [PATCH 2/4] crt: Provide wrappers for `*exit()` in libmingwex
 
 This should have no effect on functionality, but allows further
 customization of them.
@@ -44,7 +44,7 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
  create mode 100644 mingw-w64-crt/crt/ucrt_exit_wrappers.c
 
 diff --git a/mingw-w64-crt/Makefile.am b/mingw-w64-crt/Makefile.am
-index 89efc48a7..31e2a8828 100644
+index bf3628e4c..832234522 100644
 --- a/mingw-w64-crt/Makefile.am
 +++ b/mingw-w64-crt/Makefile.am
 @@ -117,7 +117,7 @@ src_libmingw32=include/oscalls.h include/internal.h include/sect_attribs.h \
@@ -262,10 +262,10 @@ index 000861ee3..76175405a 100644
  rand
  rand_s
 diff --git a/mingw-w64-crt/lib32/crtdll.def.in b/mingw-w64-crt/lib32/crtdll.def.in
-index d8b5bd821..b5c99d4af 100644
+index e98d70d6d..fe53f23c7 100644
 --- a/mingw-w64-crt/lib32/crtdll.def.in
 +++ b/mingw-w64-crt/lib32/crtdll.def.in
-@@ -269,7 +269,7 @@ _execv
+@@ -169,7 +169,7 @@ _execv
  _execve
  _execvp
  _execvpe
@@ -274,9 +274,9 @@ index d8b5bd821..b5c99d4af 100644
  _expand
  _fcloseall
  _fcvt
-@@ -552,7 +552,7 @@ ctime DATA
- ;_ctime32 = ctime
+@@ -456,7 +456,7 @@ _ctime32 == ctime
  difftime
+ _difftime32 == difftime
  div
 -exit
 +exit DATA
@@ -372,7 +372,7 @@ index 5ff03bda2..e83f1ee82 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/lib32/msvcr70.def.in b/mingw-w64-crt/lib32/msvcr70.def.in
-index 59f6ce2df..91d0b0f21 100644
+index 8db2754c4..e31f80ebe 100644
 --- a/mingw-w64-crt/lib32/msvcr70.def.in
 +++ b/mingw-w64-crt/lib32/msvcr70.def.in
 @@ -316,7 +316,7 @@ _execv
@@ -384,9 +384,9 @@ index 59f6ce2df..91d0b0f21 100644
  _expand
  _fcloseall
  _fcvt
-@@ -731,7 +731,7 @@ cosh
- ctime
+@@ -738,7 +738,7 @@ _ctime32 == ctime
  difftime
+ _difftime32 == difftime
  div
 -exit
 +exit DATA
@@ -394,7 +394,7 @@ index 59f6ce2df..91d0b0f21 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr71.def.in b/mingw-w64-crt/lib32/msvcr71.def.in
-index 1da46dcdf..2f83a442d 100644
+index c6ae2149b..864c04e81 100644
 --- a/mingw-w64-crt/lib32/msvcr71.def.in
 +++ b/mingw-w64-crt/lib32/msvcr71.def.in
 @@ -309,7 +309,7 @@ _execv
@@ -406,9 +406,9 @@ index 1da46dcdf..2f83a442d 100644
  _expand
  _fcloseall
  _fcvt
-@@ -726,7 +726,7 @@ cosh
- ctime
+@@ -733,7 +733,7 @@ _ctime32 == ctime
  difftime
+ _difftime32 == difftime
  div
 -exit
 +exit DATA
@@ -482,7 +482,7 @@ index 2835301f0..23080dbc5 100644
  fabs DATA
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcrt10.def.in b/mingw-w64-crt/lib32/msvcrt10.def.in
-index af82d7fd5..c94fb6c94 100644
+index f1581d111..f009ce934 100644
 --- a/mingw-w64-crt/lib32/msvcrt10.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt10.def.in
 @@ -946,7 +946,7 @@ _execv
@@ -494,9 +494,9 @@ index af82d7fd5..c94fb6c94 100644
  _expand
  _fcloseall
  _fcvt
-@@ -1129,7 +1129,7 @@ cosh
- ctime
+@@ -1134,7 +1134,7 @@ _ctime32 == ctime
  difftime
+ _difftime32 == difftime
  div
 -exit
 +exit DATA
@@ -504,7 +504,7 @@ index af82d7fd5..c94fb6c94 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcrt20.def.in b/mingw-w64-crt/lib32/msvcrt20.def.in
-index 1ad59beb9..c4b1f2f53 100644
+index ccbedec16..acfd88d19 100644
 --- a/mingw-w64-crt/lib32/msvcrt20.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt20.def.in
 @@ -1016,7 +1016,7 @@ _execv
@@ -516,9 +516,9 @@ index 1ad59beb9..c4b1f2f53 100644
  _expand
  _fcloseall
  _fcvt
-@@ -1397,7 +1397,7 @@ cosh
- ctime
+@@ -1404,7 +1404,7 @@ _ctime32 == ctime
  difftime
+ _difftime32 == difftime
  div
 -exit
 +exit DATA
@@ -526,7 +526,7 @@ index 1ad59beb9..c4b1f2f53 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcrt40.def.in b/mingw-w64-crt/lib32/msvcrt40.def.in
-index 03094dce8..a09b51428 100644
+index aa3b295ef..24e74e6d2 100644
 --- a/mingw-w64-crt/lib32/msvcrt40.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt40.def.in
 @@ -1115,7 +1115,7 @@ _execv
@@ -538,9 +538,9 @@ index 03094dce8..a09b51428 100644
  _expand
  _fcloseall
  _fcvt
-@@ -1481,7 +1481,7 @@ cosh
- ctime
+@@ -1488,7 +1488,7 @@ _ctime32 == ctime
  difftime
+ _difftime32 == difftime
  div
 -exit
 +exit DATA
@@ -768,5 +768,5 @@ index 3a153da53..18ab94522 100644
  expf
  fabs
 -- 
-2.42.1
+2.44.0
 
