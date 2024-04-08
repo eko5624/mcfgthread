@@ -61,9 +61,6 @@ build() {
   mkdir -p ${srcdir}/headers-${MSYSTEM} && cd ${srcdir}/headers-${MSYSTEM}
 
   ${srcdir}/mingw-w64/mingw-w64-headers/configure \
-    --build=${MINGW_CHOST} \
-    --host=${MINGW_CHOST} \
-    --target=${MINGW_CHOST} \
     --prefix=${MINGW_PREFIX} \
     --enable-sdk=all \
     "${_extra_config[@]}" \

@@ -1,7 +1,7 @@
-From 4a85f4460bc21f1ed48094ba14f32db44655d8ff Mon Sep 17 00:00:00 2001
+From 6ea0cdf2bf06c4b545b9ca020d5c0bb1d700833f Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 21 Apr 2023 22:17:21 +0800
-Subject: [PATCH 4/4] crt: Copy clock and nanosleep from winpthreads
+Subject: [PATCH 5/5] crt: Copy clock and nanosleep from winpthreads
 
 Signed-off-by: LIU Hao <lh_mouse@126.com>
 ---

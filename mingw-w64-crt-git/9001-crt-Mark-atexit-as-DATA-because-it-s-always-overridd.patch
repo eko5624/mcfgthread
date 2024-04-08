@@ -1,7 +1,7 @@
-From 85223c382dbc29973a664f1544add20f02bfdf56 Mon Sep 17 00:00:00 2001
+From a596f4e86a2a27a8f10167508dabcb145053a5a1 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 7 Oct 2022 22:42:04 +0800
-Subject: [PATCH 1/4] crt: Mark `atexit()` as DATA because it's always
+Subject: [PATCH 2/5] crt: Mark `atexit()` as DATA because it's always
  overridden
 
 Signed-off-by: LIU Hao <lh_mouse@126.com>
@@ -100,10 +100,10 @@ index 00c2ef017..f1581d111 100644
  atoi
  atol
 diff --git a/mingw-w64-crt/lib32/msvcrt20.def.in b/mingw-w64-crt/lib32/msvcrt20.def.in
-index 24fee4a21..ccbedec16 100644
+index d2702db90..4d289cebe 100644
 --- a/mingw-w64-crt/lib32/msvcrt20.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt20.def.in
-@@ -1388,7 +1388,7 @@ asctime
+@@ -1336,7 +1336,7 @@ asctime
  asin
  atan
  atan2
@@ -113,10 +113,10 @@ index 24fee4a21..ccbedec16 100644
  atoi
  atol
 diff --git a/mingw-w64-crt/lib32/msvcrt40.def.in b/mingw-w64-crt/lib32/msvcrt40.def.in
-index 4d54b8813..aa3b295ef 100644
+index d17e50362..265f6aea8 100644
 --- a/mingw-w64-crt/lib32/msvcrt40.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt40.def.in
-@@ -1472,7 +1472,7 @@ asctime
+@@ -1426,7 +1426,7 @@ asctime
  asin
  atan
  atan2

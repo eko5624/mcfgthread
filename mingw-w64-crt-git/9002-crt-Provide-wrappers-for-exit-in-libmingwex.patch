@@ -1,7 +1,7 @@
-From 14ed3ce9d148124bb9f2a904f97ad83dd30df5fb Mon Sep 17 00:00:00 2001
+From cf5656a7b786b9bead2209da3e2fafaa00070b80 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 7 Oct 2022 22:46:50 +0800
-Subject: [PATCH 2/4] crt: Provide wrappers for `*exit()` in libmingwex
+Subject: [PATCH 3/5] crt: Provide wrappers for `*exit()` in libmingwex
 
 This should have no effect on functionality, but allows further
 customization of them.
@@ -200,27 +200,27 @@ index ddb407d00..33f2e9345 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/lib-common/msvcrt.def.in b/mingw-w64-crt/lib-common/msvcrt.def.in
-index 1f8f95b17..255080a2e 100644
+index ecab547c5..416cf2a01 100644
 --- a/mingw-w64-crt/lib-common/msvcrt.def.in
 +++ b/mingw-w64-crt/lib-common/msvcrt.def.in
-@@ -485,7 +485,7 @@ _execv
+@@ -441,7 +441,7 @@ _execv
  _execve
  _execvp
  _execvpe
 -_exit
 +_exit DATA
  _expand
- F_ARM_ANY(_expand_dbg)
  _fcloseall
-@@ -1356,7 +1356,7 @@ F_NON_I386(coshf DATA)
+ _fcvt
+@@ -817,7 +817,7 @@ cosh
  ctime
  difftime
  div
 -exit
 +exit DATA
  exp F_X86_ANY(DATA)
- F_NON_I386(expf F_X86_ANY(DATA))
- F_ARM_ANY(expl == exp)
+ fabs DATA
+ fclose
 diff --git a/mingw-w64-crt/lib-common/ucrtbase.def.in b/mingw-w64-crt/lib-common/ucrtbase.def.in
 index 000861ee3..76175405a 100644
 --- a/mingw-w64-crt/lib-common/ucrtbase.def.in
@@ -504,10 +504,10 @@ index f1581d111..f009ce934 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcrt20.def.in b/mingw-w64-crt/lib32/msvcrt20.def.in
-index ccbedec16..acfd88d19 100644
+index 4d289cebe..9e277140e 100644
 --- a/mingw-w64-crt/lib32/msvcrt20.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt20.def.in
-@@ -1016,7 +1016,7 @@ _execv
+@@ -983,7 +983,7 @@ _execv
  _execve
  _execvp
  _execvpe
@@ -516,7 +516,7 @@ index ccbedec16..acfd88d19 100644
  _expand
  _fcloseall
  _fcvt
-@@ -1404,7 +1404,7 @@ _ctime32 == ctime
+@@ -1352,7 +1352,7 @@ _ctime32 == ctime
  difftime
  _difftime32 == difftime
  div
@@ -526,10 +526,10 @@ index ccbedec16..acfd88d19 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcrt40.def.in b/mingw-w64-crt/lib32/msvcrt40.def.in
-index aa3b295ef..24e74e6d2 100644
+index 265f6aea8..0f160fd05 100644
 --- a/mingw-w64-crt/lib32/msvcrt40.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt40.def.in
-@@ -1115,7 +1115,7 @@ _execv
+@@ -1092,7 +1092,7 @@ _execv
  _execve
  _execvp
  _execvpe
@@ -538,7 +538,7 @@ index aa3b295ef..24e74e6d2 100644
  _expand
  _fcloseall
  _fcvt
-@@ -1488,7 +1488,7 @@ _ctime32 == ctime
+@@ -1442,7 +1442,7 @@ _ctime32 == ctime
  difftime
  _difftime32 == difftime
  div

@@ -27,11 +27,11 @@ source=("mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64"
         9003-crt-Implement-standard-conforming-termination-suppor.patch
         9004-crt-Copy-clock-and-nanosleep-from-winpthreads.patch)
 sha256sums=('SKIP'
-            'd641257f7e1469aff89adc33e57702b75fe9667ca035978f890eae1020b6814c'
-            '5257ee7c560b04435e3b9d3ee8a3b377e158f895d075768fb8f234d11a856ef2'
-            '7aaa99e3d3d5ac5082f24976f8e058bfd1f7c2d745c02daa84462a01587ba5f5'
-            'a672f05f958cfb8d9d415e89b81ccb756bc16172000c4418e86560f7cdd469e5'
-            'a52bb0ff51525432b62928d7c207e3d352aa8bedd16d04d37b98127b645f2893')
+            'd24cdfc6f5ac19f36144a32e4bbfb01310d1fb977e1aa0b4f92ad5e5162c2bf5'
+            'ba8e333a13a05e8643cb1f578620b8e7112a26258c873807f07f3725510596bf'
+            'da4a0c192479672afd4a1acb02ebd1eeda44fc354ff0208bbc5a702d5fe5cc90'
+            'e82815d446ac7267a138b7d249f60de0e664b6f3c47a9a3706e2bf26a94267d7'
+            '515241424b8c5763449bd0365b2add2707a800bf583c69f3d2a2a0351542f704')
 
 pkgver() {
   cd "${srcdir}/mingw-w64"
@@ -84,9 +84,6 @@ build() {
 
   ${srcdir}/mingw-w64/mingw-w64-crt/configure \
     --prefix=${MINGW_PREFIX} \
-    --build=${MINGW_CHOST} \
-    --host=${MINGW_CHOST} \
-    --target=${MINGW_CHOST} \
     --enable-wildcard \
     --disable-dependency-tracking \
     "${_extra_config[@]}"
