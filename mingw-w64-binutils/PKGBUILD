@@ -18,7 +18,10 @@ msys2_references=(
 )
 license=('spdx:GPL-3.0-or-later AND GPL-2.0-or-later AND LGPL-3.0-or-later AND LGPL-2.0-or-later')
 groups=("${MINGW_PACKAGE_PREFIX}-toolchain")
-depends=("${MINGW_PACKAGE_PREFIX}-zstd" "${MINGW_PACKAGE_PREFIX}-zlib" "${MINGW_PACKAGE_PREFIX}-gettext-runtime")
+depends=("${MINGW_PACKAGE_PREFIX}-gettext-runtime"
+         "${MINGW_PACKAGE_PREFIX}-libwinpthread"
+         "${MINGW_PACKAGE_PREFIX}-zlib"
+         "${MINGW_PACKAGE_PREFIX}-zstd")
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-gettext-tools"
              "${MINGW_PACKAGE_PREFIX}-autotools")
@@ -70,6 +73,7 @@ prepare() {
     0010-bfd-Increase-_bfd_coff_max_nscns-to-65279.patch \
     0110-binutils-mingw-gnu-print.patch
 
+  # ZZZ
   apply_patch_with_msg \
     0003-opcodes-i386-dis-Use-Intel-syntax-by-default.patch
 
@@ -103,7 +107,6 @@ prepare() {
 }
 
 build() {
-  [[ -d ${srcdir}/build-${MSYSTEM} ]] && rm -rf ${srcdir}/build-${MSYSTEM}
   mkdir -p build-${MSYSTEM} && cd build-${MSYSTEM}
 
   if check_option "debug" "y"; then
@@ -126,7 +129,7 @@ build() {
     --enable-lto \
     --with-sysroot=${MINGW_PREFIX} \
     --with-libiconv-prefix=${MINGW_PREFIX} \
-    ${extra_config[@]} \
+    "${extra_config[@]}" \
     --enable-nls \
     --disable-rpath \
     --disable-multilib \

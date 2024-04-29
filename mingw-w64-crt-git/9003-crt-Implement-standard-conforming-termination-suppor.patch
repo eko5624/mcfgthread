@@ -1,7 +1,7 @@
-From 070cb04abd4bd10bc71393171c0c6dfc02baf347 Mon Sep 17 00:00:00 2001
+From 088edfd0b71b9b2c7897258d2bd24043c5b667c2 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Sat, 22 Oct 2022 23:31:33 +0800
-Subject: [PATCH 4/5] crt: Implement standard-conforming termination support
+Subject: [PATCH 3/4] crt: Implement standard-conforming termination support
  with mcfgthread
 
 This commit implements these functions in accordance with the ISO C

@@ -84,6 +84,7 @@ prepare() {
     0004-Python-Configure-path-fixes.patch \
     0005-W32-Always-check-USERPROFILE-if-HOME-is-not-set.patch
 
+  # ZZZ
   apply_patch_with_msg \
     0007-gdb-i386-tdep-Use-Intel-syntax-by-default.patch
 

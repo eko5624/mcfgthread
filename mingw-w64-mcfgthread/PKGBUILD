@@ -46,7 +46,7 @@ build() {
   meson compile
 
   rm -rf "${srcdir}${MINGW_PREFIX}"
-  DESTDIR="${srcdir}" meson install --strip
+  DESTDIR="${srcdir}" meson install
 }
 
 check() {

@@ -28,10 +28,10 @@ source=("mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64"
         9004-crt-Copy-clock-and-nanosleep-from-winpthreads.patch)
 sha256sums=('SKIP'
             'd24cdfc6f5ac19f36144a32e4bbfb01310d1fb977e1aa0b4f92ad5e5162c2bf5'
-            'ba8e333a13a05e8643cb1f578620b8e7112a26258c873807f07f3725510596bf'
-            'da4a0c192479672afd4a1acb02ebd1eeda44fc354ff0208bbc5a702d5fe5cc90'
-            'e82815d446ac7267a138b7d249f60de0e664b6f3c47a9a3706e2bf26a94267d7'
-            '515241424b8c5763449bd0365b2add2707a800bf583c69f3d2a2a0351542f704')
+            '789d9aa9fef7b1770619a634e487e622e16ef06ae5647199932979d99abda0ff'
+            '1cbccc612b881a888d7b677d5af5014dbf106e2e3d85d1e0bd5e3d4ee645f998'
+            '2cb912d68266b38333c25176ea6bcf88cace228d35de9533994e0680dea0cf65'
+            '4d17b708c2fb4e2523c5e31e662888ab0dde470d84ddd03c09bb08e0df2df7b7')
 
 pkgver() {
   cd "${srcdir}/mingw-w64"
