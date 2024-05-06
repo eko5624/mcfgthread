@@ -27,7 +27,7 @@ source=("mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64"
         9003-crt-Implement-standard-conforming-termination-suppor.patch
         9004-crt-Copy-clock-and-nanosleep-from-winpthreads.patch)
 sha256sums=('SKIP'
-            'd24cdfc6f5ac19f36144a32e4bbfb01310d1fb977e1aa0b4f92ad5e5162c2bf5'
+            'd641257f7e1469aff89adc33e57702b75fe9667ca035978f890eae1020b6814c'
             '789d9aa9fef7b1770619a634e487e622e16ef06ae5647199932979d99abda0ff'
             '1cbccc612b881a888d7b677d5af5014dbf106e2e3d85d1e0bd5e3d4ee645f998'
             '2cb912d68266b38333c25176ea6bcf88cace228d35de9533994e0680dea0cf65'

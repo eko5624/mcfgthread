@@ -25,7 +25,7 @@ pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          $([[ "$_enable_jit" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-libgccjit")
         )
 #_snapshot=20181214
-pkgver=14.0.1+20240427
+pkgver=14.0.1+20240430
 _branch=releases/gcc-14
 #_majorver=${pkgver:0:1}
 #_sourcedir=${_realname}-${_majorver}-${_snapshot}
@@ -155,9 +155,11 @@ prepare() {
     0200-add-m-no-align-vector-insn-option-for-i386.patch
 
   # ZZZ
-  apply_patch_with_msg \
-    0400-gcc-Make-stupid-AT-T-syntax-not-default.patch \
-    0401-Always-quote-labels-in-Intel-syntax.patch
+  if [[ "${CARCH}" == "x86_64" ]]; then
+    apply_patch_with_msg \
+      0400-gcc-Make-stupid-AT-T-syntax-not-default.patch \
+      0401-Always-quote-labels-in-Intel-syntax.patch
+  fi
 
   # do not expect ${prefix}/mingw symlink - this should be superceded by
   # 0005-Windows-Don-t-ignore-native-system-header-dir.patch .. but isn't!
@@ -500,7 +502,7 @@ package_gcc-rust() {
   make -C gcc DESTDIR="${pkgdir}" rust.install-{common,man,info}
 
   install -Dm755 gcc/gccrs.exe "${pkgdir}"${MINGW_PREFIX}/bin/gccrs.exe
-  install -Dm755 gcc/rust1.exe "${pkgdir}"${MINGW_PREFIX}/${_libdir}/rust1.exe
+  install -Dm755 gcc/crab1.exe "${pkgdir}"${MINGW_PREFIX}/${_libdir}/crab1.exe
 }
 
 package_gcc-lto-dump() {
