@@ -1,5 +1,3 @@
-diff --git a/gcc/rust/checks/errors/borrowck/rust-borrow-checker.cc b/gcc/rust/checks/errors/borrowck/rust-borrow-checker.cc
-index 5daa7eb8ded..9991e4b14f3 100644
 --- a/gcc/rust/checks/errors/borrowck/rust-borrow-checker.cc
 +++ b/gcc/rust/checks/errors/borrowck/rust-borrow-checker.cc
 @@ -24,20 +24,6 @@
@@ -32,8 +30,6 @@ index 5daa7eb8ded..9991e4b14f3 100644
        auto mappings = Analysis::Mappings::get ();
        bool ok
  	= mappings->get_crate_name (crate.get_mappings ().get_crate_num (),
-diff --git a/gcc/rust/expand/rust-proc-macro.cc b/gcc/rust/expand/rust-proc-macro.cc
-index 09680733e98..d658b4d10db 100644
 --- a/gcc/rust/expand/rust-proc-macro.cc
 +++ b/gcc/rust/expand/rust-proc-macro.cc
 @@ -22,7 +22,10 @@
@@ -112,16 +108,14 @@ index 09680733e98..d658b4d10db 100644
  }
  
  #undef REGISTER_CALLBACK
-diff --git a/gcc/rust/parse/rust-parse.cc b/gcc/rust/parse/rust-parse.cc
-index 504a409cc4d..634ad0bf0c8 100644
 --- a/gcc/rust/parse/rust-parse.cc
 +++ b/gcc/rust/parse/rust-parse.cc
-@@ -89,7 +89,7 @@ extract_module_path (const AST::AttrVec &inner_attrs,
+@@ -89,7 +89,7 @@
    // Source: rustc compiler
    // (https://github.com/rust-lang/rust/blob/9863bf51a52b8e61bcad312f81b5193d53099f9f/compiler/rustc_expand/src/module.rs#L174)
  #if defined(HAVE_DOS_BASED_FILE_SYSTEM)
 -  path.replace ('/', '\\');
-+  std::replace (path.begin (), path.end (), '/', '\\');
++  std::replace (path.begin(), path.end(), '/', '\\');
  #endif /* HAVE_DOS_BASED_FILE_SYSTEM */
  
    return path;

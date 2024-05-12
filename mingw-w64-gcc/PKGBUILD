@@ -7,7 +7,7 @@
 
 _enable_ada=no
 _enable_objc=yes
-_enable_rust=yes
+_enable_rust=no
 _enable_jit=yes
 
 _threads="mcf"
@@ -24,11 +24,8 @@ pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          $([[ "$_enable_rust" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-${_realname}-rust")
          $([[ "$_enable_jit" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-libgccjit")
         )
-#_snapshot=20181214
-pkgver=14.0.1+20240430
+pkgver=14.1.1+20240509
 _branch=releases/gcc-14
-#_majorver=${pkgver:0:1}
-#_sourcedir=${_realname}-${_majorver}-${_snapshot}
 _sourcedir=${_realname}
 _libdir=lib/gcc/${CHOST}/${pkgver%%+*}
 pkgrel=1
@@ -42,20 +39,22 @@ msys2_references=(
 license=('spdx:GPL-3.0-or-later')
 makedepends=("${MINGW_PACKAGE_PREFIX}-${_realname}"
              $([[ "$_enable_ada" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-${_realname}-ada")
+             $([[ "$_enable_rust" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-rust")
+             "${MINGW_PACKAGE_PREFIX}-autotools"
              "${MINGW_PACKAGE_PREFIX}-binutils"
              "${MINGW_PACKAGE_PREFIX}-crt"
              "${MINGW_PACKAGE_PREFIX}-headers"
              "${MINGW_PACKAGE_PREFIX}-gmp"
+             "${MINGW_PACKAGE_PREFIX}-gperf"
              "${MINGW_PACKAGE_PREFIX}-isl"
              "${MINGW_PACKAGE_PREFIX}-libiconv"
              "${MINGW_PACKAGE_PREFIX}-mpc"
              "${MINGW_PACKAGE_PREFIX}-mpfr"
+             "${MINGW_PACKAGE_PREFIX}-python"
              "${MINGW_PACKAGE_PREFIX}-windows-default-manifest"
              "${MINGW_PACKAGE_PREFIX}-winpthreads"
              "${MINGW_PACKAGE_PREFIX}-zlib"
              "${MINGW_PACKAGE_PREFIX}-zstd"
-             "${MINGW_PACKAGE_PREFIX}-gperf"
-             "${MINGW_PACKAGE_PREFIX}-autotools"
              "${MINGW_PACKAGE_PREFIX}-mcfgthread")
 options=('!emptydirs') # '!strip' 'debug')
 source=(${_sourcedir}::"git://gcc.gnu.org/git/gcc.git#branch=${_branch}"
@@ -69,27 +68,27 @@ source=(${_sourcedir}::"git://gcc.gnu.org/git/gcc.git#branch=${_branch}"
         0014-gcc-9-branch-clone_function_name_1-Retain-any-stdcall-suffix.patch
         0020-libgomp-Don-t-hard-code-MS-printf-attributes.patch
         0021-PR14940-Allow-a-PCH-to-be-mapped-to-a-different-addr.patch
-        0100-rust-fix.patch
         0140-gcc-diagnostic-color.patch
         0200-add-m-no-align-vector-insn-option-for-i386.patch
         0400-gcc-Make-stupid-AT-T-syntax-not-default.patch
-        0401-Always-quote-labels-in-Intel-syntax.patch)
+        0401-Always-quote-labels-in-Intel-syntax.patch
+        2001-fix-building-rust-on-mingw-w64.patch)
 sha256sums=('SKIP'
             '0acd5b088ae2c3e632f6c624cb8d240953181444c6ccdedd360711714dd999b9'
-            'ac33767947dca9cce6065adf03c535b610ba9bd8f155b40d7aae0efcd67bbddb'
-            '8f50e9bbc41933bd2dab311cdf0c3d3a91e4ffe6ec29e193afe1bf5c73ac9754'
-            'bf6e5807781d976c7dfcdcba16cc50a96e21c11f8f77aa0a735fac054de23c7e'
-            '61e7a578888f5875105a087aff980522a5dcbf26f62062de6e2c64d109e19242'
-            'f27946f99461140e51d75673de8ed8a2f4da2b84c7863243f30ebfe5a60b8cd5'
-            '7064334e3197dece8de1572265ac85f700c9e44ed777e19bb3134b7d803849d6'
-            '1e999beee8a829ff1fe3fb67e50329ac48100c6b97a50ce6de8e08c16bf7c63f'
-            '69c7b0ad2fc85484df6bb7d5cc0b5fe2779249ae351842b0763bdb050b30986c'
+            '3fc35067823f87e48dd3bfd265e7593000dc110fa9ad5f16c81b896765fc897a'
+            '57f0081655ba9a94ed7cc3d8b67a79aee8442a56613bd17f9809a7b0e68e43cd'
+            '90d5cb570083f9dea4ac0f0f87e3e8d2230f5052e6f9b946061a20a224a9d195'
+            '8a40ea004a803b7e6aabd6c58d859502a57c87755dbcfedbdfed161f2fb7eb62'
+            '5ef4148acc4a2b7ed648d4fe75fab5545e84b4b93a12d6ba4e4ea6061dd635fa'
+            'e98805ead7d78ee2a92f237894c4b2b7ddc1688e1b517d8c04f28d440202e40f'
+            'fd9bdecb2bbc4796bbc9f00b708dac42ef9e3464a06d6d27e5475cee117de5be'
+            'ad1f7b5e7afaaec008b7cbd14feea13a10989fa91bda7003af72d457619bb199'
             '6c272078340a27b3f147e497115b0a6e9fc0da720a2602f12b086524522caa59'
-            'd6ef86ffa5dfaea0ea4d1513a41ee870741d32f4a387ea00f32b23bfe4084174'
-            '80640190971bdf3f781a466946916e83a72f561bad40e38dd2fb59298ac171fe'
-            '632a8de62c781cf325f36e546459601edd4118aa214449f3acb1c11f7a23424e'
+            'e0a5b470f49a29f20215cc9f9d04c1cb9969dff6f0e546542799d3a693ef1c84'
+            'c34f9e71b5a092be1987ad4c65891742c74c9eb8ef6560100e751cd31375f579'
             'f3b3838a64e5d3c2ddab91015bebc0bbc626087f4d58198c966c5863f88dc099'
-            'b59f67cba1ba698d3bae2712f05b2d990e6d8f1f56cd85dc73de6e2afcf2d06a')
+            'b59f67cba1ba698d3bae2712f05b2d990e6d8f1f56cd85dc73de6e2afcf2d06a'
+            'ddc1538c2b9132bce5b3b2cad2a382762d58b46b31d2ae291f6e4d963b88dfd4')
 validpgpkeys=(F3691687D867B81B51CE07D9BBE43771487328A9  # bpiotrowski@archlinux.org
               86CFFCA918CF3AF47147588051E8B148A9999C34  # evangelos@foutrelis.com
               13975A70E63C361C73AE69EF6EEB81F8981C74C7  # richard.guenther@gmail.com
@@ -137,13 +136,15 @@ prepare() {
     0020-libgomp-Don-t-hard-code-MS-printf-attributes.patch \
     0021-PR14940-Allow-a-PCH-to-be-mapped-to-a-different-addr.patch
 
-  apply_patch_with_msg \
-    0100-rust-fix.patch
-
   # Enable diagnostic color under mintty
   # based on https://github.com/BurntSushi/ripgrep/issues/94#issuecomment-261761687
   apply_patch_with_msg \
     0140-gcc-diagnostic-color.patch
+
+  # ZZZ
+  # XXX: GAS segfaults on i686?!
+  test "${CARCH}" != "i686" && apply_patch_with_msg 0400-gcc-Make-stupid-AT-T-syntax-not-default.patch
+  apply_patch_with_msg 0401-Always-quote-labels-in-Intel-syntax.patch
 
   # workaround for AVX misalignment issue for pass-by-value arguments
   #   cf. https://github.com/msys2/MSYS2-packages/issues/1209
@@ -154,12 +155,8 @@ prepare() {
   apply_patch_with_msg \
     0200-add-m-no-align-vector-insn-option-for-i386.patch
 
-  # ZZZ
-  if [[ "${CARCH}" == "x86_64" ]]; then
-    apply_patch_with_msg \
-      0400-gcc-Make-stupid-AT-T-syntax-not-default.patch \
-      0401-Always-quote-labels-in-Intel-syntax.patch
-  fi
+  apply_patch_with_msg \
+    2001-fix-building-rust-on-mingw-w64.patch
 
   # do not expect ${prefix}/mingw symlink - this should be superceded by
   # 0005-Windows-Don-t-ignore-native-system-header-dir.patch .. but isn't!
@@ -211,17 +208,6 @@ build() {
   # so libgomp DLL gets built despide static libdl
   export lt_cv_deplibs_check_method='pass_all'
 
-  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105507#c3
-  # At least with mingw32 + dwarf-2 exceptions there can only be one libgcc in
-  # process, or exceptions will no longer work. Since some of the gcc deps are
-  # linked dynamically like gmp/zlib/zstd and those pull in libgcc we can't
-  # allow libgcc to be linked statically. The default is "-static-libstdc++
-  # -static-libgcc" for both, so we drop "-static-libgcc" here:
-  _extra_config+=(
-    '--with-boot-ldflags="-static-libstdc++"'
-    '--with-stage1-ldflags="-static-libstdc++"'
-  )
-
   # In addition adaint.c does `#include <accctrl.h>` which pulls in msxml.h, hacky hack:
   CPPFLAGS+=" -DCOM_NO_WINDOWS_H"
 
@@ -246,6 +232,7 @@ build() {
     --enable-fully-dynamic-string \
     --enable-libstdcxx-filesystem-ts \
     --enable-libstdcxx-time \
+    --enable-__cxa_atexit \
     --disable-libstdcxx-pch \
     --enable-lto \
     --enable-libgomp \
@@ -261,8 +248,6 @@ build() {
     --with-{gmp,mpfr,mpc,isl}=${MINGW_PREFIX} \
     --with-pkgversion="GCC with MCF thread model, built by LH_Mouse" \
     --with-bugurl="https://github.com/lhmouse/MINGW-packages/issues" \
-    --with-gnu-as \
-    --with-gnu-ld \
     "${_extra_config[@]}"
 
   # While we're debugging -fopenmp problems at least.
@@ -326,7 +311,6 @@ package_gcc() {
            "${MINGW_PACKAGE_PREFIX}-crt"
            "${MINGW_PACKAGE_PREFIX}-headers"
            "${MINGW_PACKAGE_PREFIX}-isl"
-           "${MINGW_PACKAGE_PREFIX}-libiconv"
            "${MINGW_PACKAGE_PREFIX}-gmp"
            "${MINGW_PACKAGE_PREFIX}-mpfr"
            "${MINGW_PACKAGE_PREFIX}-mpc"
@@ -337,7 +321,12 @@ package_gcc() {
            "${MINGW_PACKAGE_PREFIX}-zstd")
   provides=("${MINGW_PACKAGE_PREFIX}-${_realname}-base"
             "${MINGW_PACKAGE_PREFIX}-cc")
-  conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}-base")
+  conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}-base"
+             $([[ "$_enable_objc" != "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-${_realname}-objc" || true)
+             $([[ "$_enable_ada" != "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-${_realname}-ada" || true)
+             $([[ "$_enable_rust" != "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-${_realname}-rust" || true)
+             $([[ "$_enable_jit" != "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-libgccjit" || true)
+  )
   groups=("${MINGW_PACKAGE_PREFIX}-toolchain")
 
   cd "${srcdir}"/build-${MSYSTEM}
@@ -405,7 +394,7 @@ package_gcc() {
   sed -i 's|%GCC_NAME%|gcc-'${pkgver%%+*}'|g' "${pkgdir}"${MINGW_PREFIX}/etc/gdbinit
 
   # byte-compile python libraries
-  # ${MINGW_PREFIX}/bin/python -m compileall -o 0 -o 1 "${pkgdir}"${MINGW_PREFIX}/share/gcc-${pkgver%%+*}/
+  ${MINGW_PREFIX}/bin/python -m compileall -o 0 -o 1 "${pkgdir}"${MINGW_PREFIX}/share/gcc-${pkgver%%+*}/
 }
 
 package_gcc-libgfortran() {
@@ -423,7 +412,7 @@ package_gcc-libgfortran() {
 
 package_gcc-fortran() {
   pkgdesc="GNU Compiler Collection (Fortran) for MinGW-w64"
-  depends=("${MINGW_PACKAGE_PREFIX}-${_realname}=$pkgver-$pkgrel"
+  depends=("${MINGW_PACKAGE_PREFIX}-${_realname}=${pkgver}-${pkgrel}"
            "${MINGW_PACKAGE_PREFIX}-${_realname}-libgfortran=${pkgver}-${pkgrel}"
            "${MINGW_PACKAGE_PREFIX}-${_realname}-libs=${pkgver}-${pkgrel}"
            "${MINGW_PACKAGE_PREFIX}-gmp"
@@ -446,7 +435,7 @@ package_gcc-fortran() {
 
 package_gcc-ada() {
   pkgdesc="GNU Compiler Collection (Ada) for MinGW-w64"
-  depends=("${MINGW_PACKAGE_PREFIX}-${_realname}=$pkgver-$pkgrel"
+  depends=("${MINGW_PACKAGE_PREFIX}-${_realname}=${pkgver}-${pkgrel}"
            "${MINGW_PACKAGE_PREFIX}-${_realname}-libs=${pkgver}-${pkgrel}"
            "${MINGW_PACKAGE_PREFIX}-gmp"
            "${MINGW_PACKAGE_PREFIX}-isl"
@@ -465,7 +454,7 @@ package_gcc-ada() {
 
 package_gcc-objc() {
   pkgdesc="GNU Compiler Collection (ObjC,Obj-C++) for MinGW-w64"
-  depends=("${MINGW_PACKAGE_PREFIX}-${_realname}=$pkgver-$pkgrel"
+  depends=("${MINGW_PACKAGE_PREFIX}-${_realname}=${pkgver}-${pkgrel}"
            "${MINGW_PACKAGE_PREFIX}-${_realname}-libs=${pkgver}-${pkgrel}"
            "${MINGW_PACKAGE_PREFIX}-gmp"
            "${MINGW_PACKAGE_PREFIX}-isl"
@@ -487,7 +476,7 @@ package_gcc-objc() {
 
 package_gcc-rust() {
   pkgdesc="GNU Compiler Collection (Rust) for MinGW-w64"
-  depends=("${MINGW_PACKAGE_PREFIX}-${_realname}=$pkgver-$pkgrel"
+  depends=("${MINGW_PACKAGE_PREFIX}-${_realname}=${pkgver}-${pkgrel}"
            "${MINGW_PACKAGE_PREFIX}-${_realname}-libs=${pkgver}-${pkgrel}"
            "${MINGW_PACKAGE_PREFIX}-gmp"
            "${MINGW_PACKAGE_PREFIX}-isl"
@@ -500,8 +489,6 @@ package_gcc-rust() {
   cd "${srcdir}"/build-${MSYSTEM}
 
   make -C gcc DESTDIR="${pkgdir}" rust.install-{common,man,info}
-
-  install -Dm755 gcc/gccrs.exe "${pkgdir}"${MINGW_PREFIX}/bin/gccrs.exe
   install -Dm755 gcc/crab1.exe "${pkgdir}"${MINGW_PREFIX}/${_libdir}/crab1.exe
 }
 
@@ -524,7 +511,7 @@ package_gcc-lto-dump() {
 
 package_libgccjit() {
   pkgdesc="GNU Compiler Collection (libgccjit) for MinGW-w64"
-  depends=("${MINGW_PACKAGE_PREFIX}-${_realname}=$pkgver-$pkgrel"
+  depends=("${MINGW_PACKAGE_PREFIX}-${_realname}=${pkgver}-${pkgrel}"
            "${MINGW_PACKAGE_PREFIX}-${_realname}-libs=${pkgver}-${pkgrel}"
            "${MINGW_PACKAGE_PREFIX}-gmp"
            "${MINGW_PACKAGE_PREFIX}-isl"

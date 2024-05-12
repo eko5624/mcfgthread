@@ -1,7 +1,7 @@
-From f4a62aec35e166200f69bad89156c75eb7c64e70 Mon Sep 17 00:00:00 2001
+From 5dce6af6988afbb60ce3a7a8e9f1751f618873a6 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 7 Oct 2022 22:46:50 +0800
-Subject: [PATCH 2/4] crt: Provide wrappers for `*exit()` in libmingwex
+Subject: [PATCH 3/5] crt: Provide wrappers for `*exit()` in libmingwex
 
 This should have no effect on functionality, but allows further
 customization of them.
@@ -44,7 +44,7 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
  create mode 100644 mingw-w64-crt/crt/ucrt_exit_wrappers.c
 
 diff --git a/mingw-w64-crt/Makefile.am b/mingw-w64-crt/Makefile.am
-index e6a21446b..8e7a45bd4 100644
+index 08f5055e9..1cde56ec3 100644
 --- a/mingw-w64-crt/Makefile.am
 +++ b/mingw-w64-crt/Makefile.am
 @@ -117,7 +117,7 @@ src_libmingw32=include/oscalls.h include/internal.h include/sect_attribs.h \
@@ -178,10 +178,10 @@ index ea310d426..33e4f5504 100644
  set_terminate
  signal
 diff --git a/mingw-w64-crt/lib-common/msvcr120_app.def.in b/mingw-w64-crt/lib-common/msvcr120_app.def.in
-index ddb407d00..33f2e9345 100644
+index 9176c2bfb..7e6e0e5d1 100644
 --- a/mingw-w64-crt/lib-common/msvcr120_app.def.in
 +++ b/mingw-w64-crt/lib-common/msvcr120_app.def.in
-@@ -1080,7 +1080,7 @@ F_ARM32(_execv)
+@@ -1082,7 +1082,7 @@ F_ARM32(_execv)
  F_ARM32(_execve)
  F_ARM32(_execvp)
  F_ARM32(_execvpe)
@@ -190,7 +190,7 @@ index ddb407d00..33f2e9345 100644
  F_X86_ANY(_exit_app)
  _expand
  F_X86_ANY(_fclose_nolock)
-@@ -2143,7 +2143,7 @@ erfcl
+@@ -2112,7 +2112,7 @@ erfcl
  erff
  erfl
  #endif
@@ -200,10 +200,10 @@ index ddb407d00..33f2e9345 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/lib-common/msvcrt.def.in b/mingw-w64-crt/lib-common/msvcrt.def.in
-index b5b971d20..46bb61ade 100644
+index 6ce7a0366..c2222919e 100644
 --- a/mingw-w64-crt/lib-common/msvcrt.def.in
 +++ b/mingw-w64-crt/lib-common/msvcrt.def.in
-@@ -486,7 +486,7 @@ _execv
+@@ -500,7 +500,7 @@ _execv
  _execve
  _execvp
  _execvpe
@@ -212,7 +212,7 @@ index b5b971d20..46bb61ade 100644
  _expand
  _fcloseall
  _fcvt
-@@ -862,7 +862,7 @@ cosh
+@@ -876,7 +876,7 @@ cosh
  ctime
  difftime
  div
@@ -222,7 +222,7 @@ index b5b971d20..46bb61ade 100644
  fabs DATA
  fclose
 diff --git a/mingw-w64-crt/lib-common/ucrtbase.def.in b/mingw-w64-crt/lib-common/ucrtbase.def.in
-index 000861ee3..76175405a 100644
+index 16127eb81..432d3d2ec 100644
 --- a/mingw-w64-crt/lib-common/ucrtbase.def.in
 +++ b/mingw-w64-crt/lib-common/ucrtbase.def.in
 @@ -30,7 +30,7 @@ _CreateFrameInfo
@@ -243,7 +243,7 @@ index 000861ee3..76175405a 100644
  _expand
  _fclose_nolock
  _fcloseall
-@@ -2305,7 +2305,7 @@ erfcf
+@@ -2298,7 +2298,7 @@ erfcf
  erfcl F_X86_ANY(DATA)
  erff
  erfl F_X86_ANY(DATA)
@@ -252,7 +252,7 @@ index 000861ee3..76175405a 100644
  exp
  exp2
  exp2f
-@@ -2501,7 +2501,7 @@ putwc
+@@ -2494,7 +2494,7 @@ putwc
  putwchar
  qsort
  qsort_s
@@ -262,10 +262,10 @@ index 000861ee3..76175405a 100644
  rand
  rand_s
 diff --git a/mingw-w64-crt/lib32/crtdll.def.in b/mingw-w64-crt/lib32/crtdll.def.in
-index e98d70d6d..fe53f23c7 100644
+index e12edb5ad..fbf7dba31 100644
 --- a/mingw-w64-crt/lib32/crtdll.def.in
 +++ b/mingw-w64-crt/lib32/crtdll.def.in
-@@ -169,7 +169,7 @@ _execv
+@@ -174,7 +174,7 @@ _execv
  _execve
  _execvp
  _execvpe
@@ -274,9 +274,9 @@ index e98d70d6d..fe53f23c7 100644
  _expand
  _fcloseall
  _fcvt
-@@ -456,7 +456,7 @@ _ctime32 == ctime
+@@ -454,7 +454,7 @@ cosh
+ ctime DATA
  difftime
- _difftime32 == difftime
  div
 -exit
 +exit DATA
@@ -284,10 +284,10 @@ index e98d70d6d..fe53f23c7 100644
  fabs DATA
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr100.def.in b/mingw-w64-crt/lib32/msvcr100.def.in
-index 00d99124b..d799572f0 100644
+index f047d222e..373d8b569 100644
 --- a/mingw-w64-crt/lib32/msvcr100.def.in
 +++ b/mingw-w64-crt/lib32/msvcr100.def.in
-@@ -834,7 +834,7 @@ _execv
+@@ -837,7 +837,7 @@ _execv
  _execve
  _execvp
  _execvpe
@@ -296,7 +296,7 @@ index 00d99124b..d799572f0 100644
  _expand
  _fclose_nolock
  _fcloseall
-@@ -1704,7 +1704,7 @@ cos DATA
+@@ -1679,7 +1679,7 @@ cos DATA
  ; If we implement cosh too, we can set it to DATA only.
  cosh
  div
@@ -306,10 +306,10 @@ index 00d99124b..d799572f0 100644
  fabs DATA
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr110.def.in b/mingw-w64-crt/lib32/msvcr110.def.in
-index 2045e0a54..bf4979031 100644
+index 5b611fed9..3fba552f9 100644
 --- a/mingw-w64-crt/lib32/msvcr110.def.in
 +++ b/mingw-w64-crt/lib32/msvcr110.def.in
-@@ -957,7 +957,7 @@ _execv
+@@ -960,7 +960,7 @@ _execv
  _execve
  _execvp
  _execvpe
@@ -318,7 +318,7 @@ index 2045e0a54..bf4979031 100644
  _expand
  _fclose_nolock
  _fcloseall
-@@ -1837,7 +1837,7 @@ cos DATA
+@@ -1812,7 +1812,7 @@ cos DATA
  ; If we implement cosh, we can set it to DATA only.
  cosh
  div
@@ -328,7 +328,7 @@ index 2045e0a54..bf4979031 100644
  fabs DATA
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr120.def.in b/mingw-w64-crt/lib32/msvcr120.def.in
-index 6db27845a..823b8f766 100644
+index 9b0d09d0c..3b3870be6 100644
 --- a/mingw-w64-crt/lib32/msvcr120.def.in
 +++ b/mingw-w64-crt/lib32/msvcr120.def.in
 @@ -974,7 +974,7 @@ _execv
@@ -340,7 +340,7 @@ index 6db27845a..823b8f766 100644
  _expand
  _fclose_nolock
  _fcloseall
-@@ -1961,7 +1961,7 @@ erfcf
+@@ -1945,7 +1945,7 @@ erfcf
  erfcl
  erff
  erfl
@@ -350,7 +350,7 @@ index 6db27845a..823b8f766 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/lib32/msvcr120d.def.in b/mingw-w64-crt/lib32/msvcr120d.def.in
-index 5ff03bda2..e83f1ee82 100644
+index b55a251f1..cfffffe43 100644
 --- a/mingw-w64-crt/lib32/msvcr120d.def.in
 +++ b/mingw-w64-crt/lib32/msvcr120d.def.in
 @@ -1027,7 +1027,7 @@ _execv
@@ -362,7 +362,7 @@ index 5ff03bda2..e83f1ee82 100644
  _expand
  _expand_dbg
  _fclose_nolock
-@@ -2028,7 +2028,7 @@ erfcf
+@@ -2012,7 +2012,7 @@ erfcf
  erfcl
  erff
  erfl
@@ -372,10 +372,10 @@ index 5ff03bda2..e83f1ee82 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/lib32/msvcr70.def.in b/mingw-w64-crt/lib32/msvcr70.def.in
-index bc5a8da49..f6dbfd1ad 100644
+index 322e4f414..4241bdadc 100644
 --- a/mingw-w64-crt/lib32/msvcr70.def.in
 +++ b/mingw-w64-crt/lib32/msvcr70.def.in
-@@ -317,7 +317,7 @@ _execv
+@@ -321,7 +321,7 @@ _execv
  _execve
  _execvp
  _execvpe
@@ -384,9 +384,9 @@ index bc5a8da49..f6dbfd1ad 100644
  _expand
  _fcloseall
  _fcvt
-@@ -739,7 +739,7 @@ _ctime32 == ctime
+@@ -732,7 +732,7 @@ cosh
+ ctime
  difftime
- _difftime32 == difftime
  div
 -exit
 +exit DATA
@@ -394,10 +394,10 @@ index bc5a8da49..f6dbfd1ad 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr71.def.in b/mingw-w64-crt/lib32/msvcr71.def.in
-index f74586f35..2686e4918 100644
+index 17267bbcb..207712da3 100644
 --- a/mingw-w64-crt/lib32/msvcr71.def.in
 +++ b/mingw-w64-crt/lib32/msvcr71.def.in
-@@ -309,7 +309,7 @@ _execv
+@@ -313,7 +313,7 @@ _execv
  _execve
  _execvp
  _execvpe
@@ -406,9 +406,9 @@ index f74586f35..2686e4918 100644
  _expand
  _fcloseall
  _fcvt
-@@ -733,7 +733,7 @@ _ctime32 == ctime
+@@ -726,7 +726,7 @@ cosh
+ ctime
  difftime
- _difftime32 == difftime
  div
 -exit
 +exit DATA
@@ -416,7 +416,7 @@ index f74586f35..2686e4918 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr80.def.in b/mingw-w64-crt/lib32/msvcr80.def.in
-index af4ccca60..70f17d358 100644
+index 733b4bafc..6d4705a31 100644
 --- a/mingw-w64-crt/lib32/msvcr80.def.in
 +++ b/mingw-w64-crt/lib32/msvcr80.def.in
 @@ -462,7 +462,7 @@ _execv
@@ -428,7 +428,7 @@ index af4ccca60..70f17d358 100644
  _expand
  _fclose_nolock
  _fcloseall
-@@ -1347,7 +1347,7 @@ clock
+@@ -1317,7 +1317,7 @@ clock
  cos DATA
  cosh ; If we implement cosh, we can set it to DATA only.
  div
@@ -438,7 +438,7 @@ index af4ccca60..70f17d358 100644
  fabs DATA
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr90.def.in b/mingw-w64-crt/lib32/msvcr90.def.in
-index b0c6fb88d..e730cfe43 100644
+index aa14c954f..52a0c952a 100644
 --- a/mingw-w64-crt/lib32/msvcr90.def.in
 +++ b/mingw-w64-crt/lib32/msvcr90.def.in
 @@ -463,7 +463,7 @@ _execv
@@ -450,7 +450,7 @@ index b0c6fb88d..e730cfe43 100644
  _expand
  _fclose_nolock
  _fcloseall
-@@ -1342,7 +1342,7 @@ cos DATA
+@@ -1312,7 +1312,7 @@ cos DATA
  ; If we have cosh implementation, we can set it to DATA only.
  cosh
  div
@@ -460,7 +460,7 @@ index b0c6fb88d..e730cfe43 100644
  fabs DATA
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr90d.def.in b/mingw-w64-crt/lib32/msvcr90d.def.in
-index 3cdc83708..f7756010f 100644
+index e6caf44ce..c6c8b533c 100644
 --- a/mingw-w64-crt/lib32/msvcr90d.def.in
 +++ b/mingw-w64-crt/lib32/msvcr90d.def.in
 @@ -520,7 +520,7 @@ _execv
@@ -472,7 +472,7 @@ index 3cdc83708..f7756010f 100644
  _expand
  _expand_dbg
  _fclose_nolock
-@@ -1414,7 +1414,7 @@ cos DATA
+@@ -1384,7 +1384,7 @@ cos DATA
  ; If we implement cosh too, we can set it to DATA only.
  cosh
  div
@@ -482,10 +482,10 @@ index 3cdc83708..f7756010f 100644
  fabs DATA
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcrt10.def.in b/mingw-w64-crt/lib32/msvcrt10.def.in
-index f1581d111..f009ce934 100644
+index 3b1c1a424..98ab09958 100644
 --- a/mingw-w64-crt/lib32/msvcrt10.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt10.def.in
-@@ -946,7 +946,7 @@ _execv
+@@ -951,7 +951,7 @@ _execv
  _execve
  _execvp
  _execvpe
@@ -494,9 +494,9 @@ index f1581d111..f009ce934 100644
  _expand
  _fcloseall
  _fcvt
-@@ -1134,7 +1134,7 @@ _ctime32 == ctime
+@@ -1134,7 +1134,7 @@ cosh
+ ctime
  difftime
- _difftime32 == difftime
  div
 -exit
 +exit DATA
@@ -504,10 +504,10 @@ index f1581d111..f009ce934 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcrt20.def.in b/mingw-w64-crt/lib32/msvcrt20.def.in
-index 8417d6e12..0be9d1c10 100644
+index 31c01d507..370680845 100644
 --- a/mingw-w64-crt/lib32/msvcrt20.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt20.def.in
-@@ -983,7 +983,7 @@ _execv
+@@ -987,7 +987,7 @@ _execv
  _execve
  _execvp
  _execvpe
@@ -516,9 +516,9 @@ index 8417d6e12..0be9d1c10 100644
  _expand
  _fcloseall
  _fcvt
-@@ -1352,7 +1352,7 @@ _ctime32 == ctime
+@@ -1349,7 +1349,7 @@ cosh
+ ctime
  difftime
- _difftime32 == difftime
  div
 -exit
 +exit DATA
@@ -526,10 +526,10 @@ index 8417d6e12..0be9d1c10 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcrt40.def.in b/mingw-w64-crt/lib32/msvcrt40.def.in
-index 66e911534..eb59cc8a7 100644
+index 295a4be63..8107af158 100644
 --- a/mingw-w64-crt/lib32/msvcrt40.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt40.def.in
-@@ -1102,7 +1102,7 @@ _execv
+@@ -1105,7 +1105,7 @@ _execv
  _execve
  _execvp
  _execvpe
@@ -538,9 +538,9 @@ index 66e911534..eb59cc8a7 100644
  _expand
  _fcloseall
  _fcvt
-@@ -1453,7 +1453,7 @@ _ctime32 == ctime
+@@ -1449,7 +1449,7 @@ cosh
+ ctime
  difftime
- _difftime32 == difftime
  div
 -exit
 +exit DATA
@@ -548,10 +548,10 @@ index 66e911534..eb59cc8a7 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib64/msvcr100.def.in b/mingw-w64-crt/lib64/msvcr100.def.in
-index 1c72309d4..eef42c929 100644
+index 6d17e9b50..c3fb8f6f4 100644
 --- a/mingw-w64-crt/lib64/msvcr100.def.in
 +++ b/mingw-w64-crt/lib64/msvcr100.def.in
-@@ -789,7 +789,7 @@ _execv
+@@ -792,7 +792,7 @@ _execv
  _execve
  _execvp
  _execvpe
@@ -560,7 +560,7 @@ index 1c72309d4..eef42c929 100644
  _expand
  _fclose_nolock
  _fcloseall
-@@ -1657,7 +1657,7 @@ cosf DATA
+@@ -1632,7 +1632,7 @@ cosf DATA
  cosh
  coshf DATA
  div
@@ -570,10 +570,10 @@ index 1c72309d4..eef42c929 100644
  expf DATA
  fabs DATA
 diff --git a/mingw-w64-crt/lib64/msvcr110.def.in b/mingw-w64-crt/lib64/msvcr110.def.in
-index f3fc9a25b..06507883d 100644
+index df53f30f7..2c1a3d722 100644
 --- a/mingw-w64-crt/lib64/msvcr110.def.in
 +++ b/mingw-w64-crt/lib64/msvcr110.def.in
-@@ -914,7 +914,7 @@ _execv
+@@ -917,7 +917,7 @@ _execv
  _execve
  _execvp
  _execvpe
@@ -582,7 +582,7 @@ index f3fc9a25b..06507883d 100644
  _expand
  _fclose_nolock
  _fcloseall
-@@ -1781,7 +1781,7 @@ cosf
+@@ -1756,7 +1756,7 @@ cosf
  cosh
  coshf
  div
@@ -592,7 +592,7 @@ index f3fc9a25b..06507883d 100644
  expf
  fabs
 diff --git a/mingw-w64-crt/lib64/msvcr120.def.in b/mingw-w64-crt/lib64/msvcr120.def.in
-index 8c6dd5dd6..13d7ae262 100644
+index b01dc9e2a..bee8dedd4 100644
 --- a/mingw-w64-crt/lib64/msvcr120.def.in
 +++ b/mingw-w64-crt/lib64/msvcr120.def.in
 @@ -928,7 +928,7 @@ _execv
@@ -604,7 +604,7 @@ index 8c6dd5dd6..13d7ae262 100644
  _expand
  _fclose_nolock
  _fcloseall
-@@ -1906,7 +1906,7 @@ erfcf
+@@ -1890,7 +1890,7 @@ erfcf
  erfcl
  erff
  erfl
@@ -614,7 +614,7 @@ index 8c6dd5dd6..13d7ae262 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/lib64/msvcr120d.def.in b/mingw-w64-crt/lib64/msvcr120d.def.in
-index dca76d1e8..8080f5e5c 100644
+index 03ab1e481..ab676ce46 100644
 --- a/mingw-w64-crt/lib64/msvcr120d.def.in
 +++ b/mingw-w64-crt/lib64/msvcr120d.def.in
 @@ -979,7 +979,7 @@ _execv
@@ -626,7 +626,7 @@ index dca76d1e8..8080f5e5c 100644
  _expand
  _expand_dbg
  _fclose_nolock
-@@ -1970,7 +1970,7 @@ erfcf
+@@ -1955,7 +1955,7 @@ erfcf
  erfcl
  erff
  erfl
@@ -636,7 +636,7 @@ index dca76d1e8..8080f5e5c 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/lib64/msvcr80.def.in b/mingw-w64-crt/lib64/msvcr80.def.in
-index 6200df195..29f03d8cf 100644
+index 9abec89b0..9feacd867 100644
 --- a/mingw-w64-crt/lib64/msvcr80.def.in
 +++ b/mingw-w64-crt/lib64/msvcr80.def.in
 @@ -404,7 +404,7 @@ _execv
@@ -648,7 +648,7 @@ index 6200df195..29f03d8cf 100644
  _expand
  _fclose_nolock
  _fcloseall
-@@ -1284,7 +1284,7 @@ cosf
+@@ -1254,7 +1254,7 @@ cosf
  cosh
  coshf
  div
@@ -658,7 +658,7 @@ index 6200df195..29f03d8cf 100644
  expf DATA
  fabs
 diff --git a/mingw-w64-crt/lib64/msvcr90.def.in b/mingw-w64-crt/lib64/msvcr90.def.in
-index 1ffd75541..b785753ee 100644
+index c271b3901..196366b15 100644
 --- a/mingw-w64-crt/lib64/msvcr90.def.in
 +++ b/mingw-w64-crt/lib64/msvcr90.def.in
 @@ -408,7 +408,7 @@ _execv
@@ -670,7 +670,7 @@ index 1ffd75541..b785753ee 100644
  _expand
  _fclose_nolock
  _fcloseall
-@@ -1281,7 +1281,7 @@ cosf DATA
+@@ -1251,7 +1251,7 @@ cosf DATA
  cosh
  coshf DATA
  div
@@ -680,7 +680,7 @@ index 1ffd75541..b785753ee 100644
  expf DATA
  fabs DATA
 diff --git a/mingw-w64-crt/lib64/msvcr90d.def.in b/mingw-w64-crt/lib64/msvcr90d.def.in
-index 07adb60dd..a1d5de3aa 100644
+index 9c0b55889..7769a3556 100644
 --- a/mingw-w64-crt/lib64/msvcr90d.def.in
 +++ b/mingw-w64-crt/lib64/msvcr90d.def.in
 @@ -459,7 +459,7 @@ _execv
@@ -692,7 +692,7 @@ index 07adb60dd..a1d5de3aa 100644
  _expand
  _expand_dbg
  _fclose_nolock
-@@ -1347,7 +1347,7 @@ cosf
+@@ -1317,7 +1317,7 @@ cosf
  cosh
  coshf
  div
@@ -724,7 +724,7 @@ index d6a487db1..f6626c5df 100644
  hwprintf
  lstrcmp
 diff --git a/mingw-w64-crt/libarm32/msvcr110.def b/mingw-w64-crt/libarm32/msvcr110.def
-index 0c4aa92af..f5f31d232 100644
+index 9e1593a60..6c5b51428 100644
 --- a/mingw-w64-crt/libarm32/msvcr110.def
 +++ b/mingw-w64-crt/libarm32/msvcr110.def
 @@ -574,7 +574,7 @@ _execv
@@ -746,7 +746,7 @@ index 0c4aa92af..f5f31d232 100644
  expf
  fabs
 diff --git a/mingw-w64-crt/libarm32/msvcr120_clr0400.def b/mingw-w64-crt/libarm32/msvcr120_clr0400.def
-index 3a153da53..18ab94522 100644
+index 2e6831aca..cea359203 100644
 --- a/mingw-w64-crt/libarm32/msvcr120_clr0400.def
 +++ b/mingw-w64-crt/libarm32/msvcr120_clr0400.def
 @@ -573,7 +573,7 @@ _execv
@@ -768,5 +768,5 @@ index 3a153da53..18ab94522 100644
  expf
  fabs
 -- 
-2.44.0
+2.45.0
 
