@@ -1,7 +1,7 @@
-From 3fcd7ad5feafdc04972a1dc7e203f82d102f54db Mon Sep 17 00:00:00 2001
+From 2fcd8393d3058726161d712c302d3bfc8c581328 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 7 Oct 2022 22:42:04 +0800
-Subject: [PATCH 2/5] crt: Mark `atexit()` as DATA because it's always
+Subject: [PATCH 1/4] crt: Mark `atexit()` as DATA because it's always
  overridden
 
 Signed-off-by: LIU Hao <lh_mouse@126.com>

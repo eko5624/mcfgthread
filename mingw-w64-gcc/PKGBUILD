@@ -24,7 +24,7 @@ pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          $([[ "$_enable_rust" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-${_realname}-rust")
          $([[ "$_enable_jit" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-libgccjit")
         )
-pkgver=14.1.1+20240509
+pkgver=14.1.1+20240514
 _branch=releases/gcc-14
 _sourcedir=${_realname}
 _libdir=lib/gcc/${CHOST}/${pkgver%%+*}
@@ -72,7 +72,8 @@ source=(${_sourcedir}::"git://gcc.gnu.org/git/gcc.git#branch=${_branch}"
         0200-add-m-no-align-vector-insn-option-for-i386.patch
         0400-gcc-Make-stupid-AT-T-syntax-not-default.patch
         0401-Always-quote-labels-in-Intel-syntax.patch
-        2001-fix-building-rust-on-mingw-w64.patch)
+        2001-fix-building-rust-on-mingw-w64.patch
+        3001-fix-ice.patch)
 sha256sums=('SKIP'
             '0acd5b088ae2c3e632f6c624cb8d240953181444c6ccdedd360711714dd999b9'
             '3fc35067823f87e48dd3bfd265e7593000dc110fa9ad5f16c81b896765fc897a'
@@ -88,7 +89,8 @@ sha256sums=('SKIP'
             'c34f9e71b5a092be1987ad4c65891742c74c9eb8ef6560100e751cd31375f579'
             'f3b3838a64e5d3c2ddab91015bebc0bbc626087f4d58198c966c5863f88dc099'
             'b59f67cba1ba698d3bae2712f05b2d990e6d8f1f56cd85dc73de6e2afcf2d06a'
-            'ddc1538c2b9132bce5b3b2cad2a382762d58b46b31d2ae291f6e4d963b88dfd4')
+            'ddc1538c2b9132bce5b3b2cad2a382762d58b46b31d2ae291f6e4d963b88dfd4'
+            '38a5dff6ebfffce24763fca4221554ab5a2a6416a14594c4b87e08c94b63e273')
 validpgpkeys=(F3691687D867B81B51CE07D9BBE43771487328A9  # bpiotrowski@archlinux.org
               86CFFCA918CF3AF47147588051E8B148A9999C34  # evangelos@foutrelis.com
               13975A70E63C361C73AE69EF6EEB81F8981C74C7  # richard.guenther@gmail.com
@@ -142,9 +144,9 @@ prepare() {
     0140-gcc-diagnostic-color.patch
 
   # ZZZ
-  # XXX: GAS segfaults on i686?!
-  test "${CARCH}" != "i686" && apply_patch_with_msg 0400-gcc-Make-stupid-AT-T-syntax-not-default.patch
-  apply_patch_with_msg 0401-Always-quote-labels-in-Intel-syntax.patch
+  apply_patch_with_msg \
+    0400-gcc-Make-stupid-AT-T-syntax-not-default.patch \
+    0401-Always-quote-labels-in-Intel-syntax.patch
 
   # workaround for AVX misalignment issue for pass-by-value arguments
   #   cf. https://github.com/msys2/MSYS2-packages/issues/1209
@@ -157,6 +159,10 @@ prepare() {
 
   apply_patch_with_msg \
     2001-fix-building-rust-on-mingw-w64.patch
+
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=115038
+  apply_patch_with_msg \
+    3001-fix-ice.patch
 
   # do not expect ${prefix}/mingw symlink - this should be superceded by
   # 0005-Windows-Don-t-ignore-native-system-header-dir.patch .. but isn't!
@@ -211,6 +217,9 @@ build() {
   # In addition adaint.c does `#include <accctrl.h>` which pulls in msxml.h, hacky hack:
   CPPFLAGS+=" -DCOM_NO_WINDOWS_H"
 
+  # FIXME: necessary to work around bugs in GCC 14. will be removed.
+  CXXFLAGS+=' -masm=att'
+
   ../${_sourcedir}/configure \
     --prefix=${MINGW_PREFIX} \
     --with-local-prefix=${MINGW_PREFIX}/local \
@@ -219,7 +228,7 @@ build() {
     --target=${MINGW_CHOST} \
     --with-native-system-header-dir=${MINGW_PREFIX}/include \
     --libexecdir=${MINGW_PREFIX}/lib \
-    --enable-bootstrap \
+    --disable-bootstrap \
     --enable-checking=release \
     --with-arch=${_arch} \
     --with-tune=generic \
@@ -259,7 +268,7 @@ build() {
 
   # https://gcc.gnu.org/onlinedocs/gccint/Makefile.html
   make -O STAGE1_CFLAGS="-O2" \
-          profiledbootstrap
+          all
 }
 
 package_gcc-libs() {

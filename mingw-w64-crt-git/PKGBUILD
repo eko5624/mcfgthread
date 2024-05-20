@@ -3,7 +3,7 @@
 _realname=crt
 pkgbase=mingw-w64-${_realname}-git
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
-pkgver=11.0.0.r744.ge5ac8c550
+pkgver=11.0.0.r110.g95433fd59
 pkgrel=1
 pkgdesc='MinGW-w64 CRT for Windows (mingw-w64)'
 arch=('any')
@@ -28,10 +28,10 @@ source=("mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64"
         9004-crt-Copy-clock-and-nanosleep-from-winpthreads.patch)
 sha256sums=('SKIP'
             'd641257f7e1469aff89adc33e57702b75fe9667ca035978f890eae1020b6814c'
-            '65a244ec08d0d566d0640a7d05e6b1856ca27279bd2c7c92cfb06302133b054c'
-            '8cac71d22050bbab2a9334e0e3f20f131347819b8861d84739ffde3dd6201f36'
-            '7aa9b6629a5f334ecf88dea8d67dd4ba3252fea63e743eacf56b79de1eb6c58c'
-            'e46fb7d48d1584ba4903ba074fec0275cfa71c7fa81039738fc81e6c7de62b67')
+            'd75886671ec90540b9d3e596a55505038ad937dcc22f9debcb57036d57af6eed'
+            'f41c13102fdc93121cbf5bc0c89281d9d03316798c9cddd9d3e16770e9236e3e'
+            '137cc6c0ae487b33b165a1200d3f0df2d86d6c97491d3847e343a0058363a502'
+            '9c0350642d6f86e9f9a787add5049d78096ef871091184ceb764d1a8eefe3359')
 
 pkgver() {
   cd "${srcdir}/mingw-w64"
@@ -47,7 +47,7 @@ prepare() {
   git apply "${srcdir}/9002-crt-Provide-wrappers-for-exit-in-libmingwex.patch"
   git apply "${srcdir}/9003-crt-Implement-standard-conforming-termination-suppor.patch"
   git apply "${srcdir}/9004-crt-Copy-clock-and-nanosleep-from-winpthreads.patch"
-  (cd mingw-w64-crt && automake)
+  (cd mingw-w64-crt && autoreconf)
 
   git apply "${srcdir}/0001-Allow-to-use-bessel-and-complex-functions-without-un.patch"
 }
@@ -84,6 +84,9 @@ build() {
 
   ${srcdir}/mingw-w64/mingw-w64-crt/configure \
     --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
     --enable-wildcard \
     --disable-dependency-tracking \
     "${_extra_config[@]}"

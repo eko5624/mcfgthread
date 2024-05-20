@@ -1,7 +1,7 @@
-From 5dce6af6988afbb60ce3a7a8e9f1751f618873a6 Mon Sep 17 00:00:00 2001
+From b3d950f03202fe35f29a6f21f5639a19a0524357 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 7 Oct 2022 22:46:50 +0800
-Subject: [PATCH 3/5] crt: Provide wrappers for `*exit()` in libmingwex
+Subject: [PATCH 2/4] crt: Provide wrappers for `*exit()` in libmingwex
 
 This should have no effect on functionality, but allows further
 customization of them.
