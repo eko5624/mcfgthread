@@ -1,7 +1,7 @@
-From 2fcd8393d3058726161d712c302d3bfc8c581328 Mon Sep 17 00:00:00 2001
+From 6361aba287aadbe1b132d4a278a900675bb2f498 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 7 Oct 2022 22:42:04 +0800
-Subject: [PATCH 1/4] crt: Mark `atexit()` as DATA because it's always
+Subject: [PATCH 2/5] crt: Mark `atexit()` as DATA because it's always
  overridden
 
 Signed-off-by: LIU Hao <lh_mouse@126.com>
@@ -22,10 +22,10 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
  13 files changed, 13 insertions(+), 13 deletions(-)
 
 diff --git a/mingw-w64-crt/lib-common/msvcr120_app.def.in b/mingw-w64-crt/lib-common/msvcr120_app.def.in
-index 695635caf..9176c2bfb 100644
+index 928c0d3a5..1b1310fd5 100644
 --- a/mingw-w64-crt/lib-common/msvcr120_app.def.in
 +++ b/mingw-w64-crt/lib-common/msvcr120_app.def.in
-@@ -1998,7 +1998,7 @@ F_NON_I386(atanf)
+@@ -1992,7 +1992,7 @@ F_NON_I386(atanf)
  F_X86_ANY(atanh)
  F_X86_ANY(atanhf)
  F_X86_ANY(atanhl)
@@ -35,10 +35,10 @@ index 695635caf..9176c2bfb 100644
  atoi
  atol
 diff --git a/mingw-w64-crt/lib32/msvcr120.def.in b/mingw-w64-crt/lib32/msvcr120.def.in
-index 58f008bd2..9b0d09d0c 100644
+index 7214d2cf0..f8bb9a212 100644
 --- a/mingw-w64-crt/lib32/msvcr120.def.in
 +++ b/mingw-w64-crt/lib32/msvcr120.def.in
-@@ -1848,7 +1848,7 @@ atan2
+@@ -1845,7 +1845,7 @@ atan2
  atanh
  atanhf
  atanhl
@@ -48,10 +48,10 @@ index 58f008bd2..9b0d09d0c 100644
  atoi
  atol
 diff --git a/mingw-w64-crt/lib32/msvcr120d.def.in b/mingw-w64-crt/lib32/msvcr120d.def.in
-index ab5127b05..b55a251f1 100644
+index 7692d17c3..fd9c9da42 100644
 --- a/mingw-w64-crt/lib32/msvcr120d.def.in
 +++ b/mingw-w64-crt/lib32/msvcr120d.def.in
-@@ -1915,7 +1915,7 @@ atan2
+@@ -1912,7 +1912,7 @@ atan2
  atanh
  atanhf
  atanhl
@@ -61,10 +61,10 @@ index ab5127b05..b55a251f1 100644
  atoi
  atol
 diff --git a/mingw-w64-crt/lib32/msvcr70.def.in b/mingw-w64-crt/lib32/msvcr70.def.in
-index 2447c3305..322e4f414 100644
+index ff974ccb0..672c4e489 100644
 --- a/mingw-w64-crt/lib32/msvcr70.def.in
 +++ b/mingw-w64-crt/lib32/msvcr70.def.in
-@@ -718,7 +718,7 @@ asctime
+@@ -710,7 +710,7 @@ asctime
  asin
  atan
  atan2
@@ -74,10 +74,10 @@ index 2447c3305..322e4f414 100644
  atoi
  atol
 diff --git a/mingw-w64-crt/lib32/msvcr71.def.in b/mingw-w64-crt/lib32/msvcr71.def.in
-index 1c371b2c8..17267bbcb 100644
+index b6625a114..296ce780b 100644
 --- a/mingw-w64-crt/lib32/msvcr71.def.in
 +++ b/mingw-w64-crt/lib32/msvcr71.def.in
-@@ -712,7 +712,7 @@ asctime
+@@ -704,7 +704,7 @@ asctime
  asin
  atan
  atan2
@@ -87,10 +87,10 @@ index 1c371b2c8..17267bbcb 100644
  atoi
  atol
 diff --git a/mingw-w64-crt/lib32/msvcrt10.def.in b/mingw-w64-crt/lib32/msvcrt10.def.in
-index f8a1948f0..3b1c1a424 100644
+index ac918799d..20a89a347 100644
 --- a/mingw-w64-crt/lib32/msvcrt10.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt10.def.in
-@@ -1120,7 +1120,7 @@ asctime
+@@ -1112,7 +1112,7 @@ asctime
  asin
  atan
  atan2
@@ -100,10 +100,10 @@ index f8a1948f0..3b1c1a424 100644
  atoi
  atol
 diff --git a/mingw-w64-crt/lib32/msvcrt20.def.in b/mingw-w64-crt/lib32/msvcrt20.def.in
-index 42b0eeb32..31c01d507 100644
+index 97c024874..918375b3f 100644
 --- a/mingw-w64-crt/lib32/msvcrt20.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt20.def.in
-@@ -1335,7 +1335,7 @@ asctime
+@@ -1329,7 +1329,7 @@ asctime
  asin
  atan
  atan2
@@ -113,10 +113,10 @@ index 42b0eeb32..31c01d507 100644
  atoi
  atol
 diff --git a/mingw-w64-crt/lib32/msvcrt40.def.in b/mingw-w64-crt/lib32/msvcrt40.def.in
-index f545bdc80..295a4be63 100644
+index fb85a5075..a4d3639ce 100644
 --- a/mingw-w64-crt/lib32/msvcrt40.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt40.def.in
-@@ -1435,7 +1435,7 @@ asctime
+@@ -1429,7 +1429,7 @@ asctime
  asin
  atan
  atan2
@@ -126,10 +126,10 @@ index f545bdc80..295a4be63 100644
  atoi
  atol
 diff --git a/mingw-w64-crt/lib64/msvcr120.def.in b/mingw-w64-crt/lib64/msvcr120.def.in
-index 7918dd57c..b01dc9e2a 100644
+index bcadb7d45..faac91e29 100644
 --- a/mingw-w64-crt/lib64/msvcr120.def.in
 +++ b/mingw-w64-crt/lib64/msvcr120.def.in
-@@ -1790,7 +1790,7 @@ atanf
+@@ -1787,7 +1787,7 @@ atanf
  atanh
  atanhf
  atanhl
@@ -139,10 +139,10 @@ index 7918dd57c..b01dc9e2a 100644
  atoi
  atol
 diff --git a/mingw-w64-crt/lib64/msvcr120d.def.in b/mingw-w64-crt/lib64/msvcr120d.def.in
-index 3388e5864..03ab1e481 100644
+index 978397301..02d1930af 100644
 --- a/mingw-w64-crt/lib64/msvcr120d.def.in
 +++ b/mingw-w64-crt/lib64/msvcr120d.def.in
-@@ -1855,7 +1855,7 @@ atanf
+@@ -1852,7 +1852,7 @@ atanf
  atanh
  atanhf
  atanhl
@@ -191,5 +191,5 @@ index 1410ec131..2e6831aca 100644
  atoi
  atol
 -- 
-2.45.0
+2.45.1
 
