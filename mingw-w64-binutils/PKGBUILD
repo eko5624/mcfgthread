@@ -5,8 +5,8 @@
 _realname=binutils
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=2.41.0+20240118
-_branch=binutils-2_41-branch
+pkgver=2.42.0+20240605
+_branch=binutils-2_42-branch
 _sourcedir=${_realname}
 pkgrel=1
 pkgdesc="A set of programs to assemble and manipulate binary and object files (mingw-w64)"

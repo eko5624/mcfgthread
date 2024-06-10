@@ -72,8 +72,7 @@ source=(${_sourcedir}::"git://gcc.gnu.org/git/gcc.git#branch=${_branch}"
         0200-add-m-no-align-vector-insn-option-for-i386.patch
         0400-gcc-Make-stupid-AT-T-syntax-not-default.patch
         0401-Always-quote-labels-in-Intel-syntax.patch
-        2001-fix-building-rust-on-mingw-w64.patch
-        3001-fix-ice.patch)
+        2001-fix-building-rust-on-mingw-w64.patch)
 sha256sums=('SKIP'
             '0acd5b088ae2c3e632f6c624cb8d240953181444c6ccdedd360711714dd999b9'
             '3fc35067823f87e48dd3bfd265e7593000dc110fa9ad5f16c81b896765fc897a'
@@ -89,8 +88,7 @@ sha256sums=('SKIP'
             'c34f9e71b5a092be1987ad4c65891742c74c9eb8ef6560100e751cd31375f579'
             'f3b3838a64e5d3c2ddab91015bebc0bbc626087f4d58198c966c5863f88dc099'
             'b59f67cba1ba698d3bae2712f05b2d990e6d8f1f56cd85dc73de6e2afcf2d06a'
-            'ddc1538c2b9132bce5b3b2cad2a382762d58b46b31d2ae291f6e4d963b88dfd4'
-            '38a5dff6ebfffce24763fca4221554ab5a2a6416a14594c4b87e08c94b63e273')
+            'ddc1538c2b9132bce5b3b2cad2a382762d58b46b31d2ae291f6e4d963b88dfd4')
 validpgpkeys=(F3691687D867B81B51CE07D9BBE43771487328A9  # bpiotrowski@archlinux.org
               86CFFCA918CF3AF47147588051E8B148A9999C34  # evangelos@foutrelis.com
               13975A70E63C361C73AE69EF6EEB81F8981C74C7  # richard.guenther@gmail.com
@@ -159,10 +157,6 @@ prepare() {
 
   apply_patch_with_msg \
     2001-fix-building-rust-on-mingw-w64.patch
-
-  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=115038
-  apply_patch_with_msg \
-    3001-fix-ice.patch
 
   # do not expect ${prefix}/mingw symlink - this should be superceded by
   # 0005-Windows-Don-t-ignore-native-system-header-dir.patch .. but isn't!

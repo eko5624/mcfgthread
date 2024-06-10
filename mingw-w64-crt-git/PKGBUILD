@@ -84,9 +84,6 @@ build() {
 
   ${srcdir}/mingw-w64/mingw-w64-crt/configure \
     --prefix=${MINGW_PREFIX} \
-    --build=${MINGW_CHOST} \
-    --host=${MINGW_CHOST} \
-    --target=${MINGW_CHOST} \
     --enable-wildcard \
     --disable-dependency-tracking \
     "${_extra_config[@]}"
