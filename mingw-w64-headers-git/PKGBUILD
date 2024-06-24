@@ -19,10 +19,8 @@ provides=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 options=('!strip' '!emptydirs')
 source=("mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64"
-        0001-Allow-to-use-bessel-and-complex-functions-without-un.patch
         0002-heades-add-full-name-winrt.patch)
 sha256sums=('SKIP'
-            'd641257f7e1469aff89adc33e57702b75fe9667ca035978f890eae1020b6814c'
             '69be8e262986ee9e666f0da4ca390c3d791d70883ef8690c5311aea2a40bb23f')
 
 pkgver() {
@@ -35,11 +33,8 @@ prepare() {
   git reset --hard
   git clean -fdx
 
-  git apply "${srcdir}/0001-Allow-to-use-bessel-and-complex-functions-without-un.patch"
+  # https://bugs.winehq.org/show_bug.cgi?id=55347
   git apply "${srcdir}/0002-heades-add-full-name-winrt.patch"
-
-  cd ${srcdir}/mingw-w64/mingw-w64-headers
-  touch include/windows.*.h include/wincrypt.h include/prsht.h
 }
 
 build() {
