@@ -1,7 +1,7 @@
-From 33d8c5f53d39430f324c621651a3d2e34080dea7 Mon Sep 17 00:00:00 2001
+From 1d9dffdda427f9f43a87bd59fbc13803aebc0ed1 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Sat, 22 Oct 2022 23:31:33 +0800
-Subject: [PATCH 4/5] crt: Implement standard-conforming termination support
+Subject: [PATCH 3/4] crt: Implement standard-conforming termination support
  with mcfgthread
 
 This commit implements these functions in accordance with the ISO C
@@ -335,5 +335,5 @@ index 9eb33e534..893388b90 100644
  extern void (*__MINGW_IMP_SYMBOL(_exit))(int) __attribute__((__noreturn__));
  
 -- 
-2.45.1
+2.45.2
 
