@@ -6,7 +6,7 @@ pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-multiarch")
 pkgver=14.0.91+20231108
-_branch=gdb-14-branch
+_branch=gdb-15-branch
 _sourcedir=${_realname}
 pkgrel=1
 pkgdesc="GNU Debugger (mingw-w64)"
@@ -19,12 +19,16 @@ msys2_references=(
 license=('spdx:GPL-3.0-or-later')
 groups=($( [[ ${MINGW_PACKAGE_PREFIX} == *-clang-* ]] || echo "${MINGW_PACKAGE_PREFIX}-toolchain" ))
 depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
-         "${MINGW_PACKAGE_PREFIX}-mpc"
+         "${MINGW_PACKAGE_PREFIX}-expat"
+         "${MINGW_PACKAGE_PREFIX}-gettext-runtime"
+         "${MINGW_PACKAGE_PREFIX}-gmp"
+         "${MINGW_PACKAGE_PREFIX}-libiconv"
          "${MINGW_PACKAGE_PREFIX}-mpfr"
          "${MINGW_PACKAGE_PREFIX}-ncurses"
          "${MINGW_PACKAGE_PREFIX}-python"
          "${MINGW_PACKAGE_PREFIX}-readline"
          "${MINGW_PACKAGE_PREFIX}-xxhash"
+         "${MINGW_PACKAGE_PREFIX}-xz"
          "${MINGW_PACKAGE_PREFIX}-zlib"
          "${MINGW_PACKAGE_PREFIX}-zstd")
 optdepends=("${MINGW_PACKAGE_PREFIX}-python-pygments: for syntax highlighting")
@@ -32,8 +36,7 @@ checkdepends=('dejagnu' 'bc')
 # gmp, mpfr and xz (lzma) are linked statically
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-autotools"
-             "${MINGW_PACKAGE_PREFIX}-iconv"
-             "${MINGW_PACKAGE_PREFIX}-xz")
+             "${MINGW_PACKAGE_PREFIX}-iconv")
 source=(${_sourcedir}::"git://sourceware.org/git/binutils-gdb.git#branch=${_branch}"
         '0001-Workaround-performance-regression-in-info-func-var-t.patch'
         '0002-Fix-using-gnu-print.patch'
@@ -128,6 +131,7 @@ do_build() {
     --with-python=${MINGW_PREFIX}/bin/python \
     --with-libiconv-prefix=${MINGW_PREFIX} \
     --with-{expat,gmp,mpfr,lzma,zstd}=${MINGW_PREFIX} \
+    --with-{libexpat,libintl,libiconv,liblzma,libxxhash}-type=shared \
     --enable-tui \
     --enable-source-highlight=no
 
