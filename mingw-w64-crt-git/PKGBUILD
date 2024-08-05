@@ -26,10 +26,10 @@ source=("mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64"
         9003-crt-Implement-standard-conforming-termination-suppor.patch
         9004-crt-Copy-clock-and-nanosleep-from-winpthreads.patch)
 sha256sums=('SKIP'
-            '1a23350438d7ed0f537a706901977f288af0eaa0a9def0f8d0c08eacd6fd6ee6'
-            'ca6c1a63cdbd6cb774524e62a6a48b64a7a6cc635ee6a5d6f746c72466e17ad6'
-            '62a333e443e32e18d52323e4c211be157c0e9ab6b16ca2dbea0987e9ef79dc3e'
-            '6468595b8147767d505a23ccf7f43a34c61723dc26fdedb62c1c8ef294494826')
+            '5e41b856644765303f9327a43a44d3a17eb984ade52646058b5b37db12cecbcb'
+            'c7b661f14d9019c194e7162f828a0e7b0525ef9ee3e3f3411ef4b8e5332c1777'
+            '8181830a48eb87f0e9fbd6d5b05d1f616452d039cea12029adc4c68e650291fc'
+            '18d6df32fc207a4e1b3a5cbdd6315ab51d89f7d6f45b129cc33fd114358c0fd4')
 
 pkgver() {
   cd "${srcdir}/mingw-w64"

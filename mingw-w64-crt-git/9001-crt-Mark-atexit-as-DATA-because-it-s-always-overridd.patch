@@ -1,7 +1,7 @@
-From c45fb91d2bdcc3e3067beda49c1a7435f98dfcaf Mon Sep 17 00:00:00 2001
+From f6b09f922a1503c501eca03a23b7c39bf6525199 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 7 Oct 2022 22:42:04 +0800
-Subject: [PATCH 1/4] crt: Mark `atexit()` as DATA because it's always
+Subject: [PATCH 9001/9004] crt: Mark `atexit()` as DATA because it's always
  overridden
 
 Signed-off-by: LIU Hao <lh_mouse@126.com>
@@ -17,18 +17,18 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
  mingw-w64-crt/lib64/msvcr120.def.in          | 2 +-
  mingw-w64-crt/lib64/msvcr120d.def.in         | 2 +-
  mingw-w64-crt/libarm32/kernelbase.def        | 2 +-
- mingw-w64-crt/libarm32/msvcr110.def          | 2 +-
- mingw-w64-crt/libarm32/msvcr120_clr0400.def  | 2 +-
+ mingw-w64-crt/libarm32/msvcr110.def.in       | 2 +-
+ mingw-w64-crt/libarm32/msvcr120.def.in       | 2 +-
  13 files changed, 13 insertions(+), 13 deletions(-)
 
 diff --git a/mingw-w64-crt/lib-common/msvcr120_app.def.in b/mingw-w64-crt/lib-common/msvcr120_app.def.in
-index 18684eeaa..41c3db772 100644
+index 67f8f8a57..1788601f4 100644
 --- a/mingw-w64-crt/lib-common/msvcr120_app.def.in
 +++ b/mingw-w64-crt/lib-common/msvcr120_app.def.in
-@@ -1991,7 +1991,7 @@ F_NON_I386(atanf)
- F_X86_ANY(atanh)
- F_X86_ANY(atanhf)
- ; F_X86_ANY(atanhl) ; Can't use long double functions from the CRT on x86
+@@ -1870,7 +1870,7 @@ F_NON_I386(atanf)
+ atanh
+ atanhf
+ F_ARM32(atanhl) ; Can't use long double functions from the CRT on x86
 -atexit
 +atexit DATA
  atof
@@ -164,11 +164,11 @@ index 954ea2dc1..d6a487db1 100644
  exit
  hgets
  hwprintf
-diff --git a/mingw-w64-crt/libarm32/msvcr110.def b/mingw-w64-crt/libarm32/msvcr110.def
-index 4971fd92e..9e1593a60 100644
---- a/mingw-w64-crt/libarm32/msvcr110.def
-+++ b/mingw-w64-crt/libarm32/msvcr110.def
-@@ -1392,7 +1392,7 @@ atan
+diff --git a/mingw-w64-crt/libarm32/msvcr110.def.in b/mingw-w64-crt/libarm32/msvcr110.def.in
+index 8f30767a8..84f46eca3 100644
+--- a/mingw-w64-crt/libarm32/msvcr110.def.in
++++ b/mingw-w64-crt/libarm32/msvcr110.def.in
+@@ -1716,7 +1716,7 @@ atan
  atan2
  atan2f
  atanf
@@ -177,19 +177,19 @@ index 4971fd92e..9e1593a60 100644
  atof
  atoi
  atol
-diff --git a/mingw-w64-crt/libarm32/msvcr120_clr0400.def b/mingw-w64-crt/libarm32/msvcr120_clr0400.def
-index 1410ec131..2e6831aca 100644
---- a/mingw-w64-crt/libarm32/msvcr120_clr0400.def
-+++ b/mingw-w64-crt/libarm32/msvcr120_clr0400.def
-@@ -1391,7 +1391,7 @@ atan
- atan2
- atan2f
- atanf
+diff --git a/mingw-w64-crt/libarm32/msvcr120.def.in b/mingw-w64-crt/libarm32/msvcr120.def.in
+index 4483a2093..f94ac44f3 100644
+--- a/mingw-w64-crt/libarm32/msvcr120.def.in
++++ b/mingw-w64-crt/libarm32/msvcr120.def.in
+@@ -1753,7 +1753,7 @@ atanf
+ atanh
+ atanhf
+ atanhl
 -atexit
 +atexit DATA
  atof
  atoi
  atol
 -- 
-2.45.2
+2.46.0
 

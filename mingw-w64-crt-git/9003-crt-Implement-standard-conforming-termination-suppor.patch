@@ -1,8 +1,8 @@
-From 1d9dffdda427f9f43a87bd59fbc13803aebc0ed1 Mon Sep 17 00:00:00 2001
+From bec4192aed3b9eca34d46dfeb7e47a3395e3f84e Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Sat, 22 Oct 2022 23:31:33 +0800
-Subject: [PATCH 3/4] crt: Implement standard-conforming termination support
- with mcfgthread
+Subject: [PATCH 9003/9004] crt: Implement standard-conforming termination
+ support with mcfgthread
 
 This commit implements these functions in accordance with the ISO C
 standard and the Itanium C++ ABI (except for `atexit()` which behaves
@@ -110,7 +110,7 @@ index 88450ce9f..2f00ddacf 100644
  
  char __mingw_module_is_dll = 1;
 diff --git a/mingw-w64-crt/crt/crtexe.c b/mingw-w64-crt/crt/crtexe.c
-index 9d5126878..7353cca0b 100644
+index 2e45bf423..511636354 100644
 --- a/mingw-w64-crt/crt/crtexe.c
 +++ b/mingw-w64-crt/crt/crtexe.c
 @@ -20,6 +20,10 @@
@@ -124,15 +124,15 @@ index 9d5126878..7353cca0b 100644
  
  #if defined(__SEH__) && (!defined(__clang__) || __clang_major__ >= 7)
  #define SEH_INLINE_ASM
-@@ -45,6 +49,7 @@ int *__cdecl __p__commode(void);
- extern int _fmode;
+@@ -36,6 +40,7 @@ extern int _fmode;
+ #undef _commode
  extern int _commode;
  extern int _dowildcard;
 +extern HANDLE __dso_handle;
  
  extern _CRTIMP void __cdecl _initterm(_PVFV *, _PVFV *);
  
-@@ -258,6 +263,11 @@ __tmainCRTStartup (void)
+@@ -249,6 +254,11 @@ __tmainCRTStartup (void)
      _fpreset ();
  
      duplicate_ppstrings (argc, &argv);
@@ -144,7 +144,7 @@ index 9d5126878..7353cca0b 100644
      __main (); /* C++ initialization. */
  #ifdef _UNICODE
      __winitenv = envp;
-@@ -334,7 +344,11 @@ static void duplicate_ppstrings (int ac, _TCHAR ***av)
+@@ -325,7 +335,11 @@ static void duplicate_ppstrings (int ac, _TCHAR ***av)
  
  int __cdecl atexit (_PVFV func)
  {
@@ -335,5 +335,5 @@ index 9eb33e534..893388b90 100644
  extern void (*__MINGW_IMP_SYMBOL(_exit))(int) __attribute__((__noreturn__));
  
 -- 
-2.45.2
+2.46.0
 
