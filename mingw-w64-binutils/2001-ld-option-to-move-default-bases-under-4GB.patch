@@ -1,4 +1,4 @@
-From 7f62d66c200325e8d39ecb79ddcd153ad8125271 Mon Sep 17 00:00:00 2001
+From 374e07b7e16c2ced0e533c590a5b5511b7d9768c Mon Sep 17 00:00:00 2001
 From: Jeremy Drake <github@jdrake.com>
 Date: Thu, 10 Sep 2020 10:28:28 -0700
 Subject: [PATCH] ld option to move default bases under 4GB.
@@ -129,18 +129,15 @@ index 00c4ea9e15a..439e2eb83d4 100644
      }
  
 diff --git a/ld/ldlex.h b/ld/ldlex.h
-index defe3fcbbb9..356f46a8c5d 100644
+index defe3fcbbb9..6a9f112d7a7 100644
 --- a/ld/ldlex.h
 +++ b/ld/ldlex.h
-@@ -392,6 +392,8 @@ enum option_values
+@@ -390,6 +390,8 @@ enum option_values
+   OPTION_DISABLE_WDM_DRIVER,
+   OPTION_DISABLE_TERMINAL_SERVER_AWARE,
    /* Used by emultempl/pep.em.  */
-   OPTION_DISABLE_HIGH_ENTROPY_VA,
-   OPTION_HIGH_ENTROPY_VA,
 +  OPTION_DEFAULT_IMAGE_BASE_LOW,
 +  OPTION_DEFAULT_IMAGE_BASE_HIGH,
+   OPTION_DISABLE_HIGH_ENTROPY_VA,
+   OPTION_HIGH_ENTROPY_VA,
    /* Used by emultempl/ppc32elf.em.  */
-   OPTION_NEW_PLT,
-   OPTION_OLD_PLT,
--- 
-2.46.0
-
