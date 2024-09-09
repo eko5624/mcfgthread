@@ -1,4 +1,4 @@
-From 4c7725c4b9c64ac84fbbc532779672d2aba0a58c Mon Sep 17 00:00:00 2001
+From f66c3fb2f8f63821db559755dcb89346808980ab Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 7 Oct 2022 22:42:04 +0800
 Subject: [PATCH 9003/9004] crt: Implement standard-conforming termination
@@ -270,7 +270,7 @@ index 000000000..ab6896f96
 +}
 +#endif  /* __USING_MCFGTHREAD__  */
 diff --git a/mingw-w64-crt/crt/tls_atexit.c b/mingw-w64-crt/crt/tls_atexit.c
-index 0412fa4ba..ed36b935c 100644
+index 60c4f513e..f7614f15d 100644
 --- a/mingw-w64-crt/crt/tls_atexit.c
 +++ b/mingw-w64-crt/crt/tls_atexit.c
 @@ -4,6 +4,29 @@
@@ -325,7 +325,7 @@ index 0412fa4ba..ed36b935c 100644
 @@ -170,3 +188,5 @@ static void WINAPI tls_callback(HANDLE hDllHandle, DWORD dwReason, LPVOID __UNUS
  }
  
- _CRTALLOC(".CRT$XLB") PIMAGE_TLS_CALLBACK __xl_b = (PIMAGE_TLS_CALLBACK) tls_callback;
+ _CRTALLOC(".CRT$XLB") PIMAGE_TLS_CALLBACK __xl_b = tls_callback;
 +
 +#endif  /* __USING_MCFGTHREAD__  */
 diff --git a/mingw-w64-crt/crt/ucrt_exit_wrappers.c b/mingw-w64-crt/crt/ucrt_exit_wrappers.c
@@ -466,7 +466,7 @@ index 64e978088..aba98b197 100644
  fabs DATA
  fclose
 diff --git a/mingw-w64-crt/lib-common/ucrtbase-common.def.in b/mingw-w64-crt/lib-common/ucrtbase-common.def.in
-index 4e1c87da6..bdfdb1579 100644
+index 69052d686..086b7cca0 100644
 --- a/mingw-w64-crt/lib-common/ucrtbase-common.def.in
 +++ b/mingw-w64-crt/lib-common/ucrtbase-common.def.in
 @@ -60,7 +60,7 @@ F_DEBUG(_CrtSetReportMode)
