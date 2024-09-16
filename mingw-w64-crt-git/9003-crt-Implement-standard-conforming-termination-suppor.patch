@@ -1,4 +1,4 @@
-From f66c3fb2f8f63821db559755dcb89346808980ab Mon Sep 17 00:00:00 2001
+From eafea24da89ad2f1ab2a1b1bf962613685a918c1 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 7 Oct 2022 22:42:04 +0800
 Subject: [PATCH 9003/9004] crt: Implement standard-conforming termination
@@ -46,7 +46,7 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
  mingw-w64-crt/crt/tls_atexit.c                | 30 +++++++++--
  mingw-w64-crt/crt/ucrt_exit_wrappers.c        | 38 ++++++++++++++
  .../api-ms-win-crt-runtime-l1-1-0.def.in      |  8 +--
- mingw-w64-crt/lib-common/msvcr120_app.def.in  |  6 +--
+ mingw-w64-crt/lib-common/msvcr120_app.def.in  |  4 +-
  mingw-w64-crt/lib-common/msvcrt.def.in        |  4 +-
  .../lib-common/ucrtbase-common.def.in         |  8 +--
  mingw-w64-crt/lib32/crtdll.def.in             |  4 +-
@@ -54,39 +54,39 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
  mingw-w64-crt/lib32/msvcr100d.def.in          |  4 +-
  mingw-w64-crt/lib32/msvcr110.def.in           |  4 +-
  mingw-w64-crt/lib32/msvcr110d.def.in          |  4 +-
- mingw-w64-crt/lib32/msvcr120.def.in           |  6 +--
- mingw-w64-crt/lib32/msvcr120d.def.in          |  6 +--
- mingw-w64-crt/lib32/msvcr40d.def.in           |  6 +--
- mingw-w64-crt/lib32/msvcr70.def.in            |  6 +--
- mingw-w64-crt/lib32/msvcr70d.def.in           |  6 +--
- mingw-w64-crt/lib32/msvcr71.def.in            |  6 +--
- mingw-w64-crt/lib32/msvcr71d.def.in           |  6 +--
+ mingw-w64-crt/lib32/msvcr120.def.in           |  4 +-
+ mingw-w64-crt/lib32/msvcr120d.def.in          |  4 +-
+ mingw-w64-crt/lib32/msvcr40d.def.in           |  4 +-
+ mingw-w64-crt/lib32/msvcr70.def.in            |  4 +-
+ mingw-w64-crt/lib32/msvcr70d.def.in           |  4 +-
+ mingw-w64-crt/lib32/msvcr71.def.in            |  4 +-
+ mingw-w64-crt/lib32/msvcr71d.def.in           |  4 +-
  mingw-w64-crt/lib32/msvcr80.def.in            |  4 +-
  mingw-w64-crt/lib32/msvcr80d.def.in           |  4 +-
  mingw-w64-crt/lib32/msvcr90.def.in            |  4 +-
  mingw-w64-crt/lib32/msvcr90d.def.in           |  4 +-
- mingw-w64-crt/lib32/msvcrt10.def.in           |  6 +--
- mingw-w64-crt/lib32/msvcrt20.def.in           |  6 +--
- mingw-w64-crt/lib32/msvcrt40.def.in           |  6 +--
- mingw-w64-crt/lib32/msvcrtd.def.in            |  6 +--
+ mingw-w64-crt/lib32/msvcrt10.def.in           |  4 +-
+ mingw-w64-crt/lib32/msvcrt20.def.in           |  4 +-
+ mingw-w64-crt/lib32/msvcrt40.def.in           |  4 +-
+ mingw-w64-crt/lib32/msvcrtd.def.in            |  4 +-
  mingw-w64-crt/lib64/msvcr100.def.in           |  4 +-
  mingw-w64-crt/lib64/msvcr100d.def.in          |  4 +-
  mingw-w64-crt/lib64/msvcr110.def.in           |  4 +-
  mingw-w64-crt/lib64/msvcr110d.def.in          |  4 +-
- mingw-w64-crt/lib64/msvcr120.def.in           |  6 +--
- mingw-w64-crt/lib64/msvcr120d.def.in          |  6 +--
+ mingw-w64-crt/lib64/msvcr120.def.in           |  4 +-
+ mingw-w64-crt/lib64/msvcr120d.def.in          |  4 +-
  mingw-w64-crt/lib64/msvcr80.def.in            |  4 +-
  mingw-w64-crt/lib64/msvcr80d.def.in           |  4 +-
  mingw-w64-crt/lib64/msvcr90.def.in            |  4 +-
  mingw-w64-crt/lib64/msvcr90d.def.in           |  4 +-
- mingw-w64-crt/libarm32/kernelbase.def         |  6 +--
- mingw-w64-crt/libarm32/msvcr110.def.in        |  6 +--
- mingw-w64-crt/libarm32/msvcr110d.def.in       |  6 +--
- mingw-w64-crt/libarm32/msvcr120.def.in        |  6 +--
- mingw-w64-crt/libarm32/msvcr120d.def.in       |  6 +--
+ mingw-w64-crt/libarm32/kernelbase.def         |  4 +-
+ mingw-w64-crt/libarm32/msvcr110.def.in        |  4 +-
+ mingw-w64-crt/libarm32/msvcr110d.def.in       |  4 +-
+ mingw-w64-crt/libarm32/msvcr120.def.in        |  4 +-
+ mingw-w64-crt/libarm32/msvcr120d.def.in       |  4 +-
  mingw-w64-crt/misc/ucrt_at_quick_exit.c       |  3 ++
  mingw-w64-crt/misc/ucrt_compat.c              |  4 +-
- 47 files changed, 264 insertions(+), 109 deletions(-)
+ 47 files changed, 245 insertions(+), 90 deletions(-)
  create mode 100644 mingw-w64-crt/crt/exit_wrappers.c
  create mode 100644 mingw-w64-crt/crt/ucrt_exit_wrappers.c
 
@@ -104,7 +104,7 @@ index d497fa76b..a0bd0c7ee 100644
  src_libscrnsave=libsrc/scrnsave.c
  src_libscrnsavw=libsrc/scrnsave.c
 diff --git a/mingw-w64-crt/crt/crtdll.c b/mingw-w64-crt/crt/crtdll.c
-index 88450ce9f..2f00ddacf 100644
+index d08d2a81f..fbd87a9c5 100644
 --- a/mingw-w64-crt/crt/crtdll.c
 +++ b/mingw-w64-crt/crt/crtdll.c
 @@ -31,6 +31,12 @@
@@ -153,26 +153,28 @@ index 88450ce9f..2f00ddacf 100644
  i__leave:
    __native_dllmain_reason = UINT_MAX;
    return retcode ;
-@@ -204,7 +227,11 @@ i__leave:
+@@ -204,9 +227,13 @@ i__leave:
  
  int __cdecl atexit (_PVFV func)
  {
 +#ifdef __USING_MCFGTHREAD__
 +    return __MCF_cxa_atexit ((__MCF_cxa_dtor_cdecl*)(intptr_t) func, NULL, &__dso_handle);
 +#else
+     /* Do not use msvcrt's atexit() or UCRT's _crt_atexit() function as it
+      * cannot be called from DLL library which may be unloaded at runtime. */
      return _register_onexit_function(&atexit_table, (_onexit_t)func);
 +#endif
  }
  
  char __mingw_module_is_dll = 1;
 diff --git a/mingw-w64-crt/crt/crtexe.c b/mingw-w64-crt/crt/crtexe.c
-index 2e45bf423..511636354 100644
+index cdf5dcd25..c8bddb1af 100644
 --- a/mingw-w64-crt/crt/crtexe.c
 +++ b/mingw-w64-crt/crt/crtexe.c
-@@ -20,6 +20,10 @@
- #include <tchar.h>
+@@ -21,6 +21,10 @@
  #include <sect_attribs.h>
  #include <locale.h>
+ #include <corecrt_startup.h>
 +#include <stdio.h>
 +#ifdef __USING_MCFGTHREAD__
 +#include <mcfgthread/cxa.h>
@@ -180,7 +182,7 @@ index 2e45bf423..511636354 100644
  
  #if defined(__SEH__) && (!defined(__clang__) || __clang_major__ >= 7)
  #define SEH_INLINE_ASM
-@@ -36,6 +40,7 @@ extern int _fmode;
+@@ -37,6 +41,7 @@ extern int _fmode;
  #undef _commode
  extern int _commode;
  extern int _dowildcard;
@@ -188,7 +190,7 @@ index 2e45bf423..511636354 100644
  
  extern _CRTIMP void __cdecl _initterm(_PVFV *, _PVFV *);
  
-@@ -249,6 +254,11 @@ __tmainCRTStartup (void)
+@@ -250,6 +255,11 @@ __tmainCRTStartup (void)
      _fpreset ();
  
      duplicate_ppstrings (argc, &argv);
@@ -200,14 +202,19 @@ index 2e45bf423..511636354 100644
      __main (); /* C++ initialization. */
  #ifdef _UNICODE
      __winitenv = envp;
-@@ -325,7 +335,11 @@ static void duplicate_ppstrings (int ac, _TCHAR ***av)
+@@ -326,12 +336,16 @@ static void duplicate_ppstrings (int ac, _TCHAR ***av)
  
  int __cdecl atexit (_PVFV func)
  {
 +#ifdef __USING_MCFGTHREAD__
 +    return __MCF_cxa_atexit ((__MCF_cxa_dtor_cdecl*)(intptr_t) func, NULL, &__dso_handle);
 +#else
-     return _onexit((_onexit_t)func) ? 0 : -1;
+     /*
+      * msvcrt def file renames the real atexit() function to _crt_atexit().
+      * UCRT provides atexit() function only under name _crt_atexit().
+      * So redirect call to _crt_atexit() function.
+      */
+     return _crt_atexit(func);
 +#endif
  }
  
@@ -413,7 +420,7 @@ index ea310d426..33e4f5504 100644
  set_terminate
  signal
 diff --git a/mingw-w64-crt/lib-common/msvcr120_app.def.in b/mingw-w64-crt/lib-common/msvcr120_app.def.in
-index 67f8f8a57..95b4bdcd0 100644
+index 48f3df0cd..de65af76e 100644
 --- a/mingw-w64-crt/lib-common/msvcr120_app.def.in
 +++ b/mingw-w64-crt/lib-common/msvcr120_app.def.in
 @@ -1243,7 +1243,7 @@ F_I386(_except1)
@@ -425,15 +432,6 @@ index 67f8f8a57..95b4bdcd0 100644
  _exit_app
  _expand
  _fclose_nolock
-@@ -1870,7 +1870,7 @@ F_NON_I386(atanf)
- atanh
- atanhf
- F_ARM32(atanhl) ; Can't use long double functions from the CRT on x86
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -1970,7 +1970,7 @@ erfcf
  F_ARM32(erfcl) ; Can't use long double functions from the CRT on x86
  erff
@@ -444,7 +442,7 @@ index 67f8f8a57..95b4bdcd0 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/lib-common/msvcrt.def.in b/mingw-w64-crt/lib-common/msvcrt.def.in
-index 64e978088..aba98b197 100644
+index fe2bf2526..e1f17e09b 100644
 --- a/mingw-w64-crt/lib-common/msvcrt.def.in
 +++ b/mingw-w64-crt/lib-common/msvcrt.def.in
 @@ -578,7 +578,7 @@ _execv
@@ -506,7 +504,7 @@ index 69052d686..086b7cca0 100644
  rand
  rand_s
 diff --git a/mingw-w64-crt/lib32/crtdll.def.in b/mingw-w64-crt/lib32/crtdll.def.in
-index e0626d58d..47242831f 100644
+index f5a2939db..5ec749943 100644
 --- a/mingw-w64-crt/lib32/crtdll.def.in
 +++ b/mingw-w64-crt/lib32/crtdll.def.in
 @@ -167,7 +167,7 @@ _execv
@@ -528,7 +526,7 @@ index e0626d58d..47242831f 100644
  fabs DATA
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr100.def.in b/mingw-w64-crt/lib32/msvcr100.def.in
-index fda12255a..54347de02 100644
+index a7646f588..294c790dd 100644
 --- a/mingw-w64-crt/lib32/msvcr100.def.in
 +++ b/mingw-w64-crt/lib32/msvcr100.def.in
 @@ -830,7 +830,7 @@ _execv
@@ -550,7 +548,7 @@ index fda12255a..54347de02 100644
  fabs DATA
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr100d.def.in b/mingw-w64-crt/lib32/msvcr100d.def.in
-index c7616a8f0..8a8c8f5fe 100644
+index 0a54d464e..35dacc2cb 100644
 --- a/mingw-w64-crt/lib32/msvcr100d.def.in
 +++ b/mingw-w64-crt/lib32/msvcr100d.def.in
 @@ -883,7 +883,7 @@ _execv
@@ -572,7 +570,7 @@ index c7616a8f0..8a8c8f5fe 100644
  fabs DATA ; overwritten
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr110.def.in b/mingw-w64-crt/lib32/msvcr110.def.in
-index eb45326d5..0bb096397 100644
+index a041054ce..963ce4d32 100644
 --- a/mingw-w64-crt/lib32/msvcr110.def.in
 +++ b/mingw-w64-crt/lib32/msvcr110.def.in
 @@ -953,7 +953,7 @@ _execv
@@ -594,7 +592,7 @@ index eb45326d5..0bb096397 100644
  fabs DATA
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr110d.def.in b/mingw-w64-crt/lib32/msvcr110d.def.in
-index 2dcd3b371..7944e7805 100644
+index a0d385785..74d489e5f 100644
 --- a/mingw-w64-crt/lib32/msvcr110d.def.in
 +++ b/mingw-w64-crt/lib32/msvcr110d.def.in
 @@ -1006,7 +1006,7 @@ _execv
@@ -616,7 +614,7 @@ index 2dcd3b371..7944e7805 100644
  fabs DATA ; overwritten
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr120.def.in b/mingw-w64-crt/lib32/msvcr120.def.in
-index f45289898..b54c7f528 100644
+index 2551b3062..7daaed030 100644
 --- a/mingw-w64-crt/lib32/msvcr120.def.in
 +++ b/mingw-w64-crt/lib32/msvcr120.def.in
 @@ -972,7 +972,7 @@ _execv
@@ -628,15 +626,6 @@ index f45289898..b54c7f528 100644
  _expand
  _fclose_nolock
  _fcloseall
-@@ -1846,7 +1846,7 @@ atan2
- atanh
- atanhf
- ; atanhl ; Can't use long double functions from the CRT on x86
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -1943,7 +1943,7 @@ erfcf
  ; erfcl ; Can't use long double functions from the CRT on x86
  erff
@@ -647,7 +636,7 @@ index f45289898..b54c7f528 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/lib32/msvcr120d.def.in b/mingw-w64-crt/lib32/msvcr120d.def.in
-index f30ae72e1..22cb85bf6 100644
+index d8272600f..e2f34ca45 100644
 --- a/mingw-w64-crt/lib32/msvcr120d.def.in
 +++ b/mingw-w64-crt/lib32/msvcr120d.def.in
 @@ -1025,7 +1025,7 @@ _execv
@@ -659,15 +648,6 @@ index f30ae72e1..22cb85bf6 100644
  _expand
  _expand_dbg
  _fclose_nolock
-@@ -1913,7 +1913,7 @@ atan2
- atanh
- atanhf
- ; atanhl ; Can't use long double functions from the CRT on x86
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -2010,7 +2010,7 @@ erfcf
  ; erfcl ; Can't use long double functions from the CRT on x86
  erff
@@ -678,7 +658,7 @@ index f30ae72e1..22cb85bf6 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/lib32/msvcr40d.def.in b/mingw-w64-crt/lib32/msvcr40d.def.in
-index 2d0af6c7d..6f6b92a31 100644
+index 5d1372e1e..b053c8189 100644
 --- a/mingw-w64-crt/lib32/msvcr40d.def.in
 +++ b/mingw-w64-crt/lib32/msvcr40d.def.in
 @@ -1126,7 +1126,7 @@ _execv
@@ -690,15 +670,6 @@ index 2d0af6c7d..6f6b92a31 100644
  _expand
  _expand_dbg
  _fcloseall
-@@ -1461,7 +1461,7 @@ asctime
- asin
- atan
- atan2
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -1475,7 +1475,7 @@ cosh
  ctime
  difftime
@@ -709,7 +680,7 @@ index 2d0af6c7d..6f6b92a31 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr70.def.in b/mingw-w64-crt/lib32/msvcr70.def.in
-index c167523e7..33999a74e 100644
+index 91ae74a6c..4c1839dcb 100644
 --- a/mingw-w64-crt/lib32/msvcr70.def.in
 +++ b/mingw-w64-crt/lib32/msvcr70.def.in
 @@ -314,7 +314,7 @@ _execv
@@ -721,15 +692,6 @@ index c167523e7..33999a74e 100644
  _expand
  _fcloseall
  _fcvt
-@@ -711,7 +711,7 @@ asctime
- asin
- atan
- atan2
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -725,7 +725,7 @@ cosh
  ctime
  difftime
@@ -740,7 +702,7 @@ index c167523e7..33999a74e 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr70d.def.in b/mingw-w64-crt/lib32/msvcr70d.def.in
-index bc5a32b6a..ec92a89fd 100644
+index 0016d3620..cd3cbd3bc 100644
 --- a/mingw-w64-crt/lib32/msvcr70d.def.in
 +++ b/mingw-w64-crt/lib32/msvcr70d.def.in
 @@ -353,7 +353,7 @@ _execv
@@ -752,15 +714,6 @@ index bc5a32b6a..ec92a89fd 100644
  _expand
  _expand_dbg
  _fcloseall
-@@ -755,7 +755,7 @@ asctime
- asin
- atan
- atan2
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -769,7 +769,7 @@ cosh
  ctime
  difftime
@@ -771,7 +724,7 @@ index bc5a32b6a..ec92a89fd 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr71.def.in b/mingw-w64-crt/lib32/msvcr71.def.in
-index c1b7ce2d1..7b2d7b72e 100644
+index a130a77b0..bd6c4c618 100644
 --- a/mingw-w64-crt/lib32/msvcr71.def.in
 +++ b/mingw-w64-crt/lib32/msvcr71.def.in
 @@ -306,7 +306,7 @@ _execv
@@ -783,15 +736,6 @@ index c1b7ce2d1..7b2d7b72e 100644
  _expand
  _fcloseall
  _fcvt
-@@ -705,7 +705,7 @@ asctime
- asin
- atan
- atan2
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -719,7 +719,7 @@ cosh
  ctime
  difftime
@@ -802,7 +746,7 @@ index c1b7ce2d1..7b2d7b72e 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr71d.def.in b/mingw-w64-crt/lib32/msvcr71d.def.in
-index 806602207..5a457be81 100644
+index 7ad3b594f..edb4792d4 100644
 --- a/mingw-w64-crt/lib32/msvcr71d.def.in
 +++ b/mingw-w64-crt/lib32/msvcr71d.def.in
 @@ -345,7 +345,7 @@ _execv
@@ -814,15 +758,6 @@ index 806602207..5a457be81 100644
  _expand
  _expand_dbg
  _fcloseall
-@@ -749,7 +749,7 @@ asctime
- asin
- atan
- atan2
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -763,7 +763,7 @@ cosh
  ctime
  difftime
@@ -833,7 +768,7 @@ index 806602207..5a457be81 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr80.def.in b/mingw-w64-crt/lib32/msvcr80.def.in
-index 107356849..e90a5f3f9 100644
+index f15ea5d3f..1fa4cbbb1 100644
 --- a/mingw-w64-crt/lib32/msvcr80.def.in
 +++ b/mingw-w64-crt/lib32/msvcr80.def.in
 @@ -457,7 +457,7 @@ _execv
@@ -855,7 +790,7 @@ index 107356849..e90a5f3f9 100644
  fabs DATA
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr80d.def.in b/mingw-w64-crt/lib32/msvcr80d.def.in
-index 1e461af4d..100c93332 100644
+index 3340a189a..097f85fca 100644
 --- a/mingw-w64-crt/lib32/msvcr80d.def.in
 +++ b/mingw-w64-crt/lib32/msvcr80d.def.in
 @@ -524,7 +524,7 @@ _execv
@@ -877,7 +812,7 @@ index 1e461af4d..100c93332 100644
  fabs DATA ; overwritten
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr90.def.in b/mingw-w64-crt/lib32/msvcr90.def.in
-index c8ae0be94..017d974c8 100644
+index cf15aa62f..8912c396b 100644
 --- a/mingw-w64-crt/lib32/msvcr90.def.in
 +++ b/mingw-w64-crt/lib32/msvcr90.def.in
 @@ -457,7 +457,7 @@ _execv
@@ -899,7 +834,7 @@ index c8ae0be94..017d974c8 100644
  fabs DATA
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr90d.def.in b/mingw-w64-crt/lib32/msvcr90d.def.in
-index 1e88f7175..df5da0b4c 100644
+index 3267aa2e7..49dc3dcca 100644
 --- a/mingw-w64-crt/lib32/msvcr90d.def.in
 +++ b/mingw-w64-crt/lib32/msvcr90d.def.in
 @@ -514,7 +514,7 @@ _execv
@@ -921,7 +856,7 @@ index 1e88f7175..df5da0b4c 100644
  fabs DATA
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcrt10.def.in b/mingw-w64-crt/lib32/msvcrt10.def.in
-index 66cb07c15..19508773e 100644
+index c5ec60458..415694f1c 100644
 --- a/mingw-w64-crt/lib32/msvcrt10.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt10.def.in
 @@ -943,7 +943,7 @@ _execv
@@ -933,15 +868,6 @@ index 66cb07c15..19508773e 100644
  _expand
  _fcloseall
  _fcvt
-@@ -1112,7 +1112,7 @@ asctime
- asin
- atan
- atan2
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -1126,7 +1126,7 @@ cosh
  ctime
  difftime
@@ -952,7 +878,7 @@ index 66cb07c15..19508773e 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcrt20.def.in b/mingw-w64-crt/lib32/msvcrt20.def.in
-index 7330274d6..c10977696 100644
+index 9fc9f8ed8..96720cb12 100644
 --- a/mingw-w64-crt/lib32/msvcrt20.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt20.def.in
 @@ -981,7 +981,7 @@ _execv
@@ -964,15 +890,6 @@ index 7330274d6..c10977696 100644
  _expand
  _fcloseall
  _fcvt
-@@ -1329,7 +1329,7 @@ asctime
- asin
- atan
- atan2
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -1343,7 +1343,7 @@ cosh
  ctime
  difftime
@@ -983,7 +900,7 @@ index 7330274d6..c10977696 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcrt40.def.in b/mingw-w64-crt/lib32/msvcrt40.def.in
-index 26a7453cc..d276f910c 100644
+index 1a9cbc210..b0c7b9230 100644
 --- a/mingw-w64-crt/lib32/msvcrt40.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt40.def.in
 @@ -1099,7 +1099,7 @@ _execv
@@ -995,15 +912,6 @@ index 26a7453cc..d276f910c 100644
  _expand
  _fcloseall
  _fcvt
-@@ -1429,7 +1429,7 @@ asctime
- asin
- atan
- atan2
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -1443,7 +1443,7 @@ cosh
  ctime
  difftime
@@ -1014,7 +922,7 @@ index 26a7453cc..d276f910c 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcrtd.def.in b/mingw-w64-crt/lib32/msvcrtd.def.in
-index ee6670030..897fd8d64 100644
+index c54c9a9a9..a983db7cd 100644
 --- a/mingw-w64-crt/lib32/msvcrtd.def.in
 +++ b/mingw-w64-crt/lib32/msvcrtd.def.in
 @@ -291,7 +291,7 @@ _execv
@@ -1026,15 +934,6 @@ index ee6670030..897fd8d64 100644
  _expand
  _expand_dbg
  _fcloseall
-@@ -655,7 +655,7 @@ asctime
- asin
- atan
- atan2
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -669,7 +669,7 @@ cosh
  ctime
  difftime
@@ -1045,7 +944,7 @@ index ee6670030..897fd8d64 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib64/msvcr100.def.in b/mingw-w64-crt/lib64/msvcr100.def.in
-index 8b8ba49c6..b4b57c2f1 100644
+index af3beefbd..92e9e1cc5 100644
 --- a/mingw-w64-crt/lib64/msvcr100.def.in
 +++ b/mingw-w64-crt/lib64/msvcr100.def.in
 @@ -784,7 +784,7 @@ _execv
@@ -1067,7 +966,7 @@ index 8b8ba49c6..b4b57c2f1 100644
  expf DATA
  fabs DATA
 diff --git a/mingw-w64-crt/lib64/msvcr100d.def.in b/mingw-w64-crt/lib64/msvcr100d.def.in
-index b07bd4c95..7a0877d32 100644
+index b8b54ee10..ed1f9f664 100644
 --- a/mingw-w64-crt/lib64/msvcr100d.def.in
 +++ b/mingw-w64-crt/lib64/msvcr100d.def.in
 @@ -835,7 +835,7 @@ _execv
@@ -1089,7 +988,7 @@ index b07bd4c95..7a0877d32 100644
  expf DATA ; overwritten
  fabs DATA ; overwritten
 diff --git a/mingw-w64-crt/lib64/msvcr110.def.in b/mingw-w64-crt/lib64/msvcr110.def.in
-index 2c2c9fbb9..f98039bb3 100644
+index e39f93ee9..a2c34e6ab 100644
 --- a/mingw-w64-crt/lib64/msvcr110.def.in
 +++ b/mingw-w64-crt/lib64/msvcr110.def.in
 @@ -909,7 +909,7 @@ _execv
@@ -1111,7 +1010,7 @@ index 2c2c9fbb9..f98039bb3 100644
  expf
  fabs
 diff --git a/mingw-w64-crt/lib64/msvcr110d.def.in b/mingw-w64-crt/lib64/msvcr110d.def.in
-index 9f7bcf988..4ae550ebe 100644
+index dfcd60360..d668cede2 100644
 --- a/mingw-w64-crt/lib64/msvcr110d.def.in
 +++ b/mingw-w64-crt/lib64/msvcr110d.def.in
 @@ -960,7 +960,7 @@ _execv
@@ -1133,7 +1032,7 @@ index 9f7bcf988..4ae550ebe 100644
  expf
  fabs
 diff --git a/mingw-w64-crt/lib64/msvcr120.def.in b/mingw-w64-crt/lib64/msvcr120.def.in
-index 65637518b..bf5aaf731 100644
+index 3f517eb58..3f73f3604 100644
 --- a/mingw-w64-crt/lib64/msvcr120.def.in
 +++ b/mingw-w64-crt/lib64/msvcr120.def.in
 @@ -926,7 +926,7 @@ _execv
@@ -1145,15 +1044,6 @@ index 65637518b..bf5aaf731 100644
  _expand
  _fclose_nolock
  _fcloseall
-@@ -1788,7 +1788,7 @@ atanf
- atanh
- atanhf
- ; atanhl ; Can't use long double functions from the CRT on x86
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -1888,7 +1888,7 @@ erfcf
  ; erfcl ; Can't use long double functions from the CRT on x86
  erff
@@ -1164,7 +1054,7 @@ index 65637518b..bf5aaf731 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/lib64/msvcr120d.def.in b/mingw-w64-crt/lib64/msvcr120d.def.in
-index 5d975164d..fbc961018 100644
+index 364cc1fb2..599cd6226 100644
 --- a/mingw-w64-crt/lib64/msvcr120d.def.in
 +++ b/mingw-w64-crt/lib64/msvcr120d.def.in
 @@ -977,7 +977,7 @@ _execv
@@ -1176,15 +1066,6 @@ index 5d975164d..fbc961018 100644
  _expand
  _expand_dbg
  _fclose_nolock
-@@ -1853,7 +1853,7 @@ atanf
- atanh
- atanhf
- ; atanhl ; Can't use long double functions from the CRT on x86
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -1953,7 +1953,7 @@ erfcf
  ; erfcl ; Can't use long double functions from the CRT on x86
  erff
@@ -1195,7 +1076,7 @@ index 5d975164d..fbc961018 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/lib64/msvcr80.def.in b/mingw-w64-crt/lib64/msvcr80.def.in
-index 3c15764a6..75f2f3033 100644
+index a5690aab7..00e968587 100644
 --- a/mingw-w64-crt/lib64/msvcr80.def.in
 +++ b/mingw-w64-crt/lib64/msvcr80.def.in
 @@ -397,7 +397,7 @@ _execv
@@ -1217,7 +1098,7 @@ index 3c15764a6..75f2f3033 100644
  expf DATA
  fabs
 diff --git a/mingw-w64-crt/lib64/msvcr80d.def.in b/mingw-w64-crt/lib64/msvcr80d.def.in
-index 00d217352..a4a95bad5 100644
+index e829294dd..394136979 100644
 --- a/mingw-w64-crt/lib64/msvcr80d.def.in
 +++ b/mingw-w64-crt/lib64/msvcr80d.def.in
 @@ -458,7 +458,7 @@ _execv
@@ -1239,7 +1120,7 @@ index 00d217352..a4a95bad5 100644
  expf DATA ; overwritten
  fabs
 diff --git a/mingw-w64-crt/lib64/msvcr90.def.in b/mingw-w64-crt/lib64/msvcr90.def.in
-index 4e4c57351..dcb27400f 100644
+index 8143378ce..ecd06a979 100644
 --- a/mingw-w64-crt/lib64/msvcr90.def.in
 +++ b/mingw-w64-crt/lib64/msvcr90.def.in
 @@ -401,7 +401,7 @@ _execv
@@ -1261,7 +1142,7 @@ index 4e4c57351..dcb27400f 100644
  expf DATA
  fabs DATA
 diff --git a/mingw-w64-crt/lib64/msvcr90d.def.in b/mingw-w64-crt/lib64/msvcr90d.def.in
-index ef03d6ac0..bffa03196 100644
+index c066bebc0..de07dc0bc 100644
 --- a/mingw-w64-crt/lib64/msvcr90d.def.in
 +++ b/mingw-w64-crt/lib64/msvcr90d.def.in
 @@ -452,7 +452,7 @@ _execv
@@ -1283,10 +1164,10 @@ index ef03d6ac0..bffa03196 100644
  expf DATA
  fabs
 diff --git a/mingw-w64-crt/libarm32/kernelbase.def b/mingw-w64-crt/libarm32/kernelbase.def
-index 954ea2dc1..f6626c5df 100644
+index 90c91ab2b..2c72a5faf 100644
 --- a/mingw-w64-crt/libarm32/kernelbase.def
 +++ b/mingw-w64-crt/libarm32/kernelbase.def
-@@ -1882,15 +1882,15 @@ __wgetmainargs
+@@ -1882,7 +1882,7 @@ __wgetmainargs
  _amsg_exit
  _c_exit
  _cexit
@@ -1295,18 +1176,17 @@ index 954ea2dc1..f6626c5df 100644
  _initterm
  _initterm_e
  _invalid_parameter
- _onexit
+@@ -1890,7 +1890,7 @@ _onexit
  _purecall
  _time64
--atexit
+ _crt_atexit == atexit ; rename atexit to _crt_atexit for compatibility with UCRT, real atexit function provided by mingw-w64
 -exit
-+atexit DATA
 +exit DATA
  hgets
  hwprintf
  lstrcmp
 diff --git a/mingw-w64-crt/libarm32/msvcr110.def.in b/mingw-w64-crt/libarm32/msvcr110.def.in
-index 8f30767a8..3ed9360e3 100644
+index 8bced221e..1edb48e3f 100644
 --- a/mingw-w64-crt/libarm32/msvcr110.def.in
 +++ b/mingw-w64-crt/libarm32/msvcr110.def.in
 @@ -901,7 +901,7 @@ _execv
@@ -1318,15 +1198,6 @@ index 8f30767a8..3ed9360e3 100644
  _expand
  _fclose_nolock
  _fcloseall
-@@ -1716,7 +1716,7 @@ atan
- atan2
- atan2f
- atanf
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -1734,7 +1734,7 @@ cosf
  cosh
  coshf
@@ -1337,7 +1208,7 @@ index 8f30767a8..3ed9360e3 100644
  expf
  fabs
 diff --git a/mingw-w64-crt/libarm32/msvcr110d.def.in b/mingw-w64-crt/libarm32/msvcr110d.def.in
-index 5a809682d..c3b7490cd 100644
+index 584bf08d3..13154c140 100644
 --- a/mingw-w64-crt/libarm32/msvcr110d.def.in
 +++ b/mingw-w64-crt/libarm32/msvcr110d.def.in
 @@ -952,7 +952,7 @@ _execv
@@ -1349,15 +1220,6 @@ index 5a809682d..c3b7490cd 100644
  _expand
  _expand_dbg
  _fclose_nolock
-@@ -1781,7 +1781,7 @@ atan
- atan2
- atan2f
- atanf
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -1799,7 +1799,7 @@ cosf
  cosh
  coshf
@@ -1368,7 +1230,7 @@ index 5a809682d..c3b7490cd 100644
  expf
  fabs
 diff --git a/mingw-w64-crt/libarm32/msvcr120.def.in b/mingw-w64-crt/libarm32/msvcr120.def.in
-index 4483a2093..57f5a898a 100644
+index a9e717d64..0d6b62896 100644
 --- a/mingw-w64-crt/libarm32/msvcr120.def.in
 +++ b/mingw-w64-crt/libarm32/msvcr120.def.in
 @@ -900,7 +900,7 @@ _execv
@@ -1380,15 +1242,6 @@ index 4483a2093..57f5a898a 100644
  _expand
  _fclose_nolock
  _fcloseall
-@@ -1753,7 +1753,7 @@ atanf
- atanh
- atanhf
- atanhl
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -1853,7 +1853,7 @@ erfcf
  erfcl
  erff
@@ -1399,7 +1252,7 @@ index 4483a2093..57f5a898a 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/libarm32/msvcr120d.def.in b/mingw-w64-crt/libarm32/msvcr120d.def.in
-index 90374f7e9..a720c23dc 100644
+index b1a4eff7f..f167cd357 100644
 --- a/mingw-w64-crt/libarm32/msvcr120d.def.in
 +++ b/mingw-w64-crt/libarm32/msvcr120d.def.in
 @@ -951,7 +951,7 @@ _execv
@@ -1411,15 +1264,6 @@ index 90374f7e9..a720c23dc 100644
  _expand
  _expand_dbg
  _fclose_nolock
-@@ -1818,7 +1818,7 @@ atanf
- atanh
- atanhf
- atanhl
--atexit
-+atexit DATA
- atof
- atoi
- atol
 @@ -1918,7 +1918,7 @@ erfcf
  erfcl
  erff
