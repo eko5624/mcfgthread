@@ -5,7 +5,7 @@
 _realname=binutils
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=2.43.1+20240905
+pkgver=2.43.1+20240923
 _branch=binutils-2_43-branch
 _sourcedir=${_realname}
 pkgrel=1
@@ -25,7 +25,7 @@ depends=("${MINGW_PACKAGE_PREFIX}-gettext-runtime"
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-gettext-tools"
              "${MINGW_PACKAGE_PREFIX}-autotools")
-source=(${_sourcedir}::"git://sourceware.org/git/binutils-gdb.git#branch=${_branch}"
+source=(${_sourcedir}::"git+https://sourceware.org/git/binutils-gdb.git#branch=${_branch}"
         0002-check-for-unusual-file-harder.patch
         0003-opcodes-i386-dis-Use-Intel-syntax-by-default.patch
         0010-bfd-Increase-_bfd_coff_max_nscns-to-65279.patch
