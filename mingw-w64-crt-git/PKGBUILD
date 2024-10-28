@@ -3,7 +3,7 @@
 _realname=crt
 pkgbase=mingw-w64-${_realname}-git
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
-pkgver=12.0.0.r351.gcdf6b16b8
+pkgver=12.0.0.r361.g33d403802
 pkgrel=1
 pkgdesc='MinGW-w64 CRT for Windows (mingw-w64)'
 arch=('any')
@@ -24,8 +24,8 @@ source=("mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64"
         9003-crt-Implement-standard-conforming-termination-suppor.patch
         9004-crt-Copy-clock-and-nanosleep-from-winpthreads.patch)
 sha256sums=('SKIP'
-            'b60adf87e75b29e3f8bf1370499c77c059ae10d49bf16095e06e160402a3302d'
-            'ed8ffd514f81e5d526b7dcfacd1ac1be7837b35fdad8360835f138e36d5b5b16')
+            '7662b8eaee55c00e0b073b6f82934830f9fe256dba4068b48b45f7042dacc656'
+            'b45feb38fd1c7bdf4a943a9725bc6b8e6cc30683605f53775ddc7899ac1c6b85')
 
 pkgver() {
   cd "${srcdir}/mingw-w64"
