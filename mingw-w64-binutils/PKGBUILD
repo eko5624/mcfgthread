@@ -5,7 +5,7 @@
 _realname=binutils
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=2.43.1+20241022
+pkgver=2.43.1+20241102
 _branch=binutils-2_43-branch
 _sourcedir=${_realname}
 pkgrel=1
@@ -27,7 +27,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-autotools")
 source=(${_sourcedir}::"git+https://sourceware.org/git/binutils-gdb.git#branch=${_branch}"
         0002-check-for-unusual-file-harder.patch
-        0003-opcodes-i386-dis-Use-Intel-syntax-by-default.patch
+        0401-opcodes-i386-dis-Use-Intel-syntax-by-default.patch
         9001-ld-PE-no-base-relocs-for-section-relative-ones.patch
         0010-bfd-Increase-_bfd_coff_max_nscns-to-65279.patch
         0110-binutils-mingw-gnu-print.patch
@@ -50,7 +50,7 @@ sha256sums=('SKIP'
             '7ccbd418695733c50966068fa9755a6abb156f53af23701d2bc097c63e9e0030'
             '604628156c08f3e361de60329af250fab6839e23e61e289f8369a7e18a04e277'
             'efb74f5ce78eaa0fcaca6d7418561ffdf7921784950446cd7e36579609b78488'
-            '300e273d3523ab646932687897945746d9fe961e6a31bcc0a62a015b697487e2')
+            '9f1a983367fbfb5c6f539e0c93e670d0147d892c06d6a1d8c15d1c47bb85be42')
 validpgpkeys=('EAF1C276A747E9ED86210CBAC3126D3B4AE55E93'  # Tristan Gingold <gingold@adacore.com>
               '3A24BC1E8FB409FA9F14371813FCEF89DD9E3C4F') # Nick Clifton <nickc@redhat.com>
 
@@ -79,14 +79,14 @@ prepare() {
     0110-binutils-mingw-gnu-print.patch \
     9001-ld-PE-no-base-relocs-for-section-relative-ones.patch
 
-  # ZZZ
-  apply_patch_with_msg \
-    0003-opcodes-i386-dis-Use-Intel-syntax-by-default.patch
-
   # https://sourceware.org/bugzilla/show_bug.cgi?id=32264
   apply_patch_with_msg \
     3005-Make-.CRT-and-.idata-read-only.patch \
     3006-Merge-.CRT-.ctors-and-.dtors-into-.rdata.patch
+
+  # ZZZ
+  apply_patch_with_msg \
+    0401-opcodes-i386-dis-Use-Intel-syntax-by-default.patch
 
   # Add an option to change default bases back below 4GB to ease transition
   # https://github.com/msys2/MINGW-packages/issues/7027

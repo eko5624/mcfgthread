@@ -1,16 +1,16 @@
-From b160435f328feb3638f55e88c31aa4c4ab3634be Mon Sep 17 00:00:00 2001
+From 396d9da0541ba15a99bf8b30d7d6a3c1c9fb3c0e Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Tue, 22 Oct 2024 22:28:07 +0800
 Subject: [PATCH] Merge `.CRT`, `.ctors` and `.dtors` into `.rdata`
 
 Signed-off-by: LIU Hao <lh_mouse@126.com>
 ---
- ld/scripttempl/pe.sc  | 103 ++++++++++++++++++++++--------------------
- ld/scripttempl/pep.sc | 102 ++++++++++++++++++++++-------------------
- 2 files changed, 110 insertions(+), 95 deletions(-)
+ ld/scripttempl/pe.sc  | 112 ++++++++++++++++++++++--------------------
+ ld/scripttempl/pep.sc | 111 +++++++++++++++++++++--------------------
+ 2 files changed, 118 insertions(+), 105 deletions(-)
 
 diff --git a/ld/scripttempl/pe.sc b/ld/scripttempl/pe.sc
-index 70f5194b02f..30b0f5b653d 100644
+index 70f5194b02f..75730a5b2c7 100644
 --- a/ld/scripttempl/pe.sc
 +++ b/ld/scripttempl/pe.sc
 @@ -44,6 +44,7 @@ if test "${RELOCATING}"; then
@@ -70,7 +70,7 @@ index 70f5194b02f..30b0f5b653d 100644
      ${CONSTRUCTING+
         /* Note: we always define __CTOR_LIST__ and ___CTOR_LIST__ here,
            we do not PROVIDE them.  This is because the ctors.o startup
-@@ -136,39 +172,28 @@ SECTIONS
+@@ -136,44 +172,32 @@ SECTIONS
         KEEP(*(SORT_BY_NAME(.dtors.*)));
         LONG (0);
       }
@@ -126,10 +126,19 @@ index 70f5194b02f..30b0f5b653d 100644
 -    ${RELOCATING+KEEP(*(.rdata_runtime_pseudo_reloc))}
 -    ${RELOCATING+__rt_psrelocs_end = .;}
 -  }
-   ${RELOCATING+__rt_psrelocs_size = __rt_psrelocs_end - __rt_psrelocs_start;}
-   ${RELOCATING+___RUNTIME_PSEUDO_RELOC_LIST_END__ = .;}
-   ${RELOCATING+__RUNTIME_PSEUDO_RELOC_LIST_END__ = .;}
-@@ -218,24 +243,6 @@ SECTIONS
+-  ${RELOCATING+__rt_psrelocs_size = __rt_psrelocs_end - __rt_psrelocs_start;}
+-  ${RELOCATING+___RUNTIME_PSEUDO_RELOC_LIST_END__ = .;}
+-  ${RELOCATING+__RUNTIME_PSEUDO_RELOC_LIST_END__ = .;}
+-  ${RELOCATING+___RUNTIME_PSEUDO_RELOC_LIST__ = . - __rt_psrelocs_size;}
+-  ${RELOCATING+__RUNTIME_PSEUDO_RELOC_LIST__ = . - __rt_psrelocs_size;}
++  ${RELOCATING+___RUNTIME_PSEUDO_RELOC_LIST_END__ = __rt_psrelocs_end;}
++  ${RELOCATING+__RUNTIME_PSEUDO_RELOC_LIST_END__ = __rt_psrelocs_end;}
++  ${RELOCATING+___RUNTIME_PSEUDO_RELOC_LIST__ = __rt_psrelocs_start;}
++  ${RELOCATING+__RUNTIME_PSEUDO_RELOC_LIST__ = __rt_psrelocs_start;}
+ 
+   .eh_frame ${RELOCATING+BLOCK(__section_alignment__)} :
+   {
+@@ -218,24 +242,6 @@ SECTIONS
      ${RELOCATING+__IAT_end__ = .;}
      ${R_IDATA67}
    }
@@ -155,7 +164,7 @@ index 70f5194b02f..30b0f5b653d 100644
    /* Windows TLS expects .tls\$AAA to be at the start and .tls\$ZZZ to be
       at the end of section.  This is important because _tls_start MUST
 diff --git a/ld/scripttempl/pep.sc b/ld/scripttempl/pep.sc
-index 63039f11574..afb8272d515 100644
+index 63039f11574..b9c11cd74ed 100644
 --- a/ld/scripttempl/pep.sc
 +++ b/ld/scripttempl/pep.sc
 @@ -45,6 +45,7 @@ if test "${RELOCATING}"; then
@@ -215,7 +224,7 @@ index 63039f11574..afb8272d515 100644
      ${CONSTRUCTING+
         /* Note: we always define __CTOR_LIST__ and ___CTOR_LIST__ here,
            we do not PROVIDE them.  This is because the ctors.o startup
-@@ -138,38 +174,28 @@ SECTIONS
+@@ -138,43 +174,32 @@ SECTIONS
         KEEP (*(SORT_BY_NAME(.dtors.*)));
         LONG (0); LONG (0);
       }
@@ -270,10 +279,19 @@ index 63039f11574..afb8272d515 100644
 -    ${RELOCATING+KEEP(*(.rdata_runtime_pseudo_reloc))}
 -    ${RELOCATING+__rt_psrelocs_end = .;}
 -  }
-   ${RELOCATING+__rt_psrelocs_size = __rt_psrelocs_end - __rt_psrelocs_start;}
-   ${RELOCATING+___RUNTIME_PSEUDO_RELOC_LIST_END__ = .;}
-   ${RELOCATING+__RUNTIME_PSEUDO_RELOC_LIST_END__ = .;}
-@@ -224,24 +250,6 @@ SECTIONS
+-  ${RELOCATING+__rt_psrelocs_size = __rt_psrelocs_end - __rt_psrelocs_start;}
+-  ${RELOCATING+___RUNTIME_PSEUDO_RELOC_LIST_END__ = .;}
+-  ${RELOCATING+__RUNTIME_PSEUDO_RELOC_LIST_END__ = .;}
+-  ${RELOCATING+___RUNTIME_PSEUDO_RELOC_LIST__ = . - __rt_psrelocs_size;}
+-  ${RELOCATING+__RUNTIME_PSEUDO_RELOC_LIST__ = . - __rt_psrelocs_size;}
++  ${RELOCATING+___RUNTIME_PSEUDO_RELOC_LIST_END__ = __rt_psrelocs_end;}
++  ${RELOCATING+__RUNTIME_PSEUDO_RELOC_LIST_END__ = __rt_psrelocs_end;}
++  ${RELOCATING+___RUNTIME_PSEUDO_RELOC_LIST__ = __rt_psrelocs_start;}
++  ${RELOCATING+__RUNTIME_PSEUDO_RELOC_LIST__ = __rt_psrelocs_start;}
+ 
+   .eh_frame ${RELOCATING+BLOCK(__section_alignment__)} :
+   {
+@@ -224,24 +249,6 @@ SECTIONS
      ${RELOCATING+__IAT_end__ = .;}
      ${R_IDATA67}
    }

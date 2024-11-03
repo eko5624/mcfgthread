@@ -1,8 +1,8 @@
-From 9a0eb9c7bea398d8b017a0d7e1a44413e349bcbb Mon Sep 17 00:00:00 2001
+From 8e8f0fe7e6344c1661468b225ffd48c39ed922a6 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 7 Oct 2022 22:42:04 +0800
-Subject: [PATCH 9003/9004] crt: Implement standard-conforming termination
- support with mcfgthread
+Subject: [PATCH 2/3] crt: Implement standard-conforming termination support
+ with mcfgthread
 
 This commit implements these functions in accordance with the ISO C
 standard and the Itanium C++ ABI (except for `atexit()` which behaves
@@ -41,7 +41,7 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
 ---
  mingw-w64-crt/Makefile.am                     |  2 +-
  mingw-w64-crt/crt/crtdll.c                    | 29 ++++++++++-
- mingw-w64-crt/crt/crtexe.c                    | 14 +++++
+ mingw-w64-crt/crt/crtexe.c                    | 15 ++++++
  mingw-w64-crt/crt/exit_wrappers.c             | 51 +++++++++++++++++++
  mingw-w64-crt/crt/tls_atexit.c                | 30 +++++++++--
  mingw-w64-crt/crt/ucrt_exit_wrappers.c        | 38 ++++++++++++++
@@ -86,12 +86,12 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
  mingw-w64-crt/libarm32/msvcr120d.def.in       |  4 +-
  mingw-w64-crt/misc/ucrt_amsg_exit.c           |  3 +-
  mingw-w64-crt/misc/ucrt_at_quick_exit.c       |  3 ++
- 47 files changed, 244 insertions(+), 90 deletions(-)
+ 47 files changed, 245 insertions(+), 90 deletions(-)
  create mode 100644 mingw-w64-crt/crt/exit_wrappers.c
  create mode 100644 mingw-w64-crt/crt/ucrt_exit_wrappers.c
 
 diff --git a/mingw-w64-crt/Makefile.am b/mingw-w64-crt/Makefile.am
-index 7db657ed7..6e52e564f 100644
+index f223da353..bbd6209a3 100644
 --- a/mingw-w64-crt/Makefile.am
 +++ b/mingw-w64-crt/Makefile.am
 @@ -117,7 +117,7 @@ src_libmingw32=include/oscalls.h include/internal.h include/sect_attribs.h \
@@ -168,10 +168,10 @@ index d08d2a81f..fbd87a9c5 100644
  
  char __mingw_module_is_dll = 1;
 diff --git a/mingw-w64-crt/crt/crtexe.c b/mingw-w64-crt/crt/crtexe.c
-index cdf5dcd25..c8bddb1af 100644
+index e5364f7f4..544ae3d03 100644
 --- a/mingw-w64-crt/crt/crtexe.c
 +++ b/mingw-w64-crt/crt/crtexe.c
-@@ -21,6 +21,10 @@
+@@ -22,6 +22,10 @@
  #include <sect_attribs.h>
  #include <locale.h>
  #include <corecrt_startup.h>
@@ -182,7 +182,7 @@ index cdf5dcd25..c8bddb1af 100644
  
  #if defined(__SEH__) && (!defined(__clang__) || __clang_major__ >= 7)
  #define SEH_INLINE_ASM
-@@ -37,6 +41,7 @@ extern int _fmode;
+@@ -38,6 +42,7 @@ extern int _fmode;
  #undef _commode
  extern int _commode;
  extern int _dowildcard;
@@ -190,10 +190,11 @@ index cdf5dcd25..c8bddb1af 100644
  
  extern _CRTIMP void __cdecl _initterm(_PVFV *, _PVFV *);
  
-@@ -250,6 +255,11 @@ __tmainCRTStartup (void)
+@@ -299,6 +304,12 @@ __tmainCRTStartup (void)
+     _set_invalid_parameter_handler (__mingw_invalidParameterHandler);
+     
      _fpreset ();
- 
-     duplicate_ppstrings (argc, &argv);
++
 +#ifdef __USING_MCFGTHREAD__
 +    /* Register `fflush(NULL)` before user-defined constructors, so
 +     * it will be executed after all user-defined destructors.  */
@@ -202,7 +203,7 @@ index cdf5dcd25..c8bddb1af 100644
      __main (); /* C++ initialization. */
  #ifdef _UNICODE
      __winitenv = envp;
-@@ -326,12 +336,16 @@ static void duplicate_ppstrings (int ac, _TCHAR ***av)
+@@ -358,12 +369,16 @@ check_managed_app (void)
  
  int __cdecl atexit (_PVFV func)
  {

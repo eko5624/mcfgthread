@@ -1,0 +1,54 @@
+From 36644a0aeb4a1b0f5023e8a96c8d390a6420ffd2 Mon Sep 17 00:00:00 2001
+From: LIU Hao <lh_mouse@126.com>
+Date: Fri, 1 Nov 2024 13:50:56 +0800
+Subject: [PATCH] Bump `_WIN32_WINNT` to Windows 7
+
+Signed-off-by: LIU Hao <lh_mouse@126.com>
+---
+ gdbsupport/common-defs.h | 6 +++---
+ gdbsupport/common.m4     | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/gdbsupport/common-defs.h b/gdbsupport/common-defs.h
+index 6120719480b..40f9e243d0c 100644
+--- a/gdbsupport/common-defs.h
++++ b/gdbsupport/common-defs.h
+@@ -75,12 +75,12 @@
+    NOTE: this must be kept in sync with common.m4.  */
+ #if defined (__MINGW32__) || defined (__CYGWIN__)
+ # ifdef _WIN32_WINNT
+-#  if _WIN32_WINNT < 0x0501
++#  if _WIN32_WINNT < 0x0601
+ #   undef _WIN32_WINNT
+-#   define _WIN32_WINNT 0x0501
++#   define _WIN32_WINNT 0x0601
+ #  endif
+ # else
+-#  define _WIN32_WINNT 0x0501
++#  define _WIN32_WINNT 0x0601
+ # endif
+ #endif	/* __MINGW32__ || __CYGWIN__ */
+ 
+diff --git a/gdbsupport/common.m4 b/gdbsupport/common.m4
+index 6c317ff2450..e9a196d4466 100644
+--- a/gdbsupport/common.m4
++++ b/gdbsupport/common.m4
+@@ -106,12 +106,12 @@ AC_DEFUN([GDB_AC_COMMON], [
+   dnl NOTE: this must be kept in sync with common-defs.h.
+   [[#if defined (__MINGW32__) || defined (__CYGWIN__)
+     # ifdef _WIN32_WINNT
+-    #  if _WIN32_WINNT < 0x0501
++    #  if _WIN32_WINNT < 0x0601
+     #   undef _WIN32_WINNT
+-    #   define _WIN32_WINNT 0x0501
++    #   define _WIN32_WINNT 0x0601
+     #  endif
+     # else
+-    #  define _WIN32_WINNT 0x0501
++    #  define _WIN32_WINNT 0x0601
+     # endif
+     #endif	/* __MINGW32__ || __CYGWIN__ */
+     #include <thread>
+-- 
+2.47.0
+
