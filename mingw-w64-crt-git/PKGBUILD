@@ -3,7 +3,7 @@
 _realname=crt
 pkgbase=mingw-w64-${_realname}-git
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
-pkgver=12.0.0.r369.g0d4221712
+pkgver=12.0.0.r405.gfab7cfe34
 pkgrel=1
 pkgdesc='MinGW-w64 CRT for Windows (mingw-w64)'
 arch=('any')
@@ -21,13 +21,11 @@ provides=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 options=('!strip' '!buildflags' '!emptydirs')
 source=("mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64"
-        9001-crt-crtexe-Remove-duplicate_ppstrings.patch
         9003-crt-Implement-standard-conforming-termination-suppor.patch
         9004-crt-Copy-clock-and-nanosleep-from-winpthreads.patch)
 sha256sums=('SKIP'
-            '99c0f1690ea7252ebe8c0929d2848de1b2830bdb39237a26d314b22373e0886d'
-            'd68e81446145cfa9cd33c6979c7942d6ee45c3a454e40f3fee4575229578e72f'
-            'c4ad4197a6ffa58c53f9cb7f9bfd45acbe6d3beeae522c8e1bb855e42ecb32a6')
+            'f4e9e4dfd0f093c8b4736940aafa61a70abc328b0ef276d4aa3f1ba6c5fef132'
+            'a528fd1f25c81fe9d7c866a0ac3e097160b398eb82cd7d14f2b8584083d9f9fa')
 
 pkgver() {
   cd "${srcdir}/mingw-w64"
@@ -39,7 +37,6 @@ prepare() {
   git reset --hard
   git clean -fdx
 
-  git apply ${srcdir}/9001-crt-crtexe-Remove-duplicate_ppstrings.patch
   git apply "${srcdir}/9003-crt-Implement-standard-conforming-termination-suppor.patch"
   git apply "${srcdir}/9004-crt-Copy-clock-and-nanosleep-from-winpthreads.patch"
   (cd mingw-w64-crt && autoreconf)
@@ -77,7 +74,6 @@ build() {
 
   ${srcdir}/mingw-w64/mingw-w64-crt/configure \
     --prefix=${MINGW_PREFIX} \
-    --enable-wildcard \
     --disable-dependency-tracking \
     "${_extra_config[@]}"
 

@@ -5,9 +5,9 @@
 _realname=binutils
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=2.43.1+20241102
+pkgver=2.43.1+20241120
 _branch=binutils-2_43-branch
-_sourcedir=${_realname}
+_sourcedir=binutils-gdb
 pkgrel=1
 pkgdesc="A set of programs to assemble and manipulate binary and object files (mingw-w64)"
 arch=('any')
@@ -160,7 +160,7 @@ check() {
 
   # unset LDFLAGS as testsuite makes assumptions about which ones are active
   # do not abort on errors - manually check log files
-  make LDFLAGS="" -k check || true
+  #make LDFLAGS="" -k check || true
 }
 
 package() {

@@ -4,8 +4,8 @@ _realname=mcfgthread
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}"-libs)
-pkgver=1.10.alpha.127.ge1c6c6b
-pkgrel=2
+pkgver=1.10.alpha.231.gaf516e0
+pkgrel=1
 pkgdesc="An efficient gthread implementation, providing C++11 threading support (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
