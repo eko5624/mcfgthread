@@ -4,7 +4,7 @@ _realname=mcfgthread
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}"-libs)
-pkgver=1.10.alpha.231.gaf516e0
+pkgver=2.0.alpha.4.gfb3f1a5
 pkgrel=1
 pkgdesc="An efficient gthread implementation, providing C++11 threading support (mingw-w64)"
 arch=('any')
@@ -43,7 +43,7 @@ build() {
 
   # Build the DLL first, as Meson creates the DLL in the working directory,
   # which might get picked up by cc1.exe when it is only half-baked.
-  ninja libmcfgthread-1.dll
+  ninja libmcfgthread-${pkgver%%.*}.dll
   meson compile
 
   rm -rf "${srcdir}${MINGW_PREFIX}"
@@ -70,8 +70,8 @@ package_mcfgthread-libs() {
 
   mkdir -p "${pkgdir}${MINGW_PREFIX}"
   cd "${srcdir}${MINGW_PREFIX}"
-  cp --parents -r bin/libmcfgthread-1.dll -t "${pkgdir}${MINGW_PREFIX}"
-  cp --parents -r bin/libmcfgthread-minimal-1.dll -t "${pkgdir}${MINGW_PREFIX}"
+  cp --parents -r bin/libmcfgthread-${pkgver%%.*}.dll -t "${pkgdir}${MINGW_PREFIX}"
+  cp --parents -r bin/libmcfgthread-minimal-${pkgver%%.*}.dll -t "${pkgdir}${MINGW_PREFIX}"
 }
 
 # template start; name=mingw-w64-splitpkg-wrappers; version=1.0;
