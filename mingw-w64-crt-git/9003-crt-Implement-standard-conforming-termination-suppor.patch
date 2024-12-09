@@ -1,4 +1,4 @@
-From 4cf5f2271e58864ae19f3a0d31f90a8f87ef4386 Mon Sep 17 00:00:00 2001
+From c40f6d862bb2a9d2a5ad84a77d59d1f192937da9 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 7 Oct 2022 22:42:04 +0800
 Subject: [PATCH 9003/9004] crt: Implement standard-conforming termination
@@ -91,7 +91,7 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
  create mode 100644 mingw-w64-crt/crt/ucrt_exit_wrappers.c
 
 diff --git a/mingw-w64-crt/Makefile.am b/mingw-w64-crt/Makefile.am
-index 22bb117a0..6bb3d62fe 100644
+index 5330145eb..c448b5de0 100644
 --- a/mingw-w64-crt/Makefile.am
 +++ b/mingw-w64-crt/Makefile.am
 @@ -117,7 +117,7 @@ src_libmingw32=include/oscalls.h include/internal.h include/sect_attribs.h \
@@ -420,7 +420,7 @@ index ea310d426..33e4f5504 100644
  set_terminate
  signal
 diff --git a/mingw-w64-crt/lib-common/msvcr120_app.def.in b/mingw-w64-crt/lib-common/msvcr120_app.def.in
-index 4f17fb682..58ce471b2 100644
+index c207c442f..ff7bc95f2 100644
 --- a/mingw-w64-crt/lib-common/msvcr120_app.def.in
 +++ b/mingw-w64-crt/lib-common/msvcr120_app.def.in
 @@ -1243,7 +1243,7 @@ F_I386(_except1)
@@ -614,7 +614,7 @@ index 7719fbd32..fb0709358 100644
  fabs DATA ; overwritten
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcr120.def.in b/mingw-w64-crt/lib32/msvcr120.def.in
-index 2432346e8..63db13fd8 100644
+index 5b4f5956f..5e758c611 100644
 --- a/mingw-w64-crt/lib32/msvcr120.def.in
 +++ b/mingw-w64-crt/lib32/msvcr120.def.in
 @@ -972,7 +972,7 @@ _execv
@@ -1032,7 +1032,7 @@ index b86002efb..bc0b9ee77 100644
  expf
  fabs
 diff --git a/mingw-w64-crt/lib64/msvcr120.def.in b/mingw-w64-crt/lib64/msvcr120.def.in
-index 3a6bc1a11..4c152d510 100644
+index a1335e059..b3854a6ec 100644
 --- a/mingw-w64-crt/lib64/msvcr120.def.in
 +++ b/mingw-w64-crt/lib64/msvcr120.def.in
 @@ -926,7 +926,7 @@ _execv
@@ -1230,7 +1230,7 @@ index 66a344ce8..46df26e49 100644
  expf
  fabs
 diff --git a/mingw-w64-crt/libarm32/msvcr120.def.in b/mingw-w64-crt/libarm32/msvcr120.def.in
-index e43e29da9..6d7fd7dd2 100644
+index 0f5c42508..095ee036a 100644
 --- a/mingw-w64-crt/libarm32/msvcr120.def.in
 +++ b/mingw-w64-crt/libarm32/msvcr120.def.in
 @@ -900,7 +900,7 @@ _execv
@@ -1308,5 +1308,5 @@ index 5999552a0..5d3272d2a 100644
  int __cdecl (*__MINGW_IMP_SYMBOL(at_quick_exit))(void (__cdecl *)(void)) = at_quick_exit;
 +#endif
 -- 
-2.47.0
+2.47.1
 
