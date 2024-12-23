@@ -5,13 +5,13 @@ _realname=gdb
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-multiarch")
-pkgver=15.2.90+20241204
+pkgver=15.2.90+20241220
 _branch=gdb-15-branch
 _sourcedir=binutils-gdb
 pkgrel=1
 pkgdesc="GNU Debugger (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32')
+mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64')
 url="https://www.gnu.org/software/gdb/"
 msys2_references=(
   "cpe: cpe:/a:gnu:gdb"
