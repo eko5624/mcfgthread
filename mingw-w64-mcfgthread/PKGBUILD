@@ -4,7 +4,7 @@ _realname=mcfgthread
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}"-libs)
-pkgver=2.0.alpha.2.10.gd76d0cc
+pkgver=2.1.alpha.2.gbcfe132
 pkgrel=1
 pkgdesc="An efficient gthread implementation, providing C++11 threading support (mingw-w64)"
 arch=('any')
@@ -34,12 +34,16 @@ prepare() {
 }
 
 build() {
-  [[ -d "${srcdir}/build-${MSYSTEM}" ]] && rm -rf "${srcdir}/build-${MSYSTEM}"
   mkdir -p "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
 
-  MSYS2_ARG_CONV_EXCL="--prefix=" meson setup -Dbuildtype=plain  \
-    -Dc_args='-Os -g' -Dc_link_args='-Os'  \
-    --prefix="${MINGW_PREFIX}" . ../${_realname}
+  MSYS2_ARG_CONV_EXCL="--prefix=" \
+    meson setup \
+    --prefix="${MINGW_PREFIX}" \
+    -Dbuildtype=plain  \
+    -Dc_args='-Os -g' \
+    -Dc_link_args='-Os'  \
+    . \
+    ../${_realname}
 
   # Build the DLL first, as Meson creates the DLL in the working directory,
   # which might get picked up by cc1.exe when it is only half-baked.
