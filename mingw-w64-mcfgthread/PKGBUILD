@@ -4,7 +4,7 @@ _realname=mcfgthread
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}"-libs)
-pkgver=2.1.alpha.2.gbcfe132
+pkgver=2.1.alpha.3.g5b8a584
 pkgrel=1
 pkgdesc="An efficient gthread implementation, providing C++11 threading support (mingw-w64)"
 arch=('any')
@@ -34,6 +34,7 @@ prepare() {
 }
 
 build() {
+  [[ -d "${srcdir}/build-${MSYSTEM}" ]] && rm -rf "${srcdir}/build-${MSYSTEM}"
   mkdir -p "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
 
   MSYS2_ARG_CONV_EXCL="--prefix=" \
