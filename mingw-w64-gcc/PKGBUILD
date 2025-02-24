@@ -24,7 +24,7 @@ pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          $([[ "$_enable_rust" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-${_realname}-rust")
          $([[ "$_enable_jit" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-libgccjit")
         )
-pkgver=15.0.1+20250205
+pkgver=15.0.1+20250220
 _branch=master
 _sourcedir=gcc
 _libdir=lib/gcc/${CHOST}/${pkgver%%+*}
@@ -92,7 +92,7 @@ sha256sums=('SKIP'
             'ddc1538c2b9132bce5b3b2cad2a382762d58b46b31d2ae291f6e4d963b88dfd4'
             '9a0e5947415688ddaa15cadedaca864fd37dfc1a98dee6eb5177dd0d51c7fa76'
             'f3b3838a64e5d3c2ddab91015bebc0bbc626087f4d58198c966c5863f88dc099'
-            'b59f67cba1ba698d3bae2712f05b2d990e6d8f1f56cd85dc73de6e2afcf2d06a'
+            'b653ab507afd12a15411c2fbd1162926ab884fb0f5d93996abb27139764c5263'
             'fff2d92c924863af00812e15e86ae78632972ce81e155351d57f3a5f1c45f4a7'
             '77659729168b077ba65be0e78a79932b02b8908f64f8a0d639bc8119dc9ed368')
 validpgpkeys=(F3691687D867B81B51CE07D9BBE43771487328A9  # bpiotrowski@archlinux.org
