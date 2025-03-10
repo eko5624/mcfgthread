@@ -5,7 +5,7 @@
 _realname=winpthreads
 pkgbase=mingw-w64-${_realname}-git
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}-git" "${MINGW_PACKAGE_PREFIX}-libwinpthread-git")
-pkgver=12.0.0.r513.g9c006fc76
+pkgver=12.0.0.r563.g2a5024409
 pkgrel=1
 pkgdesc="MinGW-w64 winpthreads library (mingw-w64)"
 url="https://www.mingw-w64.org/"
@@ -19,7 +19,6 @@ mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
 groups=("${MINGW_PACKAGE_PREFIX}-toolchain")
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-binutils"
-             "${MINGW_PACKAGE_PREFIX}-autotools"
              "${MINGW_PACKAGE_PREFIX}-crt-git"
              "${MINGW_PACKAGE_PREFIX}-headers-git"
              "git")

@@ -24,7 +24,7 @@ pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          $([[ "$_enable_rust" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-${_realname}-rust")
          $([[ "$_enable_jit" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-libgccjit")
         )
-pkgver=15.0.1+20250220
+pkgver=15.0.1+20250303
 _branch=master
 _sourcedir=gcc
 _libdir=lib/gcc/${CHOST}/${pkgver%%+*}
@@ -40,7 +40,6 @@ license=('spdx:GPL-3.0-or-later')
 makedepends=("${MINGW_PACKAGE_PREFIX}-${_realname}"
              $([[ "$_enable_ada" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-${_realname}-ada")
              $([[ "$_enable_rust" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-rust")
-             "${MINGW_PACKAGE_PREFIX}-autotools"
              "${MINGW_PACKAGE_PREFIX}-binutils"
              "${MINGW_PACKAGE_PREFIX}-crt"
              "${MINGW_PACKAGE_PREFIX}-headers"
@@ -77,7 +76,7 @@ source=(${_sourcedir}::"git+https://gcc.gnu.org/git/gcc.git#branch=${_branch}"
         9002-native-tls.patch
         9003-libstdc-Avoid-thread-local-states-for-MCF-thread-mod.patch)
 sha256sums=('SKIP'
-            '0acd5b088ae2c3e632f6c624cb8d240953181444c6ccdedd360711714dd999b9'
+            '073a62609f2b62ce14d8a2c06f5f386d5ae600f98ea490e69cff80bd6dc4b84d'
             '3fc35067823f87e48dd3bfd265e7593000dc110fa9ad5f16c81b896765fc897a'
             '4bc35354207cb80b36645f8a4fcbd7ce46866b78802ebb35bde8036a899668c1'
             '90d5cb570083f9dea4ac0f0f87e3e8d2230f5052e6f9b946061a20a224a9d195'
@@ -88,11 +87,11 @@ sha256sums=('SKIP'
             'ad1f7b5e7afaaec008b7cbd14feea13a10989fa91bda7003af72d457619bb199'
             '8ba6064f2263643d849e2d31797cde0ffcef3ce26324bfe732528f0f687b5163'
             'ba3649f29049f6d4eea4a481975d9f6851c0c2604d847881b46084a943c4c8f2'
-            '96cec9e6dcff7d81a246f93b4b272e97c44e3a48e9fafc452a5478726a6155ac'
+            'f364e69dfce8d40f90d41d5d121c148f447670155dbd9ae1770e264b5c873db7'
             'ddc1538c2b9132bce5b3b2cad2a382762d58b46b31d2ae291f6e4d963b88dfd4'
             '9a0e5947415688ddaa15cadedaca864fd37dfc1a98dee6eb5177dd0d51c7fa76'
             'f3b3838a64e5d3c2ddab91015bebc0bbc626087f4d58198c966c5863f88dc099'
-            'b653ab507afd12a15411c2fbd1162926ab884fb0f5d93996abb27139764c5263'
+            '7609644ca0352b87696fdff3a63864ce797e074b085f16ec5096d0f831fa10bf'
             'fff2d92c924863af00812e15e86ae78632972ce81e155351d57f3a5f1c45f4a7'
             '77659729168b077ba65be0e78a79932b02b8908f64f8a0d639bc8119dc9ed368')
 validpgpkeys=(F3691687D867B81B51CE07D9BBE43771487328A9  # bpiotrowski@archlinux.org
@@ -194,10 +193,8 @@ build() {
       "--with-dwarf2"
     )
     LDFLAGS+=" -Wl,--large-address-aware"
-    local _arch=pentium4
   else
     _extra_config+=("--enable-plugin")
-    local _arch=nocona
   fi
 
   local _languages="c,lto,c++,fortran"
@@ -230,8 +227,9 @@ build() {
     --libexecdir=${MINGW_PREFIX}/lib \
     --enable-bootstrap \
     --enable-checking=release \
-    --with-arch=${_arch} \
-    --with-tune=generic \
+    --with-arch=x86-64-v2 \
+    --with-tune=intel \
+    --enable-mingw-wildcard \
     --enable-languages=${_languages} \
     --enable-shared \
     --enable-static \
@@ -396,6 +394,9 @@ package_gcc() {
   # install "custom" system gdbinit
   install -D -m644 "${srcdir}"/gdbinit "${pkgdir}"${MINGW_PREFIX}/etc/gdbinit
   sed -i 's|%GCC_NAME%|gcc-'${pkgver%%+*}'|g' "${pkgdir}"${MINGW_PREFIX}/etc/gdbinit
+  if [[ "${CARCH}" == "i686" || "${CARCH}" == "x86_64" ]]; then
+    sed -i '/#set disassembly-flavor intel/s/#//' "${pkgdir}"${MINGW_PREFIX}/etc/gdbinit
+  fi
 
   # byte-compile python libraries
   ${MINGW_PREFIX}/bin/python -m compileall -o 0 -o 1 "${pkgdir}"${MINGW_PREFIX}/share/gcc-${pkgver%%+*}/

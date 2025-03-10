@@ -1,4 +1,5 @@
-set disassembly-flavor intel
+tui new-layout hsplit {-horizontal src 1 asm 1 } 2 cmd 1
+#set disassembly-flavor intel
 
 python
 import sys

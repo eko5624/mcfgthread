@@ -1,6 +1,6 @@
-From 07baacbc7de1f5dc5db9e834b030c1b642774a37 Mon Sep 17 00:00:00 2001
+From f6c09e9397d5fe9c0dd1f7a02c90536732aed3df Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
-Date: Thu, 20 Feb 2025 18:12:14 +0800
+Date: Sat, 22 Feb 2025 13:11:51 +0800
 Subject: [PATCH] i386: Quote user-defined symbols in assembly in Intel syntax
 
 With `-masm=intel`, GCC generates registers without % prefixes. If a
@@ -28,9 +28,9 @@ gcc/config/:
 ---
  gcc/config/i386/cygming.h     |  5 +++--
  gcc/config/i386/i386-protos.h |  1 +
- gcc/config/i386/i386.cc       | 22 ++++++++++++++++++++++
+ gcc/config/i386/i386.cc       | 13 +++++++++++++
  gcc/config/i386/i386.h        |  7 +++++++
- 4 files changed, 33 insertions(+), 2 deletions(-)
+ 4 files changed, 24 insertions(+), 2 deletions(-)
 
 diff --git a/gcc/config/i386/cygming.h b/gcc/config/i386/cygming.h
 index 3ddcbecb22fd..4a192900045a 100644
@@ -62,10 +62,10 @@ index bea3fd4b2e2a..3b9e28ced91c 100644
  extern int ix86_reg_parm_stack_space (const_tree);
  
 diff --git a/gcc/config/i386/i386.cc b/gcc/config/i386/i386.cc
-index 3128973ba79c..6cbed7e4906e 100644
+index 3128973ba79c..d9dea86afa9c 100644
 --- a/gcc/config/i386/i386.cc
 +++ b/gcc/config/i386/i386.cc
-@@ -1709,6 +1709,28 @@ ix86_asm_output_function_label (FILE *out_file, const char *fname,
+@@ -1709,6 +1709,19 @@ ix86_asm_output_function_label (FILE *out_file, const char *fname,
      }
  }
  
@@ -76,19 +76,10 @@ index 3128973ba79c..6cbed7e4906e 100644
 +void
 +ix86_asm_output_labelref (FILE *file, const char *prefix, const char *label)
 +{
-+  if (ASSEMBLER_DIALECT != ASM_INTEL)
++  if (ASSEMBLER_DIALECT == ASM_ATT)
 +    fprintf (file, "%s%s", prefix, label);
 +  else
-+    {
-+      /* When generating DWARF2 debug info, GCC may emit an expression
-+	 like `label+42`, where only `label` shall be quoted.  */
-+      const char* op = strpbrk (label, "+-");
-+      if (op == NULL)
-+	fprintf (file, "\"%s%s\"", prefix, label);
-+      else
-+	fprintf (file, "\"%s%.*s\"%s",
-+		 prefix, static_cast<int> (op - label), label, op);
-+    }
++    fprintf (file, "\"%s%s\"", prefix, label);
 +}
 +
  /* Implementation of call abi switching target hook. Specific to FNDECL

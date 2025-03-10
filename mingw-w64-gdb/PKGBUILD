@@ -5,7 +5,7 @@ _realname=gdb
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-multiarch")
-pkgver=16.2.90+20250220
+pkgver=16.2.90+20250303
 _branch=gdb-16-branch
 _sourcedir=binutils-gdb
 pkgrel=1
@@ -34,7 +34,6 @@ depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
 optdepends=("${MINGW_PACKAGE_PREFIX}-python-pygments: for syntax highlighting")
 checkdepends=('dejagnu' 'bc')
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
-             "${MINGW_PACKAGE_PREFIX}-autotools"
              "${MINGW_PACKAGE_PREFIX}-iconv")
 source=(${_sourcedir}::"git+https://sourceware.org/git/binutils-gdb.git#branch=${_branch}"
         '0001-Workaround-performance-regression-in-info-func-var-t.patch'

@@ -1,4 +1,4 @@
-From c40f6d862bb2a9d2a5ad84a77d59d1f192937da9 Mon Sep 17 00:00:00 2001
+From d6cecc448f4a63c4482c2aa2306e454c0e95c2ef Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 7 Oct 2022 22:42:04 +0800
 Subject: [PATCH 9003/9004] crt: Implement standard-conforming termination
@@ -40,7 +40,7 @@ Implementation details:
 Signed-off-by: LIU Hao <lh_mouse@126.com>
 ---
  mingw-w64-crt/Makefile.am                     |  2 +-
- mingw-w64-crt/crt/crtdll.c                    | 29 ++++++++++-
+ mingw-w64-crt/crt/crtdll.c                    | 25 +++++++++
  mingw-w64-crt/crt/crtexe.c                    | 14 +++++
  mingw-w64-crt/crt/exit_wrappers.c             | 51 +++++++++++++++++++
  mingw-w64-crt/crt/tls_atexit.c                | 30 +++++++++--
@@ -86,12 +86,12 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
  mingw-w64-crt/libarm32/msvcr120d.def.in       |  4 +-
  mingw-w64-crt/misc/ucrt_amsg_exit.c           |  3 +-
  mingw-w64-crt/misc/ucrt_at_quick_exit.c       |  3 ++
- 47 files changed, 244 insertions(+), 90 deletions(-)
+ 47 files changed, 241 insertions(+), 89 deletions(-)
  create mode 100644 mingw-w64-crt/crt/exit_wrappers.c
  create mode 100644 mingw-w64-crt/crt/ucrt_exit_wrappers.c
 
 diff --git a/mingw-w64-crt/Makefile.am b/mingw-w64-crt/Makefile.am
-index 5330145eb..c448b5de0 100644
+index 423e233ac..8319eb716 100644
 --- a/mingw-w64-crt/Makefile.am
 +++ b/mingw-w64-crt/Makefile.am
 @@ -117,7 +117,7 @@ src_libmingw32=include/oscalls.h include/internal.h include/sect_attribs.h \
@@ -104,10 +104,10 @@ index 5330145eb..c448b5de0 100644
  src_libscrnsave=libsrc/scrnsave.c
  src_libscrnsavw=libsrc/scrnsave.c
 diff --git a/mingw-w64-crt/crt/crtdll.c b/mingw-w64-crt/crt/crtdll.c
-index d08d2a81f..fbd87a9c5 100644
+index 6bee08f59..36a1305a7 100644
 --- a/mingw-w64-crt/crt/crtdll.c
 +++ b/mingw-w64-crt/crt/crtdll.c
-@@ -31,6 +31,12 @@
+@@ -17,6 +17,12 @@
  #endif
  #include <sect_attribs.h>
  #include <locale.h>
@@ -118,27 +118,23 @@ index d08d2a81f..fbd87a9c5 100644
 +
 +extern HANDLE __dso_handle;
  
- extern void __cdecl _initterm(_PVFV *,_PVFV *);
- extern void __main ();
-@@ -182,7 +188,14 @@ __DllMainCRTStartup (HANDLE hDllHandle, DWORD dwReason, LPVOID lpreserved)
- 	  }
-     }
-   if (dwReason == DLL_PROCESS_ATTACH)
--    __main ();
-+    {
+ #if defined(__x86_64__) && !defined(__SEH__)
+ extern int __mingw_init_ehandler (void);
+@@ -83,6 +89,11 @@ WINBOOL WINAPI _CRT_INIT (HANDLE hDllHandle, DWORD dwReason, LPVOID lpreserved)
+ 	  if (ret != 0)
+ 	    goto i__leave;
+ 	  _initterm (__xc_a, __xc_z);
 +#ifdef __USING_MCFGTHREAD__
-+      /* Register `fflush(NULL)` before user-defined constructors, so
-+       * it will be executed after all user-defined destructors.  */
-+      __MCF_cxa_atexit ((__MCF_cxa_dtor_cdecl*)(intptr_t) fflush, NULL, &__dso_handle);
++	  /* Register `fflush(NULL)` before user-defined constructors, so
++	   * it will be executed after all user-defined destructors.  */
++	  __MCF_cxa_atexit ((__MCF_cxa_dtor_cdecl*)(intptr_t) fflush, NULL, &__dso_handle);
 +#endif
-+      __main ();
-+    }
-   retcode = DllMain(hDllHandle,dwReason,lpreserved);
-   if (dwReason == DLL_PROCESS_ATTACH && ! retcode)
+ 	  __main ();
+ 
+ 	  __native_startup_state = __initialized;
+@@ -171,6 +182,16 @@ DllMainCRTStartup (HANDLE hDllHandle, DWORD dwReason, LPVOID lpreserved)
      {
-@@ -196,6 +209,16 @@ __DllMainCRTStartup (HANDLE hDllHandle, DWORD dwReason, LPVOID lpreserved)
- 	if (_CRT_INIT (hDllHandle, dwReason, lpreserved) == FALSE)
- 	  retcode = FALSE;
+ 	retcode = _CRT_INIT (hDllHandle, dwReason, lpreserved);
      }
 +#ifdef __USING_MCFGTHREAD__
 +  if (dwReason == DLL_PROCESS_DETACH && lpreserved == NULL)
@@ -153,7 +149,7 @@ index d08d2a81f..fbd87a9c5 100644
  i__leave:
    __native_dllmain_reason = UINT_MAX;
    return retcode ;
-@@ -204,9 +227,13 @@ i__leave:
+@@ -178,9 +199,13 @@ i__leave:
  
  int __cdecl atexit (_PVFV func)
  {
@@ -168,10 +164,10 @@ index d08d2a81f..fbd87a9c5 100644
  
  char __mingw_module_is_dll = 1;
 diff --git a/mingw-w64-crt/crt/crtexe.c b/mingw-w64-crt/crt/crtexe.c
-index cdf5dcd25..c8bddb1af 100644
+index 4bc8a92f4..80c60a454 100644
 --- a/mingw-w64-crt/crt/crtexe.c
 +++ b/mingw-w64-crt/crt/crtexe.c
-@@ -21,6 +21,10 @@
+@@ -14,6 +14,10 @@
  #include <sect_attribs.h>
  #include <locale.h>
  #include <corecrt_startup.h>
@@ -182,7 +178,7 @@ index cdf5dcd25..c8bddb1af 100644
  
  #if defined(__SEH__) && (!defined(__clang__) || __clang_major__ >= 7)
  #define SEH_INLINE_ASM
-@@ -37,6 +41,7 @@ extern int _fmode;
+@@ -30,6 +34,7 @@ extern int _fmode;
  #undef _commode
  extern int _commode;
  extern int _dowildcard;
@@ -442,10 +438,10 @@ index c207c442f..ff7bc95f2 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/lib-common/msvcrt.def.in b/mingw-w64-crt/lib-common/msvcrt.def.in
-index feeeb1c35..580754108 100644
+index 0d1223af5..f3f22d8f8 100644
 --- a/mingw-w64-crt/lib-common/msvcrt.def.in
 +++ b/mingw-w64-crt/lib-common/msvcrt.def.in
-@@ -578,7 +578,7 @@ _execv
+@@ -580,7 +580,7 @@ _execv
  _execve
  _execvp
  _execvpe
@@ -454,7 +450,7 @@ index feeeb1c35..580754108 100644
  _expand
  _fcloseall
  _fcvt
-@@ -951,7 +951,7 @@ cosh
+@@ -953,7 +953,7 @@ cosh
  ctime
  difftime
  div
@@ -658,7 +654,7 @@ index a5db51612..1b2a6472b 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/lib32/msvcr40d.def.in b/mingw-w64-crt/lib32/msvcr40d.def.in
-index 9a108cb06..24ef97f5a 100644
+index 1590e6590..3786d3d25 100644
 --- a/mingw-w64-crt/lib32/msvcr40d.def.in
 +++ b/mingw-w64-crt/lib32/msvcr40d.def.in
 @@ -1126,7 +1126,7 @@ _execv
@@ -900,7 +896,7 @@ index 94dcdb2fa..ea2b43466 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcrt40.def.in b/mingw-w64-crt/lib32/msvcrt40.def.in
-index 88ae2bd23..b5e5c1fde 100644
+index a061b15a8..135e9abe5 100644
 --- a/mingw-w64-crt/lib32/msvcrt40.def.in
 +++ b/mingw-w64-crt/lib32/msvcrt40.def.in
 @@ -1099,7 +1099,7 @@ _execv
@@ -922,7 +918,7 @@ index 88ae2bd23..b5e5c1fde 100644
  fabs
  fclose
 diff --git a/mingw-w64-crt/lib32/msvcrtd.def.in b/mingw-w64-crt/lib32/msvcrtd.def.in
-index 4313c797a..e2c53c96a 100644
+index 36e9fa45e..20f48ee30 100644
 --- a/mingw-w64-crt/lib32/msvcrtd.def.in
 +++ b/mingw-w64-crt/lib32/msvcrtd.def.in
 @@ -291,7 +291,7 @@ _execv
@@ -1308,5 +1304,5 @@ index 5999552a0..5d3272d2a 100644
  int __cdecl (*__MINGW_IMP_SYMBOL(at_quick_exit))(void (__cdecl *)(void)) = at_quick_exit;
 +#endif
 -- 
-2.47.1
+2.48.1
 
