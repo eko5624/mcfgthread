@@ -70,7 +70,6 @@ source=(${_sourcedir}::"git+https://gcc.gnu.org/git/gcc.git#branch=${_branch}"
         0140-gcc-diagnostic-color.patch
         0200-add-m-no-align-vector-insn-option-for-i386.patch
         2001-fix-building-rust-on-mingw-w64.patch
-        9004-gcc-security.patch
         9000-gcc-Make-stupid-AT-T-syntax-not-default.patch
         9001-Always-quote-labels-in-Intel-syntax.patch
         9002-native-tls.patch
@@ -89,7 +88,6 @@ sha256sums=('SKIP'
             'ba3649f29049f6d4eea4a481975d9f6851c0c2604d847881b46084a943c4c8f2'
             'f364e69dfce8d40f90d41d5d121c148f447670155dbd9ae1770e264b5c873db7'
             'ddc1538c2b9132bce5b3b2cad2a382762d58b46b31d2ae291f6e4d963b88dfd4'
-            '9a0e5947415688ddaa15cadedaca864fd37dfc1a98dee6eb5177dd0d51c7fa76'
             'f3b3838a64e5d3c2ddab91015bebc0bbc626087f4d58198c966c5863f88dc099'
             '7609644ca0352b87696fdff3a63864ce797e074b085f16ec5096d0f831fa10bf'
             'fff2d92c924863af00812e15e86ae78632972ce81e155351d57f3a5f1c45f4a7'
@@ -119,14 +117,14 @@ del_file_exists() {
 # =========================================== #
 
 pkgver() {
-  cd ${srcdir}/${_sourcedir}
+  cd "${srcdir}/${_sourcedir}"
   _gcc_version=$(head -n 34 gcc/BASE-VER | sed -e 's/.* //' | tr -d '"\n')
   _gcc_date=$(head -n 34 gcc/DATESTAMP | sed -e 's/.* //' | tr -d '"\n')
   printf "%s+%s" "$_gcc_version" "$_gcc_date"
 }
 
 prepare() {
-  cd ${srcdir}/${_sourcedir}
+  cd "${srcdir}/${_sourcedir}"
   git reset --hard
   git clean -fdx
 
@@ -163,8 +161,7 @@ prepare() {
     9000-gcc-Make-stupid-AT-T-syntax-not-default.patch \
     9001-Always-quote-labels-in-Intel-syntax.patch \
     9002-native-tls.patch \
-    9003-libstdc-Avoid-thread-local-states-for-MCF-thread-mod.patch \
-    9004-gcc-security.patch
+    9003-libstdc-Avoid-thread-local-states-for-MCF-thread-mod.patch
 
   # do not expect ${prefix}/mingw symlink - this should be superceded by
   # 0005-Windows-Don-t-ignore-native-system-header-dir.patch .. but isn't!
