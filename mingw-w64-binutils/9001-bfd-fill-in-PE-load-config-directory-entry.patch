@@ -1,6 +1,6 @@
-From b37ace41c2eb79357487f178202f36863527274b Mon Sep 17 00:00:00 2001
+From a147fc41d9c7ab6e5d9c4c75a6dd97d217fc7b91 Mon Sep 17 00:00:00 2001
 From: Jeremy Drake <sourceware-bugzilla@jdrake.com>
-Date: Mon, 10 Mar 2025 11:25:37 -0700
+Date: Thu, 13 Mar 2025 10:14:31 -0700
 Subject: [PATCH] bfd: fill in PE load config directory entry.
 
 This is filled in with the rva of _load_config_used if defined (much
@@ -8,11 +8,11 @@ like _tls_used), and the size is the first 32-bit value at that symbol.
 
 Signed-off-by: Jeremy Drake <sourceware-bugzilla@jdrake.com>
 ---
- bfd/peXXigen.c | 46 +++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 45 insertions(+), 1 deletion(-)
+ bfd/peXXigen.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 46 insertions(+), 2 deletions(-)
 
 diff --git a/bfd/peXXigen.c b/bfd/peXXigen.c
-index 29012688adf..d58d216a681 100644
+index 29012688adf..858498a04f3 100644
 --- a/bfd/peXXigen.c
 +++ b/bfd/peXXigen.c
 @@ -593,7 +593,7 @@ _bfd_XXi_swap_aouthdr_out (bfd * abfd, void * in, void * out)
@@ -40,6 +40,15 @@ index 29012688adf..d58d216a681 100644
  
    if (extra->DataDirectory[PE_IMPORT_TABLE].VirtualAddress == 0)
      /* Until other .idata fixes are made (pending patch), the entry for
+@@ -4558,7 +4560,7 @@ _bfd_XXi_final_link_postscript (bfd * abfd, struct coff_final_link_info *pfinfo)
+       else
+ 	{
+ 	  _bfd_error_handler
+-	    (_("%pB: unable to fill in DataDictionary[9] because __tls_used is missing"),
++	    (_("%pB: unable to fill in DataDictionary[9] because _tls_used is not defined correctly"),
+ 	     abfd);
+ 	  result = false;
+ 	}
 @@ -4573,6 +4575,48 @@ _bfd_XXi_final_link_postscript (bfd * abfd, struct coff_final_link_info *pfinfo)
  #endif
      }
@@ -80,7 +89,7 @@ index 29012688adf..d58d216a681 100644
 +      else
 +	{
 +	  _bfd_error_handler
-+	    (_("%pB: unable to fill in DataDictionary[10] because __load_config_used is missing"),
++	    (_("%pB: unable to fill in DataDictionary[10] because _load_config_used is not defined correctly"),
 +	     abfd);
 +	  result = false;
 +	}

@@ -24,7 +24,7 @@ pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          $([[ "$_enable_rust" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-${_realname}-rust")
          $([[ "$_enable_jit" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-libgccjit")
         )
-pkgver=15.0.1+20250303
+pkgver=15.0.1+20250319
 _branch=master
 _sourcedir=gcc
 _libdir=lib/gcc/${CHOST}/${pkgver%%+*}
@@ -69,7 +69,6 @@ source=(${_sourcedir}::"git+https://gcc.gnu.org/git/gcc.git#branch=${_branch}"
         0021-PR14940-Allow-a-PCH-to-be-mapped-to-a-different-addr.patch
         0140-gcc-diagnostic-color.patch
         0200-add-m-no-align-vector-insn-option-for-i386.patch
-        2001-fix-building-rust-on-mingw-w64.patch
         9000-gcc-Make-stupid-AT-T-syntax-not-default.patch
         9001-Always-quote-labels-in-Intel-syntax.patch
         9002-native-tls.patch
@@ -87,7 +86,6 @@ sha256sums=('SKIP'
             '8ba6064f2263643d849e2d31797cde0ffcef3ce26324bfe732528f0f687b5163'
             'ba3649f29049f6d4eea4a481975d9f6851c0c2604d847881b46084a943c4c8f2'
             'f364e69dfce8d40f90d41d5d121c148f447670155dbd9ae1770e264b5c873db7'
-            'ddc1538c2b9132bce5b3b2cad2a382762d58b46b31d2ae291f6e4d963b88dfd4'
             'f3b3838a64e5d3c2ddab91015bebc0bbc626087f4d58198c966c5863f88dc099'
             '7609644ca0352b87696fdff3a63864ce797e074b085f16ec5096d0f831fa10bf'
             'fff2d92c924863af00812e15e86ae78632972ce81e155351d57f3a5f1c45f4a7'
@@ -152,9 +150,6 @@ prepare() {
   # https://github.com/msys2/MINGW-packages/pull/8317#issuecomment-824548411
   apply_patch_with_msg \
     0200-add-m-no-align-vector-insn-option-for-i386.patch
-
-  apply_patch_with_msg \
-    2001-fix-building-rust-on-mingw-w64.patch
 
   # GCC with the MCF thread model
   apply_patch_with_msg \

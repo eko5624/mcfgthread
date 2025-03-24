@@ -1,4 +1,4 @@
-From d6cecc448f4a63c4482c2aa2306e454c0e95c2ef Mon Sep 17 00:00:00 2001
+From fdf29462ee2236344a33cac13079beb621c79ea5 Mon Sep 17 00:00:00 2001
 From: LIU Hao <lh_mouse@126.com>
 Date: Fri, 7 Oct 2022 22:42:04 +0800
 Subject: [PATCH 9003/9004] crt: Implement standard-conforming termination
@@ -91,10 +91,10 @@ Signed-off-by: LIU Hao <lh_mouse@126.com>
  create mode 100644 mingw-w64-crt/crt/ucrt_exit_wrappers.c
 
 diff --git a/mingw-w64-crt/Makefile.am b/mingw-w64-crt/Makefile.am
-index 423e233ac..8319eb716 100644
+index f2f1e6f81..e52512059 100644
 --- a/mingw-w64-crt/Makefile.am
 +++ b/mingw-w64-crt/Makefile.am
-@@ -117,7 +117,7 @@ src_libmingw32=include/oscalls.h include/internal.h include/sect_attribs.h \
+@@ -118,7 +118,7 @@ src_libmingw32=include/oscalls.h include/internal.h include/sect_attribs.h \
    crt/usermatherr.c   \
    crt/xtxtmode.c      crt/crt_handler.c    \
    crt/tlsthrd.c       crt/tlsmthread.c     crt/tlsmcrt.c   \
@@ -376,7 +376,7 @@ index 000000000..10611ac88
 +#endif
 +}
 diff --git a/mingw-w64-crt/lib-common/api-ms-win-crt-runtime-l1-1-0.def.in b/mingw-w64-crt/lib-common/api-ms-win-crt-runtime-l1-1-0.def.in
-index ea310d426..33e4f5504 100644
+index d747fafc5..83e0940d4 100644
 --- a/mingw-w64-crt/lib-common/api-ms-win-crt-runtime-l1-1-0.def.in
 +++ b/mingw-w64-crt/lib-common/api-ms-win-crt-runtime-l1-1-0.def.in
 @@ -4,7 +4,7 @@ EXPORTS
@@ -394,10 +394,10 @@ index ea310d426..33e4f5504 100644
  _execute_onexit_table
 -_exit
 +_exit DATA
- F_NON_I386(_fpieee_flt)
- ; DATA added manually
- _fpreset DATA
-@@ -96,7 +96,7 @@ _wcserror_s
+ _fpieee_flt
+ _fpreset F_LD80(DATA)
+ _get_doserrno
+@@ -95,7 +95,7 @@ _wcserror_s
  _wperror
  _wsystem
  abort
@@ -406,9 +406,9 @@ index ea310d426..33e4f5504 100644
  ; Don't use the float env functions from UCRT; fesetround doesn't seem to have
  ; any effect on the FPU control word as required by other libmingwex math
  ; routines.
-@@ -110,7 +110,7 @@ fesetexceptflag DATA
- fesetround DATA
+@@ -110,7 +110,7 @@ fesetround DATA
  fetestexcept DATA
+ F_LD64(fpreset == _fpreset)
  perror
 -quick_exit
 +quick_exit DATA
@@ -416,7 +416,7 @@ index ea310d426..33e4f5504 100644
  set_terminate
  signal
 diff --git a/mingw-w64-crt/lib-common/msvcr120_app.def.in b/mingw-w64-crt/lib-common/msvcr120_app.def.in
-index c207c442f..ff7bc95f2 100644
+index eccf24885..e6703a4a3 100644
 --- a/mingw-w64-crt/lib-common/msvcr120_app.def.in
 +++ b/mingw-w64-crt/lib-common/msvcr120_app.def.in
 @@ -1243,7 +1243,7 @@ F_I386(_except1)
@@ -438,7 +438,7 @@ index c207c442f..ff7bc95f2 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/lib-common/msvcrt.def.in b/mingw-w64-crt/lib-common/msvcrt.def.in
-index 0d1223af5..f3f22d8f8 100644
+index 772b567c9..87703145e 100644
 --- a/mingw-w64-crt/lib-common/msvcrt.def.in
 +++ b/mingw-w64-crt/lib-common/msvcrt.def.in
 @@ -580,7 +580,7 @@ _execv
@@ -460,7 +460,7 @@ index 0d1223af5..f3f22d8f8 100644
  fabs DATA
  fclose
 diff --git a/mingw-w64-crt/lib-common/ucrtbase-common.def.in b/mingw-w64-crt/lib-common/ucrtbase-common.def.in
-index 69052d686..086b7cca0 100644
+index 6ed50ad6c..5768f2544 100644
 --- a/mingw-w64-crt/lib-common/ucrtbase-common.def.in
 +++ b/mingw-w64-crt/lib-common/ucrtbase-common.def.in
 @@ -60,7 +60,7 @@ F_DEBUG(_CrtSetReportMode)
@@ -482,15 +482,15 @@ index 69052d686..086b7cca0 100644
  F_DEBUG(_expand_dbg)
  _fclose_nolock
 @@ -2328,7 +2328,7 @@ erfcf
- F_ARM_ANY(erfcl) ; Can't use long double functions from the CRT on x86
+ F_LD64(erfcl) ; Can't use long double functions from the CRT on x86
  erff
- F_ARM_ANY(erfl) ; Can't use long double functions from the CRT on x86
+ F_LD64(erfl) ; Can't use long double functions from the CRT on x86
 -exit
 +exit DATA
  exp
  exp2
  exp2f
-@@ -2518,7 +2518,7 @@ putwc
+@@ -2519,7 +2519,7 @@ putwc
  putwchar
  qsort
  qsort_s
@@ -1204,7 +1204,7 @@ index f7363708e..788276046 100644
  expf
  fabs
 diff --git a/mingw-w64-crt/libarm32/msvcr110d.def.in b/mingw-w64-crt/libarm32/msvcr110d.def.in
-index 66a344ce8..46df26e49 100644
+index ec4736cc1..e58d58b8a 100644
 --- a/mingw-w64-crt/libarm32/msvcr110d.def.in
 +++ b/mingw-w64-crt/libarm32/msvcr110d.def.in
 @@ -952,7 +952,7 @@ _execv
@@ -1226,7 +1226,7 @@ index 66a344ce8..46df26e49 100644
  expf
  fabs
 diff --git a/mingw-w64-crt/libarm32/msvcr120.def.in b/mingw-w64-crt/libarm32/msvcr120.def.in
-index 0f5c42508..095ee036a 100644
+index ec6643da5..783d33c05 100644
 --- a/mingw-w64-crt/libarm32/msvcr120.def.in
 +++ b/mingw-w64-crt/libarm32/msvcr120.def.in
 @@ -900,7 +900,7 @@ _execv
@@ -1248,7 +1248,7 @@ index 0f5c42508..095ee036a 100644
  exp2
  exp2f
 diff --git a/mingw-w64-crt/libarm32/msvcr120d.def.in b/mingw-w64-crt/libarm32/msvcr120d.def.in
-index 7241a9e7b..6958d0863 100644
+index b79ecdcb3..aaf5b6096 100644
 --- a/mingw-w64-crt/libarm32/msvcr120d.def.in
 +++ b/mingw-w64-crt/libarm32/msvcr120d.def.in
 @@ -951,7 +951,7 @@ _execv
