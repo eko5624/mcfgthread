@@ -3,7 +3,7 @@
 _realname=crt
 pkgbase=mingw-w64-${_realname}-git
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
-pkgver=12.0.0.r598.g95ad23696
+pkgver=12.0.0.r621.g90da6c653
 pkgrel=1
 pkgdesc='MinGW-w64 CRT for Windows (mingw-w64)'
 arch=('any')
@@ -25,8 +25,8 @@ source=("mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64"
         9004-crt-Copy-clock-and-nanosleep-from-winpthreads.patch)
 sha256sums=('SKIP'
             'fcef8b83090c57ff897f471aeb0cd5a71d6385ff569eba8bbef0c424c21acda4'
-            'a8a22061145c839c3c67a99353503ad4115e51f52f4e39b6311469dcc2e55d9c'
-            'fdc027b054e6322ddf6ccff237b79cdd96bd282335742e0157b0146ccb5d831d')
+            '36046863089ab8ae779f9f73819d30f5f98c61b79c7ec1e43e7ad491fdb044c2'
+            '5e16165d1ddc215be26f7b4a145a99555540426fe46cc1f1ba57aca57fb189fc')
 
 pkgver() {
   cd "${srcdir}/mingw-w64"
