@@ -1,20 +1,18 @@
-From 48a205fe31c30ceb95125a979aa3932482068614 Mon Sep 17 00:00:00 2001
+From 5de418ba70260e34d9246224805b958767d99482 Mon Sep 17 00:00:00 2001
 From: Jeremy Drake <sourceware-bugzilla@jdrake.com>
-Date: Wed, 2 Apr 2025 15:52:46 -0700
-Subject: [PATCH 9201/9203] bfd: properly use bfd_get_symbol_leading_char in
- peXXigen.
+Date: Mon, 7 Apr 2025 13:18:46 +0200
+Subject: [PATCH] bfd: properly use bfd_get_symbol_leading_char() in peXXigen
 
 This function returns the leading char to use, so we cannot just assume
 it will always be '_' or '\0'.
 
 Signed-off-by: Jeremy Drake <sourceware-bugzilla@jdrake.com>
-Signed-off-by: LIU Hao <lh_mouse@126.com>
 ---
  bfd/peXXigen.c | 12 ++++++------
  1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/bfd/peXXigen.c b/bfd/peXXigen.c
-index 29012688adf..29831d4caaa 100644
+index 29012688adf..561f8585766 100644
 --- a/bfd/peXXigen.c
 +++ b/bfd/peXXigen.c
 @@ -4403,6 +4403,7 @@ _bfd_XXi_final_link_postscript (bfd * abfd, struct coff_final_link_info *pfinfo)
@@ -45,7 +43,7 @@ index 29012688adf..29831d4caaa 100644
  	  _bfd_error_handler
 -	    (_("%pB: unable to fill in DataDictionary[9] because __tls_used is missing"),
 -	     abfd);
-+	    (_("%pB: unable to fill in DataDictionary[%d]: %s not defined correctly"),
++	    (_("%pB: unable to fill in DataDirectory[%d]: %s not defined correctly"),
 +	     abfd, PE_TLS_TABLE, name);
  	  result = false;
  	}

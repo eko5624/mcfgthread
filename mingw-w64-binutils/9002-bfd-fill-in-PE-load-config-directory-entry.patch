@@ -1,19 +1,18 @@
-From 27713e2b4b0e9c22fdebaebaad4f2c7da3e070d9 Mon Sep 17 00:00:00 2001
+From 236214b1981b952d212e8bfd7b811210653771ae Mon Sep 17 00:00:00 2001
 From: Jeremy Drake <sourceware-bugzilla@jdrake.com>
-Date: Wed, 2 Apr 2025 15:53:45 -0700
-Subject: [PATCH 9202/9203] bfd: fill in PE load config directory entry.
+Date: Mon, 7 Apr 2025 13:19:19 +0200
+Subject: [PATCH] bfd: fill in PE load config directory entry
 
 This is filled in with the rva of _load_config_used if defined (much
 like _tls_used), and the size is the first 32-bit value at that symbol.
 
 Signed-off-by: Jeremy Drake <sourceware-bugzilla@jdrake.com>
-Signed-off-by: LIU Hao <lh_mouse@126.com>
 ---
- bfd/peXXigen.c | 69 +++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 68 insertions(+), 1 deletion(-)
+ bfd/peXXigen.c | 71 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 70 insertions(+), 1 deletion(-)
 
 diff --git a/bfd/peXXigen.c b/bfd/peXXigen.c
-index 29831d4caaa..0dec04fcc3e 100644
+index 7ca57831a94..f63a7b6f11a 100644
 --- a/bfd/peXXigen.c
 +++ b/bfd/peXXigen.c
 @@ -593,7 +593,7 @@ _bfd_XXi_swap_aouthdr_out (bfd * abfd, void * in, void * out)
@@ -41,7 +40,7 @@ index 29831d4caaa..0dec04fcc3e 100644
  
    if (extra->DataDirectory[PE_IMPORT_TABLE].VirtualAddress == 0)
      /* Until other .idata fixes are made (pending patch), the entry for
-@@ -4573,6 +4575,71 @@ _bfd_XXi_final_link_postscript (bfd * abfd, struct coff_final_link_info *pfinfo)
+@@ -4573,6 +4575,73 @@ _bfd_XXi_final_link_postscript (bfd * abfd, struct coff_final_link_info *pfinfo)
  #endif
      }
  
@@ -62,11 +61,12 @@ index 29831d4caaa..0dec04fcc3e 100644
 +	     + h1->root.u.def.section->output_offset
 +	     - pe_data (abfd)->pe_opthdr.ImageBase);
 +
-+	  if (pe_data (abfd)->pe_opthdr.DataDirectory[PE_LOAD_CONFIG_TABLE].VirtualAddress &
-+	      ((bfd_arch_bits_per_address (abfd) >> 3) - 1))
++	  if (pe_data (abfd)->pe_opthdr.DataDirectory[PE_LOAD_CONFIG_TABLE].VirtualAddress
++	      & (bfd_arch_bits_per_address (abfd) / bfd_arch_bits_per_byte (abfd)
++		- 1))
 +	    {
 +	      _bfd_error_handler
-+		(_("%pB: unable to fill in DataDictionary[%d]: %s not properly aligned"),
++		(_("%pB: unable to fill in DataDirectory[%d]: %s not properly aligned"),
 +		 abfd, PE_LOAD_CONFIG_TABLE, name);
 +	      result = false;
 +	    }
@@ -81,14 +81,15 @@ index 29831d4caaa..0dec04fcc3e 100644
 +		h1->root.u.def.section->output_offset + h1->root.u.def.value,
 +		4))
 +	    {
-+	      pe_data (abfd)->pe_opthdr.DataDirectory[PE_LOAD_CONFIG_TABLE].Size =
-+		bfd_get_32 (abfd, data);
++	      pe_data (abfd)->pe_opthdr.DataDirectory[PE_LOAD_CONFIG_TABLE].Size
++		= bfd_get_32 (abfd, data);
 +
-+	      if (pe_data (abfd)->pe_opthdr.DataDirectory[PE_LOAD_CONFIG_TABLE].Size >
-+		  h1->root.u.def.section->size - h1->root.u.def.value)
++	      if ((bfd_vma) pe_data (abfd)->pe_opthdr
++		  .DataDirectory[PE_LOAD_CONFIG_TABLE].Size
++		  > h1->root.u.def.section->size - h1->root.u.def.value)
 +		{
 +		  _bfd_error_handler
-+		    (_("%pB: unable to fill in DataDictionary[%d]: size too large for the containing section"),
++		    (_("%pB: unable to fill in DataDirectory[%d]: size too large for the containing section"),
 +		     abfd, PE_LOAD_CONFIG_TABLE);
 +		  result = false;
 +		}
@@ -96,15 +97,15 @@ index 29831d4caaa..0dec04fcc3e 100644
 +	  else
 +	    {
 +	      _bfd_error_handler
-+		(_("%pB: unable to fill in DataDictionary[%d]: size can't be read"),
-+		 abfd, PE_LOAD_CONFIG_TABLE);
++		(_("%pB: unable to fill in DataDirectory[%d]: size can't be read from %s"),
++		 abfd, PE_LOAD_CONFIG_TABLE, name);
 +	      result = false;
 +	    }
 +	}
 +      else
 +	{
 +	  _bfd_error_handler
-+	    (_("%pB: unable to fill in DataDictionary[%d]: %s not defined correctly"),
++	    (_("%pB: unable to fill in DataDirectory[%d]: %s not defined correctly"),
 +	     abfd, PE_LOAD_CONFIG_TABLE, name);
 +	  result = false;
 +	}

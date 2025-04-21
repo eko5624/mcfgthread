@@ -24,8 +24,8 @@ pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          $([[ "$_enable_rust" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-${_realname}-rust")
          $([[ "$_enable_jit" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-libgccjit")
         )
-pkgver=15.0.1+20250403
-_branch=master
+pkgver=15.0.1+20250417
+_branch=releases/gcc-15
 _sourcedir=gcc
 _libdir=lib/gcc/${CHOST}/${pkgver%%+*}
 pkgrel=1

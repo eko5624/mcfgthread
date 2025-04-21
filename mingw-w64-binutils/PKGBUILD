@@ -5,7 +5,7 @@
 _realname=binutils
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=2.44.0+20250403
+pkgver=2.44.0+20250417
 _branch=binutils-2_44-branch
 _sourcedir=binutils-gdb
 pkgrel=1
@@ -47,9 +47,9 @@ sha256sums=('SKIP'
             'a094660ec95996c00b598429843b7869037732146442af567ada9f539bd40480'
             '7ccbd418695733c50966068fa9755a6abb156f53af23701d2bc097c63e9e0030'
             '604628156c08f3e361de60329af250fab6839e23e61e289f8369a7e18a04e277'
-            '916406e2123f92a5e6ff8cc64ef473414f3c4a39501377163c17d3274844a529'
-            'd74db132ae203bac366b49b194536e164c739c48bd7b317b66623b608d829bee'
-            'b2f32c61feec3b80131351cd0c60bbd10c3a8b69457f8dd27e417a3502d6f831'
+            'ffed09dee3bd2756fa6350fcf4f0e7512e6b0257b674a6e89e6f70204c97a6d5'
+            '82892733f22926032c599d96f4354217e49933f34fb59e03b29207df3810b950'
+            '55f8a5e5b8ac3d7df48d0ed902e6a17328efdeb498e54fae3b2cd0edc62047f2'
             'aea978117e026b4e500eff14ea0d0aa1d9d3ed6ec03089d00e765fe9bb335b9a')
 validpgpkeys=('EAF1C276A747E9ED86210CBAC3126D3B4AE55E93'  # Tristan Gingold <gingold@adacore.com>
               '3A24BC1E8FB409FA9F14371813FCEF89DD9E3C4F') # Nick Clifton <nickc@redhat.com>

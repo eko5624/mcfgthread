@@ -1,8 +1,7 @@
-From 2199cf29813c5d52442480db43c3c3671d98a7ef Mon Sep 17 00:00:00 2001
+From fcdce142519644cdc359b3a7bc6eca6985e44c88 Mon Sep 17 00:00:00 2001
 From: Jeremy Drake <sourceware-bugzilla@jdrake.com>
-Date: Wed, 2 Apr 2025 15:56:01 -0700
-Subject: [PATCH 9203/9203] bfd: add load config size workaround for i386 XP
- and earlier.
+Date: Mon, 7 Apr 2025 13:19:28 +0200
+Subject: [PATCH] bfd: add load config size workaround for i386 XP and earlier
 
 Per the Microsoft PE documentation, XP and earlier on i686 require the
 Size field to be 64, rather than the actual size as required on other
@@ -10,16 +9,15 @@ architectures.  I have confirmed Windows 11 accepts either 64 or the
 actual size for i386 images, but only the actual size for x86_64 images.
 
 Signed-off-by: Jeremy Drake <sourceware-bugzilla@jdrake.com>
-Signed-off-by: LIU Hao <lh_mouse@126.com>
 ---
- bfd/peXXigen.c | 26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
+ bfd/peXXigen.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
 diff --git a/bfd/peXXigen.c b/bfd/peXXigen.c
-index 0dec04fcc3e..bbf7bfb5545 100644
+index f63a7b6f11a..9938108ce6b 100644
 --- a/bfd/peXXigen.c
 +++ b/bfd/peXXigen.c
-@@ -4601,21 +4601,29 @@ _bfd_XXi_final_link_postscript (bfd * abfd, struct coff_final_link_info *pfinfo)
+@@ -4602,22 +4602,30 @@ _bfd_XXi_final_link_postscript (bfd * abfd, struct coff_final_link_info *pfinfo)
  	      result = false;
  	    }
  
@@ -38,26 +36,28 @@ index 0dec04fcc3e..bbf7bfb5545 100644
 +	      /* The Microsoft PE format documentation says for compatibility
 +		 with Windows XP and earlier, the size must be 64 for x86
 +		 images.  */
- 	      pe_data (abfd)->pe_opthdr.DataDirectory[PE_LOAD_CONFIG_TABLE].Size =
--		bfd_get_32 (abfd, data);
+ 	      pe_data (abfd)->pe_opthdr.DataDirectory[PE_LOAD_CONFIG_TABLE].Size
+-		= bfd_get_32 (abfd, data);
 -
--	      if (pe_data (abfd)->pe_opthdr.DataDirectory[PE_LOAD_CONFIG_TABLE].Size >
--		  h1->root.u.def.section->size - h1->root.u.def.value)
-+		(bfd_get_arch (abfd) == bfd_arch_i386 &&
-+		 (bfd_get_mach (abfd) & ~bfd_mach_i386_intel_syntax) ==
-+		    bfd_mach_i386_i386 &&
-+		  (pe_data (abfd)->pe_opthdr.Subsystem ==
-+		     IMAGE_SUBSYSTEM_WINDOWS_GUI ||
-+		   pe_data (abfd)->pe_opthdr.Subsystem ==
-+		     IMAGE_SUBSYSTEM_WINDOWS_CUI) &&
-+		  pe_data (abfd)->pe_opthdr.MajorSubsystemVersion * 256 +
-+		    pe_data (abfd)->pe_opthdr.MinorSubsystemVersion <= 0x0501)
+-	      if ((bfd_vma) pe_data (abfd)->pe_opthdr
+-		  .DataDirectory[PE_LOAD_CONFIG_TABLE].Size
+-		  > h1->root.u.def.section->size - h1->root.u.def.value)
++		= (bfd_get_arch (abfd) == bfd_arch_i386
++		   && ((bfd_get_mach (abfd) & ~bfd_mach_i386_intel_syntax)
++		       == bfd_mach_i386_i386)
++		   && ((pe_data (abfd)->pe_opthdr.Subsystem
++			== IMAGE_SUBSYSTEM_WINDOWS_GUI)
++		       || (pe_data (abfd)->pe_opthdr.Subsystem
++			   == IMAGE_SUBSYSTEM_WINDOWS_CUI))
++		   && (pe_data (abfd)->pe_opthdr.MajorSubsystemVersion * 256
++		       + pe_data (abfd)->pe_opthdr.MinorSubsystemVersion
++		       <= 0x0501))
 +		? 64 : size;
 +
 +	      if (size > h1->root.u.def.section->size - h1->root.u.def.value)
  		{
  		  _bfd_error_handler
- 		    (_("%pB: unable to fill in DataDictionary[%d]: size too large for the containing section"),
+ 		    (_("%pB: unable to fill in DataDirectory[%d]: size too large for the containing section"),
 -- 
 2.49.0
 
