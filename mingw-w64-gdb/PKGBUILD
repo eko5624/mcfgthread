@@ -5,7 +5,7 @@ _realname=gdb
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-multiarch")
-pkgver=16.2.90+20250417
+pkgver=16.3.90+20250425
 _branch=gdb-16-branch
 _sourcedir=binutils-gdb
 pkgrel=1
@@ -149,7 +149,7 @@ package_gdb() {
   make DESTDIR=${pkgdir} install-gdb install-gdbserver
 
   # Remove unwanted files
-  rm -rf "${pkgdir}"${MINGW_PREFIX}/share/{man,info}
+  rm -f "${pkgdir}"${MINGW_PREFIX}/share/info/{bfd.info*,ctf-spec.info*,sframe-spec.info*}
 
   rm -f "${pkgdir}"${MINGW_PREFIX}/include/*.h
   rm -f "${pkgdir}"${MINGW_PREFIX}/lib/*.a
@@ -162,7 +162,7 @@ package_gdb-multiarch() {
   conflicts=("${MINGW_PACKAGE_PREFIX}-arm-none-eabi-gdb" "${MINGW_PACKAGE_PREFIX}-avr-gdb")
   replaces=("${MINGW_PACKAGE_PREFIX}-arm-none-eabi-gdb" "${MINGW_PACKAGE_PREFIX}-avr-gdb")
 
-  builddir="${srcdir}"/build-${MSYSTEM}-multiarch
+  builddir="${srcdir}/build-${MSYSTEM}-multiarch"
   cd ${builddir}
   make DESTDIR=${builddir}/inst install-gdb install-gdbserver
 
