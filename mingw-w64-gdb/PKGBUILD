@@ -5,7 +5,7 @@ _realname=gdb
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-multiarch")
-pkgver=16.3.90+20250425
+pkgver=16.3.90+20250501
 _branch=gdb-16-branch
 _sourcedir=binutils-gdb
 pkgrel=1
@@ -34,6 +34,7 @@ depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
 optdepends=("${MINGW_PACKAGE_PREFIX}-python-pygments: for syntax highlighting")
 checkdepends=('dejagnu' 'bc')
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
+             "${MINGW_PACKAGE_PREFIX}-autotools"
              "${MINGW_PACKAGE_PREFIX}-iconv")
 source=(${_sourcedir}::"git+https://sourceware.org/git/binutils-gdb.git#branch=${_branch}"
         '0001-Workaround-performance-regression-in-info-func-var-t.patch'
@@ -85,11 +86,11 @@ prepare() {
 
   apply_patch_with_msg \
     0004-Python-Configure-path-fixes.patch \
-    0005-W32-Always-check-USERPROFILE-if-HOME-is-not-set.patch \
-    0007-Prefer-GCC-cpuid.h.patch
+    0005-W32-Always-check-USERPROFILE-if-HOME-is-not-set.patch
 
   # ZZZ
   apply_patch_with_msg \
+    0007-Prefer-GCC-cpuid.h.patch \
     0401-gdb-i386-tdep-Use-Intel-syntax-by-default.patch
 
   # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"

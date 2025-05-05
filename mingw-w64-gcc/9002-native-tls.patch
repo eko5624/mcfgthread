@@ -306,4 +306,3 @@ index bdb22d53e2c..0a58f25f010 100644
  	    [Define if your assembler and linker support thread-local storage.])
 -- 
 2.45.2.windows.1
-
