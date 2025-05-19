@@ -5,7 +5,7 @@ _realname=gdb
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-multiarch")
-pkgver=16.3.90+20250501
+pkgver=16.3.90+20250516
 _branch=gdb-16-branch
 _sourcedir=binutils-gdb
 pkgrel=1

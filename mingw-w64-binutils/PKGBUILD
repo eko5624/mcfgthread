@@ -5,7 +5,7 @@
 _realname=binutils
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=2.44.0+20250501
+pkgver=2.44.0+20250516
 _branch=binutils-2_44-branch
 _sourcedir=binutils-gdb
 pkgrel=1
@@ -34,6 +34,7 @@ source=(${_sourcedir}::"git+https://sourceware.org/git/binutils-gdb.git#branch=$
         reproducible-import-libraries.patch
         libiberty-unlink-handle-windows-nul.patch
         3001-hack-libiberty-link-order.patch
+        4000-fix-DEBUG_S_INLINEELINES.patch
         9001-bfd-properly-use-bfd_get_symbol_leading_char-in-peXX.patch
         9002-bfd-fill-in-PE-load-config-directory-entry.patch
         9003-bfd-add-load-config-size-workaround-for-i386-XP-and-.patch
@@ -48,6 +49,7 @@ sha256sums=('SKIP'
             'a094660ec95996c00b598429843b7869037732146442af567ada9f539bd40480'
             '7ccbd418695733c50966068fa9755a6abb156f53af23701d2bc097c63e9e0030'
             '604628156c08f3e361de60329af250fab6839e23e61e289f8369a7e18a04e277'
+            '5ed35a728b956ad49a5e196ae59f681666f2754f0a4903b9280a430d7a312ea8'
             'ffed09dee3bd2756fa6350fcf4f0e7512e6b0257b674a6e89e6f70204c97a6d5'
             '82892733f22926032c599d96f4354217e49933f34fb59e03b29207df3810b950'
             '55f8a5e5b8ac3d7df48d0ed902e6a17328efdeb498e54fae3b2cd0edc62047f2'
@@ -114,6 +116,10 @@ prepare() {
   # search paths, so imho if things link against the system lib or the just
   # built one is just luck, and I don't know how that is supposed to work.
   patch -p1 -i "${srcdir}/3001-hack-libiberty-link-order.patch"
+
+  # https://github.com/msys2/MINGW-packages/issues/24148
+  # https://sourceware.org/bugzilla/show_bug.cgi?id=32942
+  patch -p1 -i "${srcdir}/4000-fix-DEBUG_S_INLINEELINES.patch"
 }
 
 build() {

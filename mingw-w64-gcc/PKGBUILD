@@ -26,7 +26,7 @@ pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          $([[ "$_enable_rust" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-${_realname}-rust")
          $([[ "$_enable_jit" == "yes" ]] && echo "${MINGW_PACKAGE_PREFIX}-libgccjit")
         )
-pkgver=15.1.1+20250501
+pkgver=15.1.1+20250516
 _branch=releases/gcc-15
 _sourcedir=gcc
 _libdir=lib/gcc/${CHOST}/${pkgver%%+*}
@@ -73,12 +73,13 @@ source=(${_sourcedir}::"git+https://gcc.gnu.org/git/gcc.git#branch=${_branch}"
         0140-gcc-diagnostic-color.patch
         0200-add-m-no-align-vector-insn-option-for-i386.patch
         2001-fix-building-rust-on-mingw-w64.patch
+        3001-fix-codeview-crashes.patch
         9000-gcc-Make-stupid-AT-T-syntax-not-default.patch
         9001-Always-quote-labels-in-Intel-syntax.patch
         9002-native-tls.patch
         9003-libstdc-Avoid-thread-local-states-for-MCF-thread-mod.patch
-        9004-gcc-For-Windows-x86-32-always-attempt-to-realign-sta.patch
-        9005-i386-cygming-Decrease-default-preferred-stack-bounda.patch)
+        9005-i386-cygming-Decrease-default-preferred-stack-bounda.patch
+        9007-Enable-mcf-thread-model-for-aarch64-mingw.patch)
 sha256sums=('SKIP'
             '073a62609f2b62ce14d8a2c06f5f386d5ae600f98ea490e69cff80bd6dc4b84d'
             '3fc35067823f87e48dd3bfd265e7593000dc110fa9ad5f16c81b896765fc897a'
@@ -89,16 +90,17 @@ sha256sums=('SKIP'
             'e98805ead7d78ee2a92f237894c4b2b7ddc1688e1b517d8c04f28d440202e40f'
             'fd9bdecb2bbc4796bbc9f00b708dac42ef9e3464a06d6d27e5475cee117de5be'
             'ad1f7b5e7afaaec008b7cbd14feea13a10989fa91bda7003af72d457619bb199'
-            '8ba6064f2263643d849e2d31797cde0ffcef3ce26324bfe732528f0f687b5163'
+            'a2abb2c2d793b42c457275e5f5c406d21a61ef07441f696d91a775d01072e17c'
             'ba3649f29049f6d4eea4a481975d9f6851c0c2604d847881b46084a943c4c8f2'
             '1484911163634f30324827619c873a6267b377abba0df8bbedfd128163c53ea4'
             'a411f59953553a3d01dd64c79b1acbb91eca092c4cb01bfd26b1c51c3eb798e8'
+            'f21f9ab731e9cab8fd4ca8c289497f859ef7004e6fa0507877dc2559ac2071c3'
             'f3b3838a64e5d3c2ddab91015bebc0bbc626087f4d58198c966c5863f88dc099'
             '7609644ca0352b87696fdff3a63864ce797e074b085f16ec5096d0f831fa10bf'
             'd977683efc6f6b4dd675a8f1978416d22d5b5d1fa53614b9a18bc18efa231391'
             '77659729168b077ba65be0e78a79932b02b8908f64f8a0d639bc8119dc9ed368'
-            'c5c6997743cab3bda5805d0d27eb01d69aeaeeca5df470a8170cd0e0e7b876c1'
-            '9e785c15c71a3610b7e57635131007ec79fb3672c4012eafd64558f2ed07881f')
+            'e167fc5b1377edf6f449e7f2e34e8ffc5340332cb218229b06f166fd38849c1f'
+            '13e00f7cedb13f94ffdb96a558e4800ccddb769f9a02639eee1f52117630306f')
 validpgpkeys=(F3691687D867B81B51CE07D9BBE43771487328A9  # bpiotrowski@archlinux.org
               86CFFCA918CF3AF47147588051E8B148A9999C34  # evangelos@foutrelis.com
               13975A70E63C361C73AE69EF6EEB81F8981C74C7  # richard.guenther@gmail.com
@@ -163,14 +165,23 @@ prepare() {
   apply_patch_with_msg \
     2001-fix-building-rust-on-mingw-w64.patch
 
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120051
+  apply_patch_with_msg \
+    3001-fix-codeview-crashes.patch
+
+  # backported from master
+  apply_patch_with_msg \
+    9001-Always-quote-labels-in-Intel-syntax.patch \
+    9002-native-tls.patch \
+    9005-i386-cygming-Decrease-default-preferred-stack-bounda.patch \
+    9007-Enable-mcf-thread-model-for-aarch64-mingw.patch
+
   # GCC with the MCF thread model
   apply_patch_with_msg \
     9000-gcc-Make-stupid-AT-T-syntax-not-default.patch \
-    9001-Always-quote-labels-in-Intel-syntax.patch \
-    9002-native-tls.patch \
-    9003-libstdc-Avoid-thread-local-states-for-MCF-thread-mod.patch \
-    9004-gcc-For-Windows-x86-32-always-attempt-to-realign-sta.patch \
-    9005-i386-cygming-Decrease-default-preferred-stack-bounda.patch
+    9003-libstdc-Avoid-thread-local-states-for-MCF-thread-mod.patch
+
+  autoreconf -fiv
 
   # do not expect ${prefix}/mingw symlink - this should be superceded by
   # 0005-Windows-Don-t-ignore-native-system-header-dir.patch .. but isn't!
@@ -276,7 +287,7 @@ build() {
     --with-libiconv \
     --with-system-zlib \
     --with-{gmp,mpfr,mpc,isl}=${MINGW_PREFIX} \
-    --with-pkgversion="GCC with MCF thread model, built by LH_Mouse" \
+    --with-pkgversion="GCC with the MCF thread model, built by LH_Mouse" \
     --with-bugurl="https://github.com/lhmouse/MINGW-packages/issues" \
     --with-gnu-as \
     --with-gnu-ld \
